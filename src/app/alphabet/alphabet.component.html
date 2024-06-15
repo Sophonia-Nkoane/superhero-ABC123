@@ -1,0 +1,9 @@
+<div>
+  <h1>Alphabet</h1>
+  <div class="alphabet-row">
+    <span *ngFor="let letter of alphabet.split('')">
+      <button (click)="playAudio(letter)">{{ letter }}</button>
+    </span>
+  </div>
+  <input type="text" [(ngModel)]="searchLetter" placeholder="">
+</div>

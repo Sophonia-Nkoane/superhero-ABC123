@@ -1,0 +1,31 @@
+<div>
+  <h1>Sentence Building</h1>
+  <div *ngFor="let entry of words | keyvalue">
+    <div class="box">
+      <span>{{ entry.key }}:</span>
+      <button *ngFor="let word of entry.value" (click)="addWordToSentence([word])">
+        {{ word }}
+      </button>
+    </div>
+  </div>
+  <p>Sentence: {{ sentence }}</p>
+  <div class="box">
+    <button (click)="undoWord()">Backspace</button>
+    <button (click)="clearSentence()">Clear Sentence</button>
+    <button (click)="playGame()">Play Sentence</button>
+  </div>
+  <div *ngIf="playGame()">
+    <p *ngIf="checkSentenceOrder().index !== -1">
+      <span *ngFor="let word of sentence.split(' '); let i = index">
+        <span [ngClass]="{'incorrect': checkIncorrectWord(word, i), 'correct': !checkIncorrectWord(word, i)}">{{ word }}</span>
+      </span>
+    </p>
+    <p *ngIf="checkSentenceOrder().index === -1">Correct sentence!&#128526;</p>
+  </div>
+  <div *ngIf="checkUserSentence(sentence)">
+    <p>Your sentence is grammatically correct!&#128526;</p>
+  </div>
+  <div *ngIf="!checkUserSentence(sentence)">
+    <p>Your sentence is not grammatically correct.&#128542;</p>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="number-row">
+  <div class="number-column">
+    <span *ngFor="let number of numbers">
+      <button (click)="playAudio(number); searchNumber = number">{{ number }}</button>
+    </span>
+  </div>
+</div>
+<!-- Display the number in words -->
+<div id="number-in-words" #numberInWordsElement></div>
+<!-- Display the search input field -->
+<input type="text" class="search-input" [(ngModel)]="searchNumber" placeholder="Search number">
+<!-- Display the search results -->
+<ul>
+  <li *ngFor="let result of searchResults">
+    {{ result }}
+  </li>
+</ul>

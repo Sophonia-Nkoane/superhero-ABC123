@@ -1,0 +1,40 @@
+<!-- word-families.component.html -->
+<div class="word-families-container">
+  <h1>Word Families</h1>
+  <p>Starting Letter: {{ startingLetter }}</p>
+  <p *ngIf="answered">
+    <span *ngIf="isCorrect; else incorrect">Correct!</span>
+    <ng-template #incorrect>Incorrect</ng-template>
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>Correct Word</th>
+        <th>Word Family</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="isCorrect">
+        <td>{{ startingLetter + selectedWordFamily.prefix }}</td>
+        <td>
+          <ul>
+            <li *ngFor="let word of selectedWordFamily.words">{{ word }}</li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <button (click)="completeWord('at')">at</button>
+  <button (click)="completeWord('an')">an</button>
+  <button (click)="completeWord('in')">in</button>
+  <button (click)="completeWord('en')">en</button>
+  <button (click)="completeWord('ot')">ot</button>
+  <button (click)="completeWord('un')">un</button>
+  <button (click)="completeWord('et')">et</button>
+  <button (click)="completeWord('it')">it</button>
+  <button (click)="completeWord('ut')">ut</button>
+  <button (click)="completeWord('am')">am</button>
+  <button (click)="completeWord('em')">em</button>
+  <button (click)="completeWord('im')">im</button>
+  <button (click)="nextLetter()">Next Letter</button>
+</div>

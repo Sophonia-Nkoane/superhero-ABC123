@@ -1,0 +1,91 @@
+
+.keyboard-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+}
+
+.number-row span {
+  font-size: 36px;
+  margin: -4px;
+}
+
+#number-in-words {
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+  font-size: 36px;
+}
+
+button {
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 36px;
+  transition: ease-in-out 0.3s;
+}
+
+button:hover {
+  background-color: #3e8e41;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+button:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+button.active {
+  background-color: #333;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.search-input[type="text"] {
+  padding: 24px 16px;
+  font-size: 15rem;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: ease-in-out 0.3s;
+  text-align: center;
+  margin: 0 auto;
+  display: block;
+}
+
+.search-input[type="text"]:focus {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .keyboard-row span{
+    font-size: 24px;
+  }
+  button {
+    font-size: 24px;
+    padding: 8px 16px;
+  }
+  .search-input[type="text"] {
+    padding: 16px 12px;
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .keyboard-row {
+    font-size: 18px;
+  }
+  button {
+    font-size: 18px;
+    padding: 6px 12px;
+  }
+  .search-input[type="text"] {
+    padding: 12px 8px;
+    font-size: 18px;
+  }
+}
