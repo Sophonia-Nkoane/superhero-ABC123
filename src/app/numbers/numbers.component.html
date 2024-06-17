@@ -1,17 +1,29 @@
-<div class="number-row">
-  <div class="number-column">
-    <span *ngFor="let number of numbers">
-      <button (click)="playAudio(number); searchNumber = number">{{ number }}</button>
-    </span>
-  </div>
+<div class="spacing">
+  <div class="spacing">
+    <h1>Numbers
+      <span class="toggle-container">
+        <span class="toggle-number" (click)="toggleIncrement('1')">1</span>
+        <span class="toggle-number" (click)="toggleIncrement('2')">2</span>
+        <span class="toggle-number" (click)="toggleIncrement('5')">5</span>
+        <span class="toggle-number" (click)="toggleIncrement('10')">10</span>
+        <span class="toggle-number" (click)="toggleIncrement('20')">20</span>
+      </span>
+    </h1>
+
+    <div class="number-column">
+      <span *ngFor="let number of getNumbers()">
+        <button (click)="playAudio(number); searchNumber = number">{{ number }}</button>
+      </span>
+    </div>
+
+  <!-- Display the number in words -->
+  <div id="number-in-words" #numberInWordsElement></div>
+  <!-- Display the search input field -->
+  <input type="text" class="search-input" [(ngModel)]="searchNumber">
+  <!-- Display the search results -->
+  <ul>
+    <li *ngFor="let result of searchResults">
+      {{ result }}
+    </li>
+  </ul>
 </div>
-<!-- Display the number in words -->
-<div id="number-in-words" #numberInWordsElement></div>
-<!-- Display the search input field -->
-<input type="text" class="search-input" [(ngModel)]="searchNumber" placeholder="Search number">
-<!-- Display the search results -->
-<ul>
-  <li *ngFor="let result of searchResults">
-    {{ result }}
-  </li>
-</ul>

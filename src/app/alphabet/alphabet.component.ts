@@ -16,10 +16,10 @@ export class AlphabetComponent {
   filteredAlphabet = this.alphabet.split('');
 
   getAudioSrc(letter: string) {
-    return `assets/audio/mp3/${letter.toUpperCase()}.mp3`;
+    return `assets/audio/alphabet/${letter.toUpperCase()}.mp3`;
   }
   playAudio(letter: string) {
-    const audio = new Audio(`assets/audio/mp3/${letter.toUpperCase()}.mp3`);
+    const audio = new Audio(`assets/audio/alphabet/${letter.toUpperCase()}.mp3`);
     audio.play();
     this.searchLetter = `${letter.toUpperCase()}  ${letter.toLowerCase()}`; // Update the searchLetter with both uppercase and lowercase letters
     this.selectedLetter = letter;

@@ -14,29 +14,43 @@ export class NumbersComponent {
   numberInWords: string = '';
   searchNumber = '';
   searchResults: string[] = [];
+  increment = '1'; // initial increment value
+  increments = ['1', '2', '5', '10', '20']; // array of increment values
 
   @ViewChild('numberInWordsElement', { static: true }) numberInWordsElement!: ElementRef;
 
   @HostListener('window:keydown', ['$event'])
-handleKeydown(event: KeyboardEvent) {
-  console.log('Keydown event triggered!');
-  const number = event.key;
-  console.log(`Key pressed: ${number}`);
-  if (parseInt(number) >= 0 && parseInt(number) <= 9) {
-    console.log('Number is within range');
-    const audio = new Audio(`assets/audio/mp3/${number}.mp3`);
-    audio.play();
-    const numberInWords = this.num2words(parseInt(number)) ?? '';
-    console.log(`Number in words: ${numberInWords}`);
-    this.numberInWordsElement.nativeElement.innerText = numberInWords;
-    console.log('Updated text content');
-  } else {
-    console.log('Number is out of range');
+  handleKeydown(event: KeyboardEvent) {
+    console.log('Keydown event triggered!');
+    const number = event.key;
+    console.log(`Key pressed: ${number}`);
+    if (parseInt(number) >= 0 && parseInt(number) <= 9) {
+      console.log('Number is within range');
+      const audio = new Audio(`assets/audio/number/${number}.mp3`);
+      audio.play();
+      const numberInWords = this.num2words(parseInt(number)) ?? '';
+      console.log(`Number in words: ${numberInWords}`);
+      this.numberInWordsElement.nativeElement.innerText = numberInWords;
+      console.log('Updated text content');
+    } else {
+      console.log('Number is out of range');
+    }
   }
-}
+
+  toggleIncrement(increment: string) {
+    this.increment = increment;
+  }
+
+  getNumbers() {
+    const numbers = [];
+    for (let i = 0; i <= 100; i += parseInt(this.increment)) {
+      numbers.push(i.toString());
+    }
+    return numbers;
+  }
 
   playAudio(number: string) {
-    const audio = new Audio(`assets/audio/mp3/${number}.mp3`);
+    const audio = new Audio(`assets/audio/number/${number}.mp3`);
     audio.play();
     this.numberInWords = this.num2words(parseInt(number));
     this.numberInWordsElement.nativeElement.innerText = this.numberInWords;
