@@ -4,6 +4,7 @@ import { WordFamiliesComponent } from './word-families/word-families.component';
 import { SentenceBuildingComponent } from './sentence-building/sentence-building.component';
 import { NumbersComponent } from './numbers/numbers.component';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { SentenceBuildingTestComponent } from './sentence-building-test/sentence-building-test.component';
 
 export const routes: Routes = [
   { path: '', component: WelcomeComponent },
@@ -12,4 +13,5 @@ export const routes: Routes = [
   { path: 'numbers', component: NumbersComponent },
   { path: 'word-families', component: WordFamiliesComponent },
   { path: 'sentence-building', component: SentenceBuildingComponent },
+  { path: 'sentence-building-test', component: SentenceBuildingTestComponent}
 ];

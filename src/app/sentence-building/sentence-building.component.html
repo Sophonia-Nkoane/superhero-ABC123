@@ -1,31 +1,91 @@
-<div>
+<div class="container">
   <h1>Sentence Building</h1>
-  <div *ngFor="let entry of words | keyvalue">
+
+  <!-- Word Categories Section -->
+  <div *ngFor="let entry of words | keyvalue" class="word-category">
     <div class="box">
       <span>{{ entry.key }}:</span>
-      <button *ngFor="let word of entry.value" (click)="addWordToSentence([word])">
+      <button *ngFor="let word of entry.value" class="word-button" (click)="addWordToSentence([word])">
         {{ word }}
       </button>
     </div>
   </div>
-  <p>Sentence: {{ sentence }}</p>
-  <div class="box">
-    <button (click)="undoWord()">Backspace</button>
-    <button (click)="clearSentence()">Clear Sentence</button>
-    <button (click)="playGame()">Play Sentence</button>
-  </div>
-  <div *ngIf="playGame()">
-    <p *ngIf="checkSentenceOrder().index !== -1">
-      <span *ngFor="let word of sentence.split(' '); let i = index">
-        <span [ngClass]="{'incorrect': checkIncorrectWord(word, i), 'correct': !checkIncorrectWord(word, i)}">{{ word }}</span>
+
+  <!-- Main Display (Selected Words without Highlight) -->
+  <div class="main-display-text">
+    <p>
+      Selected:
+      <span *ngFor="let word of sentenceWords; let i = index">
+        {{ word }}
+        <ng-container *ngIf="i !== sentenceWords.length - 1"> </ng-container>
       </span>
     </p>
-    <p *ngIf="checkSentenceOrder().index === -1">Correct sentence!&#128526;</p>
   </div>
-  <div *ngIf="checkUserSentence(sentence)">
-    <p>Your sentence is grammatically correct!&#128526;</p>
+
+  <!-- Action Buttons -->
+  <div class="box button-container">
+    <button class="action-button" (click)="undo()">Undo</button>
+    <button class="action-button" (click)="clearSentence()">Clear Sentence</button>
+    <button class="action-button" (click)="playSentence()">Play Sentence</button>
   </div>
-  <div *ngIf="!checkUserSentence(sentence)">
-    <p>Your sentence is not grammatically correct.&#128542;</p>
+
+  <!-- Checkbox Input -->
+  <div class="input-container">
+    <label>
+      <input type="checkbox" [(ngModel)]="showHits"> Show Hits
+    </label>
+  </div>
+
+  <!-- Feedback Display (Always Highlighted) -->
+  <div *ngIf="sentenceWords.length > 0">
+    <p>
+      Feedback:
+      <span *ngFor="let word of sentenceWords; let i = index">
+        <span [ngClass]="{
+          'selected-word': true,
+          'correct': !checkIncorrectWord(word, i),
+          'incorrect': checkIncorrectWord(word, i)
+        }">
+          {{ word }}
+          <ng-container *ngIf="i !== sentenceWords.length - 1"> </ng-container>
+        </span>
+      </span>
+    </p>
+
+    <!-- Grammar Validation with Hits Display Toggle -->
+    <div *ngIf="showHits && !checkUserSentence(sentence)">
+      <p>Next Expected Word Order:</p>
+      <ul>
+        <li *ngFor="let wordType of ['beginningWords', 'functionWords', 'verbs', 'objects', 'functionWords']">
+          {{ wordType }}
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="!showHits && !checkUserSentence(sentence)">
+      <p>Your sentence is not grammatically correct. 😔</p>
+    </div>
+    <div *ngIf="checkUserSentence(sentence)">
+      <p>Your sentence is grammatically correct! 😊</p>
+    </div>
   </div>
 </div>
+
+
+    <!-- Grammar Validation with Hits Display Toggle
+    <div>
+      <label>
+        <input type="checkbox" [(ngModel)]="showHits"> Show Hits
+      </label>
+    </div>
+    <div *ngIf="showHits && !checkUserSentence(sentence)">
+      <p>Word Sequence Hits:</p>
+      <ul>
+        <li *ngFor="let sentence of generateAllSentences()">
+          {{ sentence }}
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="!showHits && !checkUserSentence(sentence)">
+      <p>Your sentence is not grammatically correct. 😔</p>
+    </div>
+  </div>-->
