@@ -1,83 +1,93 @@
+/* Container for the alphabet letters, arranged in a flexible row */
 .alphabet-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 20px;
+  display: flex;                /* Use flexbox for layout */
+  flex-wrap: wrap;              /* Allow items to wrap to the next line */
+  justify-content: center;      /* Center items horizontally */
+  padding: 20px;                /* Add padding around the container */
 }
 
+/* Style for each letter in the alphabet row */
 .alphabet-row span {
-  font-size: 36px;
-  margin: 5px;
+  font-size: 36px;              /* Set font size */
+  margin: 5px;                  /* Add margin around each letter */
 }
 
+/* Style for all buttons */
 button {
-  background-color: #4CAF50;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 36px;
-  transition: ease-in-out 0.3s;
+  background-color: #4CAF50;    /* Set background color */
+  color: #fff;                  /* Set text color */
+  padding: 10px 20px;           /* Add padding inside the button */
+  border: none;                 /* Remove default border */
+  border-radius: 5px;           /* Round the corners */
+  cursor: pointer;              /* Change cursor to pointer on hover */
+  font-size: 36px;              /* Set font size */
+  transition: 0.3s ease-in-out; /* Add transition for hover effects */
 }
 
+/* Style for buttons on hover */
 button:hover {
-  background-color: #3e8e41;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  background-color: #3e8e41;    /* Darken background color */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add shadow effect */
 }
 
+/* Style for buttons when active (clicked) */
 button:active {
-  transform: scale(0.95);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  transform: scale(0.95);       /* Slightly scale down the button */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); /* Add a darker shadow */
 }
 
+/* Style for buttons with the 'active' class */
 button.active {
-  background-color: #333;
-  color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  background-color: #333;       /* Set background color */
+  color: #fff;                  /* Set text color */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); /* Add shadow effect */
 }
 
+/* Style for text input fields */
 input[type="text"] {
-  padding: 24px 16px;
-  font-size: 20rem;
-  border: none;
-  border-radius: 5px;
-  width: 100%;
-  box-sizing: border-box;
-  transition: ease-in-out 0.3s;
-  text-align: center;
-  margin: 0 auto;
-  display: block;
+  padding: 24px 16px;           /* Add padding inside the input field */
+  font-size: 2rem;              /* Set font size */
+  border: none;                 /* Remove default border */
+  border-radius: 5px;           /* Round the corners */
+  width: 100%;                  /* Set width to 100% of the container */
+  box-sizing: border-box;       /* Include padding and border in the element's total width and height */
+  transition: 0.3s ease-in-out; /* Add transition for focus effect */
+  text-align: center;           /* Center text inside the input field */
+  margin: 0 auto;               /* Center the input field horizontally */
+  display: block;               /* Display as block element */
 }
 
+/* Style for text input fields when focused */
 input[type="text"]:focus {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add shadow effect */
 }
 
+/* Media query for screens with a max width of 768px (tablets) */
 @media (max-width: 768px) {
   .alphabet-row span {
-    font-size: 24px;
+    font-size: 24px;            /* Reduce font size for letters */
   }
   button {
-    font-size: 24px;
-    padding: 8px 16px;
+    font-size: 24px;            /* Reduce font size for buttons */
+    padding: 8px 16px;          /* Adjust padding for buttons */
   }
   input[type="text"] {
-    padding: 16px 12px;
-    font-size: 24px;
+    padding: 16px 12px;         /* Adjust padding for input fields */
+    font-size: 1.5rem;          /* Reduce font size for input fields */
   }
 }
 
+/* Media query for screens with a max width of 480px (phones) */
 @media (max-width: 480px) {
   .alphabet-row span {
-    font-size: 18px;
+    font-size: 18px;            /* Further reduce font size for letters */
   }
   button {
-    font-size: 18px;
-    padding: 6px 12px;
+    font-size: 18px;            /* Further reduce font size for buttons */
+    padding: 6px 12px;          /* Adjust padding for buttons */
   }
   input[type="text"] {
-    padding: 12px 8px;
-    font-size: 18px;
+    padding: 12px 8px;          /* Adjust padding for input fields */
+    font-size: 1.2rem;          /* Further reduce font size for input fields */
   }
 }

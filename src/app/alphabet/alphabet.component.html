@@ -1,9 +1,16 @@
 <div>
+  <!-- Header Section -->
   <h1>Alphabet</h1>
+
+  <!-- Alphabet Row Section -->
   <div class="alphabet-row">
+    <!-- Loop through each letter in the alphabet string -->
     <span *ngFor="let letter of alphabet.split('')">
+      <!-- Button for each letter, triggers playAudio method on click -->
       <button (click)="playAudio(letter)">{{ letter }}</button>
     </span>
   </div>
-  <input type="text" [(ngModel)]="searchLetter" placeholder="">
+
+  <!-- Search Input Section -->
+  <input type="text" [(ngModel)]="searchLetter" placeholder="Search letter">
 </div>

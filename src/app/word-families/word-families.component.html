@@ -1,11 +1,21 @@
 <!-- word-families.component.html -->
+
+<!-- Container for the word families component -->
 <div class="word-families-container">
+  <!-- Header -->
   <h1>Word Families</h1>
+
+  <!-- Display the starting letter -->
   <p>Starting Letter: {{ startingLetter }}</p>
+
+  <!-- Display feedback message if answered -->
   <p *ngIf="answered">
+    <!-- Conditional display of correct or incorrect message -->
     <span *ngIf="isCorrect; else incorrect">Correct!</span>
     <ng-template #incorrect>Incorrect</ng-template>
   </p>
+
+  <!-- Table to display the correct word and word family -->
   <table>
     <thead>
       <tr>
@@ -14,27 +24,27 @@
       </tr>
     </thead>
     <tbody>
+      <!-- Display correct word and its word family if correct -->
       <tr *ngIf="isCorrect">
         <td>{{ startingLetter + selectedWordFamily.prefix }}</td>
         <td>
           <ul>
+            <!-- List the words in the selected word family -->
             <li *ngFor="let word of selectedWordFamily.words">{{ word }}</li>
           </ul>
         </td>
       </tr>
     </tbody>
   </table>
-  <button (click)="completeWord('at')">at</button>
-  <button (click)="completeWord('an')">an</button>
-  <button (click)="completeWord('in')">in</button>
-  <button (click)="completeWord('en')">en</button>
-  <button (click)="completeWord('ot')">ot</button>
-  <button (click)="completeWord('un')">un</button>
-  <button (click)="completeWord('et')">et</button>
-  <button (click)="completeWord('it')">it</button>
-  <button (click)="completeWord('ut')">ut</button>
-  <button (click)="completeWord('am')">am</button>
-  <button (click)="completeWord('em')">em</button>
-  <button (click)="completeWord('im')">im</button>
+
+  <!-- Buttons for selecting word families -->
+  <div class="buttons">
+    <!-- Create a button for each word family -->
+    <button *ngFor="let wordFamily of wordFamilies" (click)="completeWord(wordFamily.prefix)">
+      {{ wordFamily.prefix }}
+    </button>
+  </div>
+
+  <!-- Button to move to the next letter -->
   <button (click)="nextLetter()">Next Letter</button>
 </div>

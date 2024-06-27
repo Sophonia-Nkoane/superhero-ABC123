@@ -1,113 +1,123 @@
-.spacing{
-  padding-left: 20px;
-  padding-right: 20px;
+/*
+  Styles for Number Converter Component
+*/
+
+.spacing {
+  padding-left: 20px; /* Left padding */
+  padding-right: 20px; /* Right padding */
 }
 
+/* Toggle container for number type */
 .toggle-container {
-  display: inline-flex;
-  align-items: center;
-  margin-left: auto;
+  display: inline-flex; /* Inline-flex container */
+  align-items: center; /* Center items vertically */
+  margin-left: auto; /* Auto margin on left */
 }
 
+/* Styling for number toggles */
 .toggle-number {
-  font-size: 18px;
-  margin: 0 5px;
-  cursor: pointer;
+  font-size: 18px; /* Font size */
+  margin: 0 5px; /* Margin around numbers */
+  cursor: pointer; /* Cursor style */
 }
 
 .toggle-number:hover {
-  text-decoration: underline;
+  text-decoration: underline; /* Underline on hover */
 }
 
 .toggle-number.active {
-  font-weight: bold;
-  color: #333;
+  font-weight: bold; /* Bold font for active number */
+  color: #333; /* Dark color for active number */
 }
 
+/* Styling for keyboard rows */
 .keyboard-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 20px;
+  display: flex; /* Flex container */
+  flex-wrap: wrap; /* Wrap items */
+  justify-content: center; /* Center content horizontally */
+  padding: 20px; /* Padding inside the keyboard row */
 }
 
 .number-row span {
-  font-size: 36px;
-  margin: -4px;
+  font-size: 36px; /* Font size */
+  margin: -4px; /* Negative margin for spacing */
 }
 
+/* Styling for the number display */
 #number-in-words {
-  text-align: center;
-  display: block;
-  margin: 0 auto;
-  font-size: 60px;
+  text-align: center; /* Center text */
+  display: block; /* Block element */
+  margin: 0 auto; /* Center horizontally */
+  font-size: 60px; /* Large font size */
 }
 
+/* Button styling */
 button {
-  background-color: #4CAF50;
-  color: #fff;
-  padding: 10px 12px;
-  border: none;
-  cursor: pointer;
-  font-size: 36px;
-  transition: ease-in-out 0.3s;
+  background-color: #4CAF50; /* Green background */
+  color: #fff; /* White text color */
+  padding: 10px 12px; /* Padding inside button */
+  border: none; /* No border */
+  cursor: pointer; /* Cursor style */
+  font-size: 36px; /* Font size */
+  transition: ease-in-out 0.3s; /* Transition effect */
 }
 
 button:hover {
-  background-color: #3e8e41;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  background-color: #3e8e41; /* Darker green on hover */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Box shadow on hover */
 }
 
 button:active {
-  transform: scale(0.95);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  transform: scale(0.95); /* Scale down on active */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); /* Stronger box shadow on active */
 }
 
 button.active {
-  background-color: #333;
-  color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  background-color: #333; /* Dark background for active state */
+  color: #fff; /* White text color */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); /* Stronger box shadow */
 }
 
+/* Search input styling */
 .search-input[type="text"] {
-  font-size: 15rem;
-  border: none;
-  width: 100%;
-  box-sizing: border-box;
-  transition: ease-in-out 0.3s;
-  text-align: center;
-
-  display: block;
+  font-size: 15rem; /* Large font size */
+  border: none; /* No border */
+  width: 100%; /* Full width */
+  box-sizing: border-box; /* Box-sizing */
+  transition: ease-in-out 0.3s; /* Transition effect */
+  text-align: center; /* Center text */
+  display: block; /* Block element */
 }
 
 .search-input[type="text"]:focus {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Box shadow on focus */
 }
 
+/* Media queries for responsive design */
 @media (max-width: 768px) {
-  .keyboard-row span{
-    font-size: 24px;
+  .keyboard-row span {
+    font-size: 24px; /* Adjusted font size */
   }
   button {
-    font-size: 24px;
-    padding: 8px 16px;
+    font-size: 24px; /* Adjusted font size */
+    padding: 8px 16px; /* Adjusted padding */
   }
   .search-input[type="text"] {
-    padding: 16px 12px;
-    font-size: 24px;
+    padding: 16px 12px; /* Adjusted padding */
+    font-size: 24px; /* Adjusted font size */
   }
 }
 
 @media (max-width: 480px) {
   .keyboard-row {
-    font-size: 18px;
+    font-size: 18px; /* Adjusted font size */
   }
   button {
-    font-size: 18px;
-    padding: 6px 12px;
+    font-size: 18px; /* Adjusted font size */
+    padding: 6px 12px; /* Adjusted padding */
   }
   .search-input[type="text"] {
-    padding: 12px 8px;
-    font-size: 18px;
+    padding: 12px 8px; /* Adjusted padding */
+    font-size: 18px; /* Adjusted font size */
   }
 }
