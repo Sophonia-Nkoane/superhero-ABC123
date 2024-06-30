@@ -8,6 +8,10 @@ const cache = await caches.open('my-cache');
 
 // Cache resources
 cache.add('/index.html');
+cache.add('/alphabet.html');
+cache.add('/numbers.html');
+cache.add('/sentence-building.html');
+cache.add('/word-families.html');
 cache.add('/styles.css');
 cache.add('/scripts.js');
 

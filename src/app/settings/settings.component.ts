@@ -14,11 +14,11 @@ export class SettingsComponent implements OnInit {
   voices: SpeechSynthesisVoice[] = [];
   selectedVoice: SpeechSynthesisVoice | null = null;
   voiceRate: number;
-  savedVoiceRate: number;
+  repeatWords: boolean;
 
   constructor(private voiceService: VoiceService) {
-    this.voiceRate =this.voiceService.getRate();
-    this.savedVoiceRate = this.voiceRate;
+    this.voiceRate = this.voiceService.getRate();
+    this.repeatWords = this.voiceService.getRepeat();
   }
 
   setVoiceRate(rate: number): void {
@@ -27,10 +27,9 @@ export class SettingsComponent implements OnInit {
     this.voiceService.setRate(mappedRate);
   }
 
-  // Method to map slider values to speech synthesis rates
   mapVoiceRate(rate: number): number {
-    // Define a mapping from slider values to speech synthesis rates
-    const mapping = {
+    const mapping: { [key: string]: number } = {
+      '-2': 0.1,
       '-1': 0.25,
       '-0.5': 0.5,
       '0': 0.75,
@@ -39,37 +38,61 @@ export class SettingsComponent implements OnInit {
       '1.5': 1.5,
       '2': 1.75
     };
-    return Object.values(mapping).find(value => String(value) === rate.toString()) || 1;
+    return mapping[rate.toString()] || 1;
   }
 
   saveSettings(): void {
     localStorage.setItem('voiceRate', this.voiceRate.toString());
-    this.savedVoiceRate = this.voiceRate;
+    localStorage.setItem('selectedVoice', this.selectedVoice ? this.selectedVoice.name : '');
+    localStorage.setItem('repeatWords', this.repeatWords.toString());
   }
 
   resetSettings(): void {
     localStorage.removeItem('voiceRate');
-    this.voiceRate = 1; // Default rate
-    this.savedVoiceRate = this.voiceRate;
+    localStorage.removeItem('selectedVoice');
+    localStorage.removeItem('repeatWords');
+    this.voiceRate = 1;
+    this.repeatWords = false;
+    this.selectedVoice = this.voices.length > 0 ? this.voices[0] : null;
     this.voiceService.setRate(1);
+    this.voiceService.setRepeat(false);
+    this.voiceService.setSelectedVoice(this.selectedVoice!);
   }
 
   ngOnInit() {
     this.voices = this.voiceService.getVoices();
-    this.selectedVoice = this.voiceService.getSelectedVoice();
+    this.loadSettings();
+  }
+
+  loadSettings() {
+    const savedVoice = localStorage.getItem('selectedVoice');
+    if (savedVoice) {
+      this.selectedVoice = this.voices.find(voice => voice.name === savedVoice) || null;
+    }
     const savedRate = localStorage.getItem('voiceRate');
     if (savedRate !== null) {
       this.voiceRate = parseFloat(savedRate);
-      const mappedRate = this.mapVoiceRate(this.voiceRate);
-      this.voiceService.setRate(mappedRate);
-      this.savedVoiceRate = this.voiceRate;
+    }
+    const savedRepeat = localStorage.getItem('repeatWords');
+    if (savedRepeat !== null) {
+      this.repeatWords = savedRepeat === 'true';
     }
   }
 
-  onVoiceChange(event: any) {
-    const selectedVoice = this.voices.find(voice => voice.name === event.target.value);
+  onVoiceChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedVoice = this.voices.find(voice => voice.name === selectElement.value);
     if (selectedVoice) {
+      this.selectedVoice = selectedVoice;
       this.voiceService.setSelectedVoice(selectedVoice);
+      this.saveSettings();
     }
+  }
+
+  onRepeatChange(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.repeatWords = inputElement.checked;
+    this.voiceService.setRepeat(this.repeatWords);
+    this.saveSettings();
   }
 }

@@ -1,5 +1,5 @@
 /*
-  Styles for Number Converter Component
+Styles for Number Converter Component
 */
 
 .spacing {
@@ -49,6 +49,23 @@
   display: block; /* Block element */
   margin: 0 auto; /* Center horizontally */
   font-size: 60px; /* Large font size */
+  padding: 20px; /* Padding */
+  border: 1px solid #ccc; /* Border */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow */
+}
+
+/* Additional styling for number display */
+.number-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.number-in-words,
+.current-number {
+  font-size: 2em; /* Larger font size for words */
+  margin-bottom: 10px; /* Margin below */
+  transition: all 0.5s ease-in-out;
 }
 
 /* Button styling */
@@ -78,19 +95,16 @@ button.active {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); /* Stronger box shadow */
 }
 
-/* Search input styling */
-.search-input[type="text"] {
-  font-size: 15rem; /* Large font size */
-  border: none; /* No border */
-  width: 100%; /* Full width */
-  box-sizing: border-box; /* Box-sizing */
-  transition: ease-in-out 0.3s; /* Transition effect */
-  text-align: center; /* Center text */
-  display: block; /* Block element */
-}
-
-.search-input[type="text"]:focus {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Box shadow on focus */
+/* Animation for fade-in and zoom */
+@keyframes fadeInZoom {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* Media queries for responsive design */

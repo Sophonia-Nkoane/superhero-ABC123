@@ -1,5 +1,5 @@
 /*
-  Global Styles for Word Families Component
+  Global Styles for Sentence Building Component
 */
 
 /* Host element styling */
@@ -49,7 +49,7 @@ h1 {
   border: none; /* No border */
   border-radius: 5px; /* Rounded corners */
   cursor: pointer; /* Cursor style */
-  margin: 0.5%; /* Margin around buttons */
+  margin: 0.2%; /* Margin around buttons */
   flex-basis: 8%; /* Basis for flexbox sizing */
 }
 
@@ -94,6 +94,14 @@ input[type="checkbox"] {
   margin-right: 5px; /* Right margin for spacing */
 }
 
+/* Highlight for the currently spoken word */
+.highlighted-word {
+  background-color: yellow; /* Yellow background for highlighting */
+  border-radius: 4px; /* Rounded corners */
+  transition: background-color 0.3s ease; /* Smooth transition for highlighting */
+}
+
+/* Correct and Incorrect Word Feedback */
 .correct {
   background-color: green; /* Green background for correct feedback */
 }

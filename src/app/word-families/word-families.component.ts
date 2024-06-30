@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { VoiceService } from '../voice.service';
 
 // Define interface for word families
@@ -63,11 +63,6 @@ export class WordFamiliesComponent {
       return this.alphabet[Math.floor(Math.random() * this.alphabet.length)];
     }
 
-    // If no letters left in the filtered group, choose a random letter from entire alphabet
-    if (groupLetters.length === 0) {
-      return this.alphabet[Math.floor(Math.random() * this.alphabet.length)];
-    }
-
     // Choose a random letter from the filtered group
     const randomIndex: number = Math.floor(Math.random() * groupLetters.length);
     return groupLetters[randomIndex];
@@ -82,21 +77,36 @@ export class WordFamiliesComponent {
   // Method to handle completing a word with a given prefix
   completeWord(prefix: string): void {
     this.answered = true;
+
     // Find the selected word family based on the prefix
     const selectedWordFamily: WordFamily | undefined = this.wordFamilies.find(wf => wf.prefix === prefix);
+
     if (selectedWordFamily) {
       this.selectedWordFamily = selectedWordFamily;
+
       // Construct the complete word
       const completeWord: string = this.startingLetter + prefix;
+
       // Check if the complete word is in the selected word family
       this.isCorrect = selectedWordFamily.words.includes(completeWord);
 
-      // Play the entire word family
+      // Play the words and highlight/animate them one by one
       if (this.isCorrect) {
-        this.voiceService.playWords(this.selectedWordFamily.words);
+        const wordElements = this.selectedWordFamily.words.map(word => ({
+          word,
+          highlighted: false
+        }));
+
+
+        this.voiceService.playWords(
+          this.selectedWordFamily.words,
+          (word) => this.highlightWord(word, wordElements),
+          (word) => this.unhighlightWord(word, wordElements)
+        );
       }
     }
   }
+
 
   // Method to move to the next letter
   nextLetter(): void {
@@ -115,4 +125,28 @@ export class WordFamiliesComponent {
       alert('Please complete the current word correctly before moving on.');
     }
   }
+  createWordElement(word: string): HTMLElement {
+    const span = document.createElement('span');
+    span.innerText = word;
+    span.classList.add('word');
+    return span;
+  }
+
+  highlightWord(word: string, wordElements: { word: string, highlighted: boolean }[]): void {
+    const index = wordElements.findIndex(w => w.word === word);
+    if (index !== -1) {
+      wordElements[index].highlighted = true;
+      // Use the word string instead of the element property
+      console.log(word);
+    }
+  }
+
+  unhighlightWord(word: string, wordElements: { word: string, highlighted: boolean }[]): void {
+    const index = wordElements.findIndex(w => w.word === word);
+    if (index !== -1) {
+      wordElements[index].highlighted = false;
+    }
+  }
+
+
 }

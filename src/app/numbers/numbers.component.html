@@ -12,18 +12,27 @@
 
     <div class="number-column">
       <span *ngFor="let number of getNumbers()">
-        <button (click)="playAudio(number); searchNumber = number">{{ number }}</button>
+        <button (click)="playNumberAudio(number);">{{ number }}</button>
       </span>
     </div>
+  </div>
 
-  <!-- Display the number in words -->
-  <div id="number-in-words" #numberInWordsElement></div>
-  <!-- Display the search input field -->
-  <input type="text" class="search-input" [(ngModel)]="searchNumber">
-  <!-- Display the search results -->
-  <ul>
-    <li *ngFor="let result of searchResults">
-      {{ result }}
-    </li>
-  </ul>
+  <!-- Language Selection -->
+  <div class="language-selection">
+    <label>
+      <input type="radio" name="language" value="English" [(ngModel)]="language" (change)="changeLanguage(language)" /> English
+    </label>
+    <label>
+      <input type="radio" name="language" value="Afrikaans" [(ngModel)]="language" (change)="changeLanguage(language)" /> Afrikaans
+    </label>
+    <label>
+      <input type="radio" name="language" value="Zulu" [(ngModel)]="language" (change)="changeLanguage(language)" /> Zulu
+    </label>
+  </div>
+
+  <!-- Displaying the number in words and the numerical value -->
+  <div class="number-display">
+    <div #numberInWordsElement class="number-in-words">{{ numberInWords }}</div>
+    <div #currentNumberElement class="number-value">{{ currentNumber }}</div>
+  </div>
 </div>

@@ -5,17 +5,16 @@
   <div *ngFor="let entry of words | keyvalue" class="word-category">
     <div class="box">
       <span>{{ entry.key }}:</span>
-      <button *ngFor="let word of entry.value" class="word-button" (click)="addWordToSentence([word])">
+      <button *ngFor="let word of entry.value" class="word-button" (click)="addWordToSentence(word)">
         {{ word }}
       </button>
     </div>
   </div>
 
-  <!-- Main Display (Selected Words without Highlight) -->
+  <!-- Main Display (Selected Words with Highlighting) -->
   <div class="main-display-text">
     <p>
-      Selected:
-      <span *ngFor="let word of sentenceWords; let i = index">
+      <span *ngFor="let word of sentenceWords; let i = index" [ngClass]="getWordStyle(i)">
         {{ word }}
         <ng-container *ngIf="i !== sentenceWords.length - 1"> </ng-container>
       </span>
@@ -56,7 +55,7 @@
     <div *ngIf="showHits && !checkUserSentence(sentence)">
       <p>Next Expected Word Order:</p>
       <ul>
-        <li *ngFor="let wordType of ['beginningWords', 'functionWords', 'verbs', 'objects', 'functionWords']">
+        <li *ngFor="let wordType of ['subjects', 'actions', 'objects']">
           {{ wordType }}
         </li>
       </ul>
@@ -69,23 +68,3 @@
     </div>
   </div>
 </div>
-
-
-    <!-- Grammar Validation with Hits Display Toggle
-    <div>
-      <label>
-        <input type="checkbox" [(ngModel)]="showHits"> Show Hits
-      </label>
-    </div>
-    <div *ngIf="showHits && !checkUserSentence(sentence)">
-      <p>Word Sequence Hits:</p>
-      <ul>
-        <li *ngFor="let sentence of generateAllSentences()">
-          {{ sentence }}
-        </li>
-      </ul>
-    </div>
-    <div *ngIf="!showHits && !checkUserSentence(sentence)">
-      <p>Your sentence is not grammatically correct. 😔</p>
-    </div>
-  </div>-->

@@ -1,5 +1,3 @@
-<!-- word-families.component.html -->
-
 <!-- Container for the word families component -->
 <div class="word-families-container">
   <!-- Header -->
@@ -29,8 +27,9 @@
         <td>{{ startingLetter + selectedWordFamily.prefix }}</td>
         <td>
           <ul>
-            <!-- List the words in the selected word family -->
-            <li *ngFor="let word of selectedWordFamily.words">{{ word }}</li>
+            <li *ngFor="let word of selectedWordFamily.words">
+              <span class="word highlight">{{ word }}</span>
+            </li>
           </ul>
         </td>
       </tr>

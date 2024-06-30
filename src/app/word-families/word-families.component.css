@@ -8,6 +8,22 @@
   background-color: #f9f9f9;
 }
 
+.word-family {
+  margin-bottom: 10px;
+}
+
+.word {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.highlight {
+  background-color: yellow;
+  transition: background-color 0.5s, transform 0.5s ease-out;
+}
+
 /* Styling for the complete word display */
 .complete-word {
   font-weight: bold;

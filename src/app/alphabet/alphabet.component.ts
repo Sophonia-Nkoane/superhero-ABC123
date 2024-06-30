@@ -26,7 +26,7 @@ export class AlphabetComponent {
     return `assets/audio/alphabet/${letter.toUpperCase()}.mp3`;
   }
 
-  // Method to play audio for a specific letter and update selectedLetter and searchLetter
+  // Method to play audio for a specif  letter and update selectedLetter and searchLetter
   playAudio(letter: string): void {
     const audio = new Audio(this.getAudioSrc(letter)); // Create new audio element
     audio.play(); // Play the audio
