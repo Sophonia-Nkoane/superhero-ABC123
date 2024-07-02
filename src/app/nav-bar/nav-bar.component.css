@@ -1,0 +1,65 @@
+.navbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+.navbar-content h1 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.navbar-toggle {
+  display: none;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.navbar-content nav {
+  display: flex;
+  align-items: center;
+  transition: max-height 0.5s;
+}
+
+.navbar-content nav a {
+  margin-right: 1rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.navbar-content nav a.active {
+  font-weight: bold;
+  color: blue; /* Change this to whatever highlight color you want */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .navbar-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar-toggle {
+    display: block;
+    margin-left: auto;
+  }
+
+  .navbar-content nav {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .navbar-content nav.show {
+    display: flex;
+  }
+
+  .navbar-content nav a {
+    margin-bottom: 1rem;
+    width: 100%;
+    text-align: center;
+  }
+}

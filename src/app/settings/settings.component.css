@@ -6,7 +6,6 @@
   margin-bottom: 20px;
 }
 
-/* Add more styles as needed */
 /* Container for the settings */
 .settings-container {
   max-width: 600px;
@@ -33,10 +32,26 @@
   color: #555;
 }
 
+/* Dropdown styling */
+.settings-container select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
 /* Slider styling */
 .settings-container input[type="range"] {
   width: 100%;
   margin-bottom: 20px;
+}
+
+/* Checkbox styling */
+.settings-container input[type="checkbox"] {
+  margin-right: 10px;
 }
 
 /* Container for buttons */
@@ -72,4 +87,34 @@
 
 .button-container button:last-child:hover {
   background-color: #e53935;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .settings-container {
+    padding: 15px;
+  }
+
+  .settings-container label {
+    font-size: 14px;
+  }
+
+  .settings-container select,
+  .settings-container input[type="range"],
+  .button-container button {
+    font-size: 14px;
+  }
+
+  .button-container {
+    flex-direction: column;
+  }
+
+  .button-container button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .button-container button:last-child {
+    margin-bottom: 0;
+  }
 }

@@ -12,6 +12,15 @@
   margin: 5px;                  /* Add margin around each letter */
 }
 
+/* Add this CSS to apply a special theme during reading mode */
+body.reading-mode {
+  background-color: #f0f8ff; /* Light blue background */
+  color: #000080; /* Navy text color */
+}
+
+/* Add any other styles you want to apply during reading mode */
+
+
 /* Style for all buttons */
 button {
   background-color: #4CAF50;    /* Set background color */

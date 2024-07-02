@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SuperheroHqComponent } from './superhero-hq/superhero-hq.component';
-import { WelcomeComponent } from './welcome/welcome.component';
+import { NavBarComponent } from './nav-bar/nav-bar.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,SuperheroHqComponent,WelcomeComponent],
+  imports: [RouterOutlet,NavBarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

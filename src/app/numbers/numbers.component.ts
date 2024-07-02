@@ -156,4 +156,12 @@ export class NumbersComponent {
   changeLanguage(language: 'English' | 'Afrikaans' | 'Zulu') {
     this.language = language;
   }
+
+  // New method to read all numbers sequentially
+  async readAllNumbers() {
+    for (let number of this.getNumbers()) {
+      await this.playNumberAudio(number);
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Delay between numbers
+    }
+  }
 }

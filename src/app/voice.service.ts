@@ -9,6 +9,36 @@ export class VoiceService {
   private rate: number = 1;
   private repeat: boolean = false;
 
+  // Simplified phonetic representations for each letter
+  private phonetics: { [key: string]: string } = {
+    A: 'ah',
+    B: 'bah',
+    C: 'kuh',
+    D: 'duh',
+    E: 'eh',
+    F: 'fuh',
+    G: 'gah',
+    H: 'hah',
+    I: 'i',
+    J: 'jar',
+    K: 'kuh',
+    L: 'la',
+    M: 'm',
+    N: 'nuh',
+    O: 'oh',
+    P: 'puh',
+    Q: 'qua',
+    R: 'rah',
+    S: 'sah',
+    T: 'tuh',
+    U: 'uh',
+    V: 'vuh',
+    W: 'wuh',
+    X: 'ksuh',
+    Y: 'yah',
+    Z: 'zah'
+  };
+
   constructor() {
     if ('speechSynthesis' in window) {
       this.populateVoices();
@@ -57,6 +87,11 @@ export class VoiceService {
 
   getVoices(): SpeechSynthesisVoice[] {
     return this.voices;
+  }
+
+  // Method to get phonetic representation of a letter
+  getPhonetic(letter: string): string {
+    return this.phonetics[letter.toUpperCase()] || letter;
   }
 
   setRate(rate: number) {

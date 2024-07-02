@@ -1,16 +1,27 @@
 <div>
   <!-- Header Section -->
   <h1>Alphabet</h1>
-
-  <!-- Alphabet Row Section -->
-  <div class="alphabet-row">
-    <!-- Loop through each letter in the alphabet string -->
-    <span *ngFor="let letter of alphabet.split('')">
-      <!-- Button for each letter, triggers playAudio method on click -->
-      <button (click)="playAudio(letter)">{{ letter }}</button>
-    </span>
-  </div>
+  <button (click)="toggleMode('all')">All</button>
+  <button (click)="toggleMode('alphabet')">Alphabet Only</button>
+  <button (click)="toggleMode('phonics')">Phonics Only</button>
+  <button (click)="toggleMode('objects')">Objects Only</button>
+  <button (click)="readAll()">Read All</button>
 
   <!-- Search Input Section -->
   <input type="text" [(ngModel)]="searchLetter" placeholder="Search letter">
+</div>
+
+<!-- Alphabet Row Section -->
+<div class="alphabet-row">
+  <!-- Loop through each letter in the filtered alphabet array -->
+  <span *ngFor="let letter of filteredAlphabet">
+    <!-- Button for each letter, triggers playPhoneticSpeech method on click -->
+    <button (click)="playPhoneticSpeech(letter)">
+      {{ mode === 'objects' ? getObject(letter) : letter }}
+      <!-- Display the icon if mode is 'all' or 'objects' -->
+      <span *ngIf="mode === 'all' || mode === 'objects'">
+        <span>{{ getObjectIcon(letter) }}</span>
+      </span>
+    </button>
+  </span>
 </div>
