@@ -18,19 +18,121 @@ body.reading-mode {
   color: #000080; /* Navy text color */
 }
 
-/* Add any other styles you want to apply during reading mode */
+/* Styles for the nav-wrapper component */
+.nav-wrapper {
+  position: relative;
+  right: 0;
+}
 
+.nav {
+  display: flex;
+  flex-direction: row;          /* Set flex direction to row for horizontal layout */
+  padding: 12px;
+  justify-content: space-around; /* Distribute space around items */
+}
 
-/* Style for all buttons */
-button {
-  background-color: #4CAF50;    /* Set background color */
-  color: #fff;                  /* Set text color */
-  padding: 10px 20px;           /* Add padding inside the button */
-  border: none;                 /* Remove default border */
+.nav-item {
+  list-style-type: none;
+  margin: 0 5px;               /* Add horizontal space between buttons */
+}
+
+.nav-link {
+  margin-bottom: 0;
+  padding: 10px;                /* Adjust padding for buttons */
+  text-align: center;
+  color: #4CAF50;
+  text-decoration: none;
+  display: flex;               /* Use flex for horizontal alignment of icon and text */
+  align-items: center;         /* Align items in the center */
+  justify-content: center;     /* Center the content horizontally */
+  border-radius: 0.25rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.nav-link svg {
+  margin-right: 8px;            /* Add space between icon and text */
+}
+
+.nav-link:hover {
+  background-color: #e2e6ea;
+  color: #4CAF50;
+}
+
+.nav-link.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* Style for the search input container */
+.search-container {
+  display: flex;
+  justify-content: center;     /* Center the search container horizontally */
+  margin: 20px 0;              /* Add vertical margin */
+}
+
+/* Style for text input fields */
+input[type="text"] {
+  padding: 12px 16px;           /* Add padding inside the input field */
+  font-size: 1.5rem;            /* Set font size */
+  border: 2px solid #4CAF50;    /* Add a border */
   border-radius: 5px;           /* Round the corners */
-  cursor: pointer;              /* Change cursor to pointer on hover */
-  font-size: 36px;              /* Set font size */
-  transition: 0.3s ease-in-out; /* Add transition for hover effects */
+  width: 100%;                  /* Set width to 100% */
+  max-width: 500px;             /* Limit the maximum width */
+  box-sizing: border-box;       /* Include padding and border in the element's total width and height */
+  transition: 0.3s ease-in-out; /* Add transition for focus effect */
+  text-align: center;           /* Center text inside the input field */
+  outline: none;                /* Remove default outline */
+}
+
+/* Style for text input fields when focused */
+input[type="text"]:focus {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add shadow effect */
+}
+
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: row;        /* Ensure the layout remains horizontal */
+    flex-wrap: wrap;            /* Allow items to wrap on smaller screens */
+    justify-content: center;    /* Center items on smaller screens */
+  }
+
+  .nav-link {
+    padding: 0.5rem;
+  }
+
+  .button-text {
+    display: none;
+  }
+
+  input[type="text"] {
+    padding: 10px 14px;         /* Adjust padding for input fields */
+    font-size: 1.2rem;          /* Adjust font size for input fields */
+    max-width: 90%;             /* Adjust maximum width for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  input[type="text"] {
+    padding: 8px 12px;          /* Further adjust padding for input fields */
+    font-size: 1rem;            /* Further adjust font size for input fields */
+    max-width: 100%;            /* Set maximum width to 100% for very small screens */
+  }
+}
+
+@media (min-width: 769px) {
+  .nav {
+    flex-direction: row;
+  }
+
+  .nav-link {
+    padding: 0.5rem 1rem;
+  }
+
+  input[type="text"] {
+    padding: 12px 16px;         /* Default padding for input fields */
+    font-size: 1.5rem;          /* Default font size for input fields */
+  }
 }
 
 /* Style for buttons on hover */
@@ -50,53 +152,4 @@ button.active {
   background-color: #333;       /* Set background color */
   color: #fff;                  /* Set text color */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); /* Add shadow effect */
-}
-
-/* Style for text input fields */
-input[type="text"] {
-  padding: 24px 16px;           /* Add padding inside the input field */
-  font-size: 2rem;              /* Set font size */
-  border: none;                 /* Remove default border */
-  border-radius: 5px;           /* Round the corners */
-  width: 100%;                  /* Set width to 100% of the container */
-  box-sizing: border-box;       /* Include padding and border in the element's total width and height */
-  transition: 0.3s ease-in-out; /* Add transition for focus effect */
-  text-align: center;           /* Center text inside the input field */
-  margin: 0 auto;               /* Center the input field horizontally */
-  display: block;               /* Display as block element */
-}
-
-/* Style for text input fields when focused */
-input[type="text"]:focus {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add shadow effect */
-}
-
-/* Media query for screens with a max width of 768px (tablets) */
-@media (max-width: 768px) {
-  .alphabet-row span {
-    font-size: 24px;            /* Reduce font size for letters */
-  }
-  button {
-    font-size: 24px;            /* Reduce font size for buttons */
-    padding: 8px 16px;          /* Adjust padding for buttons */
-  }
-  input[type="text"] {
-    padding: 16px 12px;         /* Adjust padding for input fields */
-    font-size: 1.5rem;          /* Reduce font size for input fields */
-  }
-}
-
-/* Media query for screens with a max width of 480px (phones) */
-@media (max-width: 480px) {
-  .alphabet-row span {
-    font-size: 18px;            /* Further reduce font size for letters */
-  }
-  button {
-    font-size: 18px;            /* Further reduce font size for buttons */
-    padding: 6px 12px;          /* Adjust padding for buttons */
-  }
-  input[type="text"] {
-    padding: 12px 8px;          /* Adjust padding for input fields */
-    font-size: 1.2rem;          /* Further reduce font size for input fields */
-  }
 }
