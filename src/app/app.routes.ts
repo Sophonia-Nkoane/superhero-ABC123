@@ -6,6 +6,7 @@ import { NumbersComponent } from './numbers/numbers.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { SettingsComponent } from './settings/settings.component';
 
+
 export const routes: Routes = [
   { path: '', redirectTo: '/welcome', pathMatch: 'full' }, // Redirect to welcome page if no route matched
   { path: 'welcome', component: WelcomeComponent },
