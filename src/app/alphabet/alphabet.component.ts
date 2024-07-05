@@ -20,8 +20,6 @@ export class AlphabetComponent {
   isReading = false; // Flag to indicate if the read all process is ongoing
   isAutoRead = false; // Flag to indicate if auto read is enabled
 
-  iam = 'Browser';
-
   objects = [
     { letter: 'A', object: 'Apple', icon: '🍎' },
     { letter: 'B', object: 'Boy', icon: '👦' },
