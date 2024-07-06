@@ -1,12 +1,28 @@
 <div class="settings-container">
   <h2>Voice Settings</h2>
 
-  <div class="voice-selection">
-    <label for="voiceSelect">Select Voice:</label>
-    <select id="voiceSelect" (change)="onVoiceChange($event)">
-      <option *ngFor="let voice of voices" [value]="voice.name" [selected]="voice === selectedVoice">{{ voice.name }}</option>
+
+  <div>
+    <label for="voiceEnglish">Voice (English):</label>
+    <select id="voiceEnglish" [(ngModel)]="selectedVoiceEnglish" (change)="onVoiceChange('English', $event)">
+      <option *ngFor="let voice of englishVoices" [value]="voice.name">{{ voice.name }}</option>
     </select>
   </div>
+
+  <div>
+    <label for="voiceAfrikaans">Voice (Afrikaans):</label>
+    <select id="voiceAfrikaans" [(ngModel)]="selectedVoiceAfrikaans" (change)="onVoiceChange('Afrikaans', $event)">
+      <option *ngFor="let voice of afrikaansVoices" [value]="voice.name">{{ voice.name }}</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="voiceZulu">Voice (Zulu):</label>
+    <select id="voiceZulu" [(ngModel)]="selectedVoiceZulu" (change)="onVoiceChange('Zulu', $event)">
+      <option *ngFor="let voice of zuluVoices" [value]="voice.name">{{ voice.name }}</option>
+    </select>
+  </div>
+
 
   <div>
     <label for="voiceRate">Voice Rate:</label>
