@@ -12,12 +12,6 @@
   margin: 5px;                  /* Add margin around each letter */
 }
 
-/* Add this CSS to apply a special theme during reading mode */
-body.reading-mode {
-  background-color: #f0f8ff; /* Light blue background */
-  color: #000080; /* Navy text color */
-}
-
 /* Styles for the nav-wrapper component */
 .nav-wrapper {
   position: relative;
@@ -51,6 +45,8 @@ body.reading-mode {
 
 .nav-link svg {
   margin-right: 8px;            /* Add space between icon and text */
+  width: 24px;                  /* Set SVG width */
+  height: 24px;                 /* Set SVG height */
 }
 
 .nav-link:hover {
@@ -89,6 +85,54 @@ input[type="text"]:focus {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add shadow effect */
 }
 
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Animation for text glow */
+@keyframes text-glow {
+  0% {
+    text-shadow: 0 0 5px #fff, 0 0 10px #4CAF50, 0 0 15px #4CAF50, 0 0 20px #4CAF50, 0 0 25px #4CAF50, 0 0 30px #4CAF50, 0 0 35px #4CAF50;
+  }
+  100% {
+    text-shadow: 0 0 10px #fff, 0 0 20px #4CAF50, 0 0 30px #4CAF50, 0 0 40px #4CAF50, 0 0 50px #4CAF50, 0 0 60px #4CAF50, 0 0 70px #4CAF50;
+  }
+}
+
+/* Animation for fade-in and zoom-in */
+@keyframes fade-in-zoom-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animation for zoom-out and fade-out */
+@keyframes zoom-out-fade-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+/* Applying the animations */
+.reading-text {
+  animation: fade-in-zoom-in 0.5s forwards, text-glow 1.5s infinite alternate;
+}
+
+.reading-text-out {
+  animation: zoom-out-fade-out 0.5s forwards;
+}
+
 /* Media queries for responsive design */
 @media (max-width: 768px) {
   .nav {
@@ -99,6 +143,12 @@ input[type="text"]:focus {
 
   .nav-link {
     padding: 0.5rem;
+    font-size: 0.9rem;          /* Adjust font size for buttons */
+  }
+
+  .nav-link svg {
+    width: 24px;                /* Adjust SVG width for smaller screens */
+    height: 24px;               /* Adjust SVG height for smaller screens */
   }
 
   .button-text {
@@ -113,9 +163,18 @@ input[type="text"]:focus {
 }
 
 @media (max-width: 480px) {
+  .nav-link {
+    font-size: 0.8rem;          /* Further adjust font size for buttons */
+  }
+
+  .nav-link svg {
+    width: 24px;                /* Adjust SVG width for very small screens */
+    height: 24px;               /* Adjust SVG height for very small screens */
+  }
+
   input[type="text"] {
     padding: 8px 12px;          /* Further adjust padding for input fields */
-    font-size: 1rem;            /* Further adjust font size for input fields */
+    font-size: 2.5rem;            /* Further adjust font size for input fields */
     max-width: 100%;            /* Set maximum width to 100% for very small screens */
   }
 }
@@ -127,11 +186,17 @@ input[type="text"]:focus {
 
   .nav-link {
     padding: 0.5rem 1rem;
+    font-size: 1rem;            /* Default font size for buttons */
+  }
+
+  .nav-link svg {
+    width: 24px;                /* Default SVG width */
+    height: 24px;               /* Default SVG height */
   }
 
   input[type="text"] {
     padding: 12px 16px;         /* Default padding for input fields */
-    font-size: 1.5rem;          /* Default font size for input fields */
+    font-size: 4rem;            /* Default font size for input fields */
   }
 }
 

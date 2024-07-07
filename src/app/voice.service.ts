@@ -11,32 +11,19 @@ export class VoiceService {
 
   // Simplified phonetic representations for each letter
   private phonetics: { [key: string]: string } = {
-    A: 'ah',
-    B: 'bah',
-    C: 'kuh',
-    D: 'duh',
-    E: 'eh',
-    F: 'fuh',
-    G: 'gah',
-    H: 'hah',
-    I: 'i',
-    J: 'jar',
-    K: 'kuh',
-    L: 'la',
-    M: 'm',
-    N: 'nuh',
-    O: 'oh',
-    P: 'puh',
-    Q: 'qua',
-    R: 'rah',
-    S: 'sah',
-    T: 'tuh',
-    U: 'uh',
-    V: 'vuh',
-    W: 'wuh',
-    X: 'ksuh',
-    Y: 'yah',
-    Z: 'zah'
+    A: 'ah', B: 'bah',
+    C: 'kuh', D: 'duh',
+    E: 'eh', F: 'fuh',
+    G: 'gah', H: 'hah',
+    I: 'i', J: 'jar',
+    K: 'kuh', L: 'la',
+    M: 'm', N: 'nuh',
+    O: 'oh', P: 'puh',
+    Q: 'qua', R: 'rah',
+    S: 'sah', T: 'tuh',
+    U: 'uh', V: 'vuh',
+    W: 'wuh', X: 'ksuh',
+    Y: 'yah', Z: 'zah'
   };
 
   constructor() {
@@ -55,14 +42,22 @@ export class VoiceService {
     this.voices = speechSynthesis.getVoices().filter(voice =>
       ['en', 'af', 'zu'].includes(voice.lang.split('-')[0])
     );
-    const savedVoiceName = localStorage.getItem('selectedVoice');
-    if (savedVoiceName) {
-      this.selectedVoice = this.voices.find(voice => voice.name === savedVoiceName) || this.voices[0];
-    } else if (this.voices.length > 0) {
-      this.selectedVoice = this.voices[0]; // Default to the first voice
+    const storedVoice = localStorage.getItem('selectedVoice');
+    if (storedVoice) {
+      try {
+        this.selectedVoice = JSON.parse(storedVoice);
+      } catch (error) {
+        console.error('Error parsing selectedVoice from local storage:', error);
+        this.selectedVoice = this.voices[0]; // Default to the first voice
+      }
     } else {
-      console.warn('No speech synthesis voices available.');
+      this.selectedVoice = this.voices[0]; // Default to the first voice
     }
+  }
+
+  setSelectedVoice(voice: SpeechSynthesisVoice) {
+    this.selectedVoice = voice;
+    localStorage.setItem('selectedVoice', JSON.stringify(this.selectedVoice));
   }
 
   private loadSettings() {
@@ -74,11 +69,6 @@ export class VoiceService {
     if (savedRepeat !== null) {
       this.repeat = savedRepeat === 'true';
     }
-  }
-
-  setSelectedVoice(voice: SpeechSynthesisVoice) {
-    this.selectedVoice = voice;
-    localStorage.setItem('selectedVoice', voice.name);
   }
 
   getSelectedVoice(): SpeechSynthesisVoice | null {
@@ -193,5 +183,28 @@ export class VoiceService {
     setTimeout(() => {
       removeAnimation(numberElement);
     }, wordDuration * 2);
+  }
+
+  updateLanguage(language: 'English' | 'Afrikaans' | 'Zulu') {
+    let langCode = 'en';
+    switch (language) {
+      case 'Afrikaans':
+        langCode = 'af';
+        break;
+      case 'Zulu':
+        langCode = 'zu';
+        break;
+    }
+    this.filterVoices(langCode);
+  }
+
+  filterVoices(languageCode: string) {
+    this.voices = speechSynthesis.getVoices().filter(voice => voice.lang.startsWith(languageCode));
+    if (this.voices.length > 0) {
+      this.selectedVoice = this.voices.find(voice => voice.lang.startsWith(languageCode)) || this.voices[0];
+      localStorage.setItem('selectedVoice', JSON.stringify(this.selectedVoice));
+    } else {
+      console.warn(`No voices found for language code: ${languageCode}`);
+    }
   }
 }
