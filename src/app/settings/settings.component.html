@@ -1,28 +1,26 @@
 <div class="settings-container">
   <h2>Voice Settings</h2>
 
-
   <div>
     <label for="voiceEnglish">Voice (English):</label>
-    <select id="voiceEnglish" [(ngModel)]="selectedVoiceEnglish" (change)="onVoiceChange('English', $event)">
+    <select id="voiceEnglish" [(ngModel)]="selectedVoiceEnglish" (change)="saveSelectedVoice('English')">
       <option *ngFor="let voice of englishVoices" [value]="voice.name">{{ voice.name }}</option>
     </select>
   </div>
 
   <div>
     <label for="voiceAfrikaans">Voice (Afrikaans):</label>
-    <select id="voiceAfrikaans" [(ngModel)]="selectedVoiceAfrikaans" (change)="onVoiceChange('Afrikaans', $event)">
+    <select id="voiceAfrikaans" [(ngModel)]="selectedVoiceAfrikaans" (change)="saveSelectedVoice('Afrikaans')">
       <option *ngFor="let voice of afrikaansVoices" [value]="voice.name">{{ voice.name }}</option>
     </select>
   </div>
 
   <div>
     <label for="voiceZulu">Voice (Zulu):</label>
-    <select id="voiceZulu" [(ngModel)]="selectedVoiceZulu" (change)="onVoiceChange('Zulu', $event)">
+    <select id="voiceZulu" [(ngModel)]="selectedVoiceZulu" (change)="saveSelectedVoice('Zulu')">
       <option *ngFor="let voice of zuluVoices" [value]="voice.name">{{ voice.name }}</option>
     </select>
   </div>
-
 
   <div>
     <label for="voiceRate">Voice Rate:</label>
@@ -33,6 +31,15 @@
   <div>
     <label for="repeatWordsToggle">Repeat Words:</label>
     <input type="checkbox" id="repeatWordsToggle" [(ngModel)]="repeatWords" (change)="onRepeatChange($event)">
+  </div>
+
+  <div>
+    <label for="languageSelect">Language:</label>
+    <select id="languageSelect" [(ngModel)]="language" (change)="changeLanguage(language)">
+      <option value="English">English</option>
+      <option value="Afrikaans">Afrikaans</option>
+      <option value="Zulu">Zulu</option>
+    </select>
   </div>
 
   <div class="button-container">

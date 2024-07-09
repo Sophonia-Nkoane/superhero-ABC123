@@ -6,23 +6,13 @@ import { Injectable } from '@angular/core';
 export class VoiceService {
   voices: SpeechSynthesisVoice[] = [];
   selectedVoice: SpeechSynthesisVoice | null = null;
-  private rate: number = 1;
-  private repeat: boolean = false;
+  rate: number = 1;
+  repeat: boolean = false;
 
-  // Simplified phonetic representations for each letter
-  private phonetics: { [key: string]: string } = {
-    A: 'ah', B: 'bah',
-    C: 'kuh', D: 'duh',
-    E: 'eh', F: 'fuh',
-    G: 'gah', H: 'hah',
-    I: 'i', J: 'jar',
-    K: 'kuh', L: 'la',
-    M: 'm', N: 'nuh',
-    O: 'oh', P: 'puh',
-    Q: 'qua', R: 'rah',
-    S: 'sah', T: 'tuh',
-    U: 'uh', V: 'vuh',
-    W: 'wuh', X: 'ksuh',
+  phonetics: { [key: string]: string } = {
+    A: 'ah', B: 'bah', C: 'kuh', D: 'duh', E: 'eh', F: 'fuh', G: 'gah', H: 'hah',
+    I: 'i', J: 'jar', K: 'kuh', L: 'la', M: 'm', N: 'nuh', O: 'oh', P: 'puh',
+    Q: 'qua', R: 'rah', S: 'sah', T: 'tuh', U: 'uh', V: 'vuh', W: 'wuh', X: 'ksuh',
     Y: 'yah', Z: 'zah'
   };
 
@@ -35,32 +25,35 @@ export class VoiceService {
     } else {
       console.error('Speech Synthesis not supported in this browser.');
     }
-    this.loadSettings(); // Load settings on initialization
+    this.loadSettings();
   }
 
-  private populateVoices() {
+  populateVoices() {
     this.voices = speechSynthesis.getVoices().filter(voice =>
       ['en', 'af', 'zu'].includes(voice.lang.split('-')[0])
     );
-    const storedVoice = localStorage.getItem('selectedVoice');
-    if (storedVoice) {
-      try {
-        this.selectedVoice = JSON.parse(storedVoice);
-      } catch (error) {
-        console.error('Error parsing selectedVoice from local storage:', error);
-        this.selectedVoice = this.voices[0]; // Default to the first voice
-      }
+    this.setStoredVoice();
+  }
+
+  setStoredVoice() {
+    const storedVoiceId = localStorage.getItem('selectedVoice');
+    if (storedVoiceId) {
+      this.selectedVoice = this.voices.find(voice => this.getVoiceId(voice) === storedVoiceId) || this.voices[0];
     } else {
       this.selectedVoice = this.voices[0]; // Default to the first voice
     }
   }
 
-  setSelectedVoice(voice: SpeechSynthesisVoice) {
-    this.selectedVoice = voice;
-    localStorage.setItem('selectedVoice', JSON.stringify(this.selectedVoice));
+  getVoiceId(voice: SpeechSynthesisVoice): string {
+    return `${voice.name}-${voice.lang}`;
   }
 
-  private loadSettings() {
+  setSelectedVoice(voice: SpeechSynthesisVoice) {
+    this.selectedVoice = voice;
+    localStorage.setItem('selectedVoice', this.getVoiceId(voice));
+  }
+
+  loadSettings() {
     const savedRate = localStorage.getItem('voiceRate');
     if (savedRate !== null) {
       this.rate = parseFloat(savedRate);
@@ -79,7 +72,6 @@ export class VoiceService {
     return this.voices;
   }
 
-  // Method to get phonetic representation of a letter
   getPhonetic(letter: string): string {
     return this.phonetics[letter.toUpperCase()] || letter;
   }
@@ -202,7 +194,7 @@ export class VoiceService {
     this.voices = speechSynthesis.getVoices().filter(voice => voice.lang.startsWith(languageCode));
     if (this.voices.length > 0) {
       this.selectedVoice = this.voices.find(voice => voice.lang.startsWith(languageCode)) || this.voices[0];
-      localStorage.setItem('selectedVoice', JSON.stringify(this.selectedVoice));
+      localStorage.setItem('selectedVoice', this.getVoiceId(this.selectedVoice));
     } else {
       console.warn(`No voices found for language code: ${languageCode}`);
     }

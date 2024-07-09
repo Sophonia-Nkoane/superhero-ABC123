@@ -31,6 +31,27 @@ export class NumbersComponent implements OnInit {
       this.language = savedLanguage as 'English' | 'Afrikaans' | 'Zulu';
     }
     this.voiceService.updateLanguage(this.language);
+
+    // Load the selected voice for the current language
+    this.loadSelectedVoice();
+  }
+
+  loadSelectedVoice() {
+    let selectedVoiceKey = '';
+    if (this.language === 'English') {
+      selectedVoiceKey = 'selectedVoiceEnglish';
+    } else if (this.language === 'Afrikaans') {
+      selectedVoiceKey = 'selectedVoiceAfrikaans';
+    } else if (this.language === 'Zulu') {
+      selectedVoiceKey = 'selectedVoiceZulu';
+    }
+    const savedVoiceId = localStorage.getItem(selectedVoiceKey);
+    if (savedVoiceId) {
+      const voice = this.voiceService.getVoices().find(v => this.voiceService.getVoiceId(v) === savedVoiceId);
+      if (voice) {
+        this.voiceService.setSelectedVoice(voice);
+      }
+    }
   }
 
   @HostListener('window:keydown', ['$event'])
@@ -91,22 +112,26 @@ export class NumbersComponent implements OnInit {
     this.currentNumber = number;
     this.updateNumberInWordsElement();
 
-    this.voiceService.playWords([this.numberInWords, number],
-      (word) => {
-        if (word === this.numberInWords) {
-          this.numberInWordsElement.nativeElement.classList.add('highlight');
-        } else if (word === number) {
-          this.currentNumberElement.nativeElement.classList.add('highlight');
+    if (this.voiceService.getSelectedVoice()) {
+      this.voiceService.playWords([this.numberInWords, number],
+        (word) => {
+          if (word === this.numberInWords) {
+            this.numberInWordsElement.nativeElement.classList.add('highlight');
+          } else if (word === number) {
+            this.currentNumberElement.nativeElement.classList.add('highlight');
+          }
+        },
+        (word) => {
+          if (word === this.numberInWords) {
+            this.numberInWordsElement.nativeElement.classList.remove('highlight');
+          } else if (word === number) {
+            this.currentNumberElement.nativeElement.classList.remove('highlight');
+          }
         }
-      },
-      (word) => {
-        if (word === this.numberInWords) {
-          this.numberInWordsElement.nativeElement.classList.remove('highlight');
-        } else if (word === number) {
-          this.currentNumberElement.nativeElement.classList.remove('highlight');
-        }
-      }
-    );
+      );
+    } else {
+      console.error('Selected voice is null.');
+    }
 
     await this.animateElement(this.numberInWordsElement.nativeElement, 1000);
     await this.animateElement(this.currentNumberElement.nativeElement, 1000);
@@ -136,12 +161,6 @@ export class NumbersComponent implements OnInit {
         }, duration);
       }, 0);
     });
-  }
-
-  changeLanguage(language: 'English' | 'Afrikaans' | 'Zulu') {
-    this.language = language;
-    this.voiceService.updateLanguage(language);
-    localStorage.setItem('language', language);
   }
 
   async readAllNumbers() {
