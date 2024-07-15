@@ -1,16 +1,17 @@
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { VoiceService } from '../voice.service';
+import { VoiceService } from '../Utilities/voice.service';
+import { DataService, Object as DataObject  } from '../data.service'; // Import the objects }
 
 @Component({
   selector: 'app-alphabet',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './alphabet.component.html',
-  styleUrl: './alphabet.component.css'
+  styleUrls: ['./alphabet.component.css']
 })
-export class AlphabetComponent {
+export class AlphabetComponent implements OnInit {
   alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // List of all alphabet letters
   searchLetter = ''; // Holds the current search query for letters
   selectedLetter = ''; // Stores the last selected letter
@@ -20,53 +21,32 @@ export class AlphabetComponent {
   isReading = false; // Flag to indicate if the read all process is ongoing
   isAutoRead = false; // Flag to indicate if auto read is enabled
 
-  objects = [
-    { letter: 'A', object: 'Apple', icon: '🍎' },
-    { letter: 'B', object: 'Boy', icon: '👦' },
-    { letter: 'C', object: 'Cat', icon: '🐈' },
-    { letter: 'D', object: 'Dog', icon: '🐕' },
-    { letter: 'E', object: 'Elephant', icon: '🐘' },
-    { letter: 'F', object: 'Fish', icon: '🐟' },
-    { letter: 'G', object: 'Girl', icon: '👧' },
-    { letter: 'H', object: 'House', icon: '🏠' },
-    { letter: 'I', object: 'Ice-cream', icon: '🍦' },
-    { letter: 'J', object: 'Jet', icon: '🛩️' },
-    { letter: 'K', object: 'Kite', icon: '🪁' },
-    { letter: 'L', object: 'Lion', icon: '🦁' },
-    { letter: 'M', object: 'Mouse', icon: '🐭' },
-    { letter: 'N', object: 'Nose', icon: '👃' },
-    { letter: 'O', object: 'Ocean', icon: '🌊' },
-    { letter: 'P', object: 'Penguin', icon: '🐧' },
-    { letter: 'Q', object: 'Queen', icon: '👑' },
-    { letter: 'R', object: 'Robot', icon: '🤖' },
-    { letter: 'S', object: 'Sun', icon: '☀️' },
-    { letter: 'T', object: 'Tiger', icon: '🐯' },
-    { letter: 'U', object: 'Umbrella', icon: '☔️' },
-    { letter: 'V', object: 'Violin', icon: '🎻' },
-    { letter: 'W', object: 'Whale', icon: '🐳' },
-    { letter: 'X', object: 'X-ray', icon: '🔍' },
-    { letter: 'Y', object: 'Yacht', icon: '🛥️' },
-    { letter: 'Z', object: 'Zebra', icon: '🦓' },
-  ];
+  objects: DataObject[]=[]; // Assigning the imported objects array
 
-  constructor(private voiceService: VoiceService) {}
+  constructor(
+    private voiceService: VoiceService,
+    private dataService: DataService
+    ) {}
 
-  ngOnInit() {
-    this.filteredAlphabet = this.alphabet.split(''); // Initialize filtered alphabet with all letters
-  }
-
+    ngOnInit() {
+      this.filteredAlphabet = this.alphabet.split('');
+      this.dataService.getObjects().subscribe(objects => {
+        this.objects = objects;
+      });
+    }
 
   playPhoneticSpeech(letter: string): void {
+    const language: 'English' = 'English'; // Use English phonics only
     if (this.mode === 'all' || this.mode === 'alphabet') {
-      this.playAlphabetSound(letter);
+      this.playAlphabetSound(letter, language);
     }
     if (this.mode === 'all' || this.mode === 'phonics') {
-      this.playPhoneticSound(letter);
+      this.playPhoneticSound(letter, language);
     }
     if (this.mode === 'all' || this.mode === 'objects') {
       const object = this.objects.find(obj => obj.letter === letter);
       if (object) {
-        this.voiceService.playText(object.object);
+        this.voiceService.playText(object.object, language); // Use the correct service method
         if (this.mode === 'all') {
           this.searchLetter = `${letter.toUpperCase()} ${letter.toLowerCase()} - ${object.object} ${object.icon}`;
         } else {
@@ -80,13 +60,13 @@ export class AlphabetComponent {
     }
   }
 
-  playAlphabetSound(letter: string): void {
-    this.voiceService.playText(letter);
+  playAlphabetSound(letter: string, language: 'English'): void {
+    this.voiceService.playText(letter, language); // Use the correct service method
   }
 
-  playPhoneticSound(letter: string): void {
+  playPhoneticSound(letter: string, language: 'English'): void {
     const phonetic = this.voiceService.getPhonetic(letter);
-    this.voiceService.playText(phonetic);
+    this.voiceService.playText(phonetic, language); // Use the correct service method
   }
 
   updateSearchLetter(letter: string): void {
@@ -141,6 +121,19 @@ export class AlphabetComponent {
   readAll(): void {
     this.isReading = true;
     let index = 0;
+    let intervalTime: number;
+
+    switch (this.mode) {
+      case 'alphabet':
+        intervalTime = 2200;
+        break;
+      case 'phonics':
+        intervalTime = 2200;
+        break;
+      default:
+        intervalTime = 5000;
+    }
+
     const intervalId = setInterval(() => {
       if (index < this.filteredAlphabet.length && this.isReading) {
         const letter = this.filteredAlphabet[index];
@@ -150,7 +143,7 @@ export class AlphabetComponent {
         clearInterval(intervalId); // Stop the interval when all items are read
         this.stopReading();
       }
-    }, 5000); // Adjust the interval time as needed
+    }, intervalTime); // Use the interval time based on the mode
   }
 
   stopReading(): void {

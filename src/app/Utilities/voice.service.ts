@@ -31,10 +31,14 @@ export class VoiceService {
   }
 
   populateVoices() {
-    this.voices = speechSynthesis.getVoices().filter(voice =>
-      ['en', 'af', 'zu'].includes(voice.lang.split('-')[0])
-    );
-    this.setStoredVoices();
+    setTimeout(() => {
+      this.voices = speechSynthesis.getVoices();
+      console.log('Voices loaded:', this.voices);  // Log the loaded voices
+      this.setStoredVoices();
+      if (this.voices.length === 0) {
+        console.warn('No voices found. Ensure you have voices available in your browser.');
+      }
+    }, 500);  // Slight delay to ensure voices are loaded
   }
 
   setStoredVoices() {
@@ -45,27 +49,34 @@ export class VoiceService {
 
   getStoredVoice(key: string, langPrefix: string): SpeechSynthesisVoice | null {
     const storedVoiceId = localStorage.getItem(key);
-    return this.voices.find(voice => this.getVoiceId(voice) === storedVoiceId && voice.lang.startsWith(langPrefix)) || this.voices.find(voice => voice.lang.startsWith(langPrefix)) || null;
+    const voice = this.voices.find(voice => this.getVoiceId(voice) === storedVoiceId && voice.lang.startsWith(langPrefix));
+    console.log(`Stored voice for ${key}:`, voice);
+    return voice || this.getDefaultVoice(langPrefix);
   }
 
   getVoiceId(voice: SpeechSynthesisVoice): string {
     return `${voice.name}-${voice.lang}`;
   }
 
-  setSelectedVoice(voice: SpeechSynthesisVoice, language: 'English' | 'Afrikaans' | 'Zulu') {
-    switch (language) {
-      case 'English':
-        this.selectedVoiceEnglish = voice;
-        localStorage.setItem('selectedVoiceEnglish', this.getVoiceId(voice));
-        break;
-      case 'Afrikaans':
-        this.selectedVoiceAfrikaans = voice;
-        localStorage.setItem('selectedVoiceAfrikaans', this.getVoiceId(voice));
-        break;
-      case 'Zulu':
-        this.selectedVoiceZulu = voice;
-        localStorage.setItem('selectedVoiceZulu', this.getVoiceId(voice));
-        break;
+  setSelectedVoice(voice: SpeechSynthesisVoice | null, language: 'English' | 'Afrikaans' | 'Zulu') {
+    if (voice) {
+      switch (language) {
+        case 'English':
+          this.selectedVoiceEnglish = voice;
+          localStorage.setItem('selectedVoiceEnglish', this.getVoiceId(voice));
+          break;
+        case 'Afrikaans':
+          this.selectedVoiceAfrikaans = voice;
+          localStorage.setItem('selectedVoiceAfrikaans', this.getVoiceId(voice));
+          break;
+        case 'Zulu':
+          this.selectedVoiceZulu = voice;
+          localStorage.setItem('selectedVoiceZulu', this.getVoiceId(voice));
+          break;
+      }
+      console.log(`Selected voice for ${language}:`, voice);
+    } else {
+      console.error('Selected voice is null.');
     }
   }
 
@@ -93,8 +104,12 @@ export class VoiceService {
     }
   }
 
-  getVoices(): SpeechSynthesisVoice[] {
-    return this.voices;
+  getVoices(langPrefix: string): SpeechSynthesisVoice[] {
+    return this.voices.filter(voice => voice.lang.startsWith(langPrefix));
+  }
+
+  getVoiceByName(name: string, langPrefix: string): SpeechSynthesisVoice | null {
+    return this.voices.find(voice => voice.name === name && voice.lang.startsWith(langPrefix)) || null;
   }
 
   getPhonetic(letter: string): string {
@@ -110,7 +125,6 @@ export class VoiceService {
     return this.rate;
   }
 
-
   setRepeat(repeat: boolean) {
     this.repeat = repeat;
     localStorage.setItem('repeatWords', repeat.toString());
@@ -120,13 +134,21 @@ export class VoiceService {
     return this.repeat;
   }
 
-  resetVoiceSettings() {
-    this.selectedVoiceEnglish = this.getDefaultVoice('en');
-    this.selectedVoiceAfrikaans = this.getDefaultVoice('af');
-    this.selectedVoiceZulu = this.getDefaultVoice('zu');
-    localStorage.removeItem('selectedVoiceEnglish');
-    localStorage.removeItem('selectedVoiceAfrikaans');
-    localStorage.removeItem('selectedVoiceZulu');
+  resetVoiceSettings(language: 'English' | 'Afrikaans' | 'Zulu') {
+    switch (language) {
+      case 'English':
+        this.selectedVoiceEnglish = this.getDefaultVoice('en');
+        localStorage.removeItem('selectedVoiceEnglish');
+        break;
+      case 'Afrikaans':
+        this.selectedVoiceAfrikaans = this.getDefaultVoice('af');
+        localStorage.removeItem('selectedVoiceAfrikaans');
+        break;
+      case 'Zulu':
+        this.selectedVoiceZulu = this.getDefaultVoice('zu');
+        localStorage.removeItem('selectedVoiceZulu');
+        break;
+    }
   }
 
   getDefaultVoice(langPrefix: string): SpeechSynthesisVoice | null {
@@ -187,7 +209,6 @@ export class VoiceService {
     speakNextWord();
   }
 
-
   animateSequence(numberInWordsElement: HTMLElement, numberElement: HTMLElement) {
     const wordDuration = 1000 / this.rate;
 
@@ -213,36 +234,7 @@ export class VoiceService {
   }
 
   updateLanguage(language: 'English' | 'Afrikaans' | 'Zulu') {
-    let langCode = 'en';
-    switch (language) {
-      case 'Afrikaans':
-        langCode = 'af';
-        break;
-      case 'Zulu':
-        langCode = 'zu';
-        break;
-    }
-    this.filterVoices(langCode);
-  }
-
-  filterVoices(languageCode: string) {
-    this.voices = speechSynthesis.getVoices().filter(voice => voice.lang.startsWith(languageCode));
-    if (this.voices.length > 0) {
-      const selectedVoice = this.voices.find(voice => voice.lang.startsWith(languageCode)) || this.voices[0];
-      localStorage.setItem('selectedVoice', this.getVoiceId(selectedVoice));
-      switch (languageCode) {
-        case 'en':
-          this.selectedVoiceEnglish = selectedVoice;
-          break;
-        case 'af':
-          this.selectedVoiceAfrikaans = selectedVoice;
-          break;
-        case 'zu':
-          this.selectedVoiceZulu = selectedVoice;
-          break;
-      }
-    } else {
-      console.warn(`No voices found for language code: ${languageCode}`);
-    }
+    localStorage.setItem('language', language);
+    this.setStoredVoices();
   }
 }
