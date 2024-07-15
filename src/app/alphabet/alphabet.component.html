@@ -37,8 +37,8 @@
     </ul>
   </div>
 
-<!-- Auto Read Toggle Section (Visible only in 'all' mode) -->
-<div *ngIf="mode === 'all'" class="auto-read-toggle">
+<!-- Auto Read Toggle Section (Visible in all modes except 'objects') -->
+<div class="auto-read-toggle" *ngIf="mode !== 'objects'">
   <button type="button" class="btn btn-outline-default" (click)="toggleAutoRead()">
     {{ isAutoRead ? 'Stop Reading' : 'Read' }}
   </button>

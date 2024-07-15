@@ -1,48 +1,31 @@
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { VoiceService } from '../voice.service';
-
-// Define interface for word families
-interface WordFamily {
-  group: 'Vowels' | 'Consonants'; // Define group type for word families
-  prefix: string; // Prefix for word family
-  words: string[]; // Array of words in the word family
-}
-
-// Array of predefined word families
-const WORD_FAMILIES: WordFamily[] = [
-  { group: 'Vowels', prefix: 'at', words: ['cat', 'hat', 'mat', 'rat', 'sat', 'flat', 'chat', 'spat'] },// Vowel word family
-  { group: 'Vowels', prefix: 'an', words: ['can', 'fan', 'man', 'van', 'tan', 'pan', 'scan', 'plan'] },// Vowel word family
-  { group: 'Consonants', prefix: 'in', words: ['pin', 'tin', 'win', 'din', 'kin', 'lin', 'min', 'sin'] },// Consonant word family
-  { group: 'Consonants', prefix: 'en', words: ['pen', 'ten', 'hen', 'men', 'den', 'len', 'wen', 'gen'] },// Consonant word family
-  { group: 'Vowels', prefix: 'ot', words: ['not', 'hot', 'pot', 'rot', 'tot', 'dot', 'got', 'lot'] },
-  { group: 'Vowels', prefix: 'un', words: ['fun', 'run', 'sun', 'bun', 'gun', 'hun', 'mun', 'pun'] },
-  { group: 'Consonants', prefix: 'et', words: ['get', 'set', 'vet', 'bet', 'jet', 'let', 'met', 'net'] },
-  { group: 'Consonants', prefix: 'it', words: ['sit', 'kit', 'lit', 'mit', 'nit', 'pit', 'rit', 'wit'] },
-  { group: 'Consonants', prefix: 'ut', words: ['cut', 'gut', 'hut', 'lut', 'mut', 'nut', 'put', 'rut'] },
-  { group: 'Vowels', prefix: 'am', words: ['cam', 'ham', 'jam', 'lam', 'mam', 'ram', 'sam', 'dam'] },
-  { group: 'Vowels', prefix: 'em', words: ['gem', 'hem', 'lem', 'mem', 'nem', 'rem', 'sem', 'them'] },
-  { group: 'Consonants', prefix: 'im', words: ['him', 'lim', 'rim', 'sim', 'tim', 'vim', 'whim', 'brim'] }
-];
+import { VoiceService } from '../Utilities/voice.service';
+import { WORD_FAMILIES, WordFamily, alphabet, vowels } from '../Utilities/word-management';
 
 @Component({
   selector: 'app-word-families',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './word-families.component.html',
-  styleUrl: './word-families.component.css'
+  styleUrls: ['./word-families.component.css']
 })
 export class WordFamiliesComponent {
   // Array to hold predefined word families
   wordFamilies: WordFamily[] = WORD_FAMILIES;
+
   // Array of alphabet letters
-  alphabet: string[] = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'r', 's', 't', 'v', 'w'];
+  alphabet: string[] = alphabet;
+
   // Selected word family for the current game
   selectedWordFamily: WordFamily = this.getRandomWordFamily();
+
   // Starting letter for the current game
   startingLetter: string = this.getRandomLetter();
+
   // Boolean to track if the current answer is correct
   isCorrect: boolean = false;
+
   // Boolean to track if the user has answered
   answered: boolean = false;
 
@@ -50,7 +33,6 @@ export class WordFamiliesComponent {
 
   // Method to generate a random letter from alphabet
   getRandomLetter(): string {
-    const vowels: string[] = ['a', 'e', 'i', 'o', 'u'];
     const currentGroup: 'Vowels' | 'Consonants' = this.selectedWordFamily.group;
 
     // Filter alphabet based on current word family group (vowels or consonants)
@@ -97,16 +79,15 @@ export class WordFamiliesComponent {
           highlighted: false
         }));
 
-
         this.voiceService.playWords(
           this.selectedWordFamily.words,
+          'English', // Adjust the language string as needed
           (word) => this.highlightWord(word, wordElements),
           (word) => this.unhighlightWord(word, wordElements)
         );
       }
     }
   }
-
 
   // Method to move to the next letter
   nextLetter(): void {
@@ -125,6 +106,7 @@ export class WordFamiliesComponent {
       alert('Please complete the current word correctly before moving on.');
     }
   }
+
   createWordElement(word: string): HTMLElement {
     const span = document.createElement('span');
     span.innerText = word;
@@ -147,6 +129,4 @@ export class WordFamiliesComponent {
       wordElements[index].highlighted = false;
     }
   }
-
-
 }

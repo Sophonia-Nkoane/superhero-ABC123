@@ -18,19 +18,6 @@
     </div>
   </div>
 
-  <!-- Language Selection -->
-  <div class="language-selection">
-    <label>
-      <input type="radio" name="language" value="English" [(ngModel)]="language" (change)="changeLanguage(language)" /> English
-    </label>
-    <label>
-      <input type="radio" name="language" value="Afrikaans" [(ngModel)]="language" (change)="changeLanguage(language)" /> Afrikaans
-    </label>
-    <label>
-      <input type="radio" name="language" value="Zulu" [(ngModel)]="language" (change)="changeLanguage(language)" /> Zulu
-    </label>
-  </div>
-
   <!-- Displaying the number in words and the numerical value -->
   <div class="number-display">
     <div #numberInWordsElement class="number-in-words">{{ numberInWords }}</div>

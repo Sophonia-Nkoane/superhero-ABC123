@@ -1,58 +1,59 @@
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { VoiceService } from '../voice.service';
+import { VoiceService } from '../Utilities/voice.service';
+import { DataService , Words } from '../data.service';
 
 @Component({
   selector: 'app-sentence-building',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './sentence-building.component.html',
-  styleUrl: './sentence-building.component.css'
+  styleUrls: ['./sentence-building.component.css']
 })
-export class SentenceBuildingComponent {
-  // Object containing arrays of words categorized by type
-  words = {
-    subjects: ["I", "The boy", "The girl", "He", "She", "It", "The dog", "The cat", "We", "They"],
-    actions: ["Eat", "Play", "Run", "Jump", "Read", "Write", "Draw", "Paint", "Sing", "Dance"],
-    objects: ["Apples", "Ball", "Book", "Toy", "Game", "Pencil", "Paper", "Crayon", "Paintbrush", "Guitar"]
-  };
+export class SentenceBuildingComponent implements OnInit {
+  words: Words = { subjects: [], actions: [], objects: [] };
 
-  sentenceWords: string[] = []; // Array to store words in the current sentence
-  showHits: boolean = false; // Flag to control display of word hits
-  currentWordIndex = -1; // Index of the current word in the sentence
+  sentenceWords: string[] = [];
+  showHits: boolean = false;
+  currentWordIndex = -1;
+  selectedVoice: SpeechSynthesisVoice | null = null;
 
-  constructor(private voiceService: VoiceService) { }
+  constructor(
+    private voiceService: VoiceService,
+    private dataService: DataService
+  ) { }
 
-  // Getter method to concatenate sentence words into a string
+  ngOnInit() {
+    this.dataService.getWords().subscribe(words => {
+      this.words = words;
+    });
+  }
+
   get sentence(): string {
     return this.sentenceWords.join(' ');
   }
 
-  // Method to add words to the current sentence
   addWordToSentence(word: string): void {
     this.sentenceWords.push(word);
   }
 
-  // Method to clear the current sentence
   clearSentence(): void {
     this.sentenceWords = [];
   }
 
-  // Method to remove the last word from the current sentence
   undo(): void {
     if (this.sentenceWords.length > 0) {
       this.sentenceWords.pop();
     }
   }
 
-  // Method to check if the current sentence is valid and in correct order
   playSentence(): void {
     const words = this.sentenceWords;
     let index = 0;
     const voiceRate = this.voiceService.getRate();
     const repeat = this.voiceService.getRepeat();
-    const intervalTime = 1200 / voiceRate; // Adjust interval time based on voice rate
+    const intervalTime = 1200 / voiceRate;
 
     const interval = setInterval(() => {
       if (index > 0) {
@@ -74,17 +75,19 @@ export class SentenceBuildingComponent {
     }, intervalTime * (repeat ? 2 : 1));
   }
 
-  readWord(word: string, rate: number, repeat: boolean) {
+  readWord(word: string, rate: number, repeat: boolean): void {
     const utterance = new SpeechSynthesisUtterance(word);
     utterance.rate = rate;
-    const selectedVoice = this.voiceService.getSelectedVoice();
-    if (selectedVoice) {
-      utterance.voice = selectedVoice;
+    if (this.selectedVoice) {
+      utterance.voice = this.selectedVoice;
     }
     window.speechSynthesis.speak(utterance);
   }
 
-  // Method to check the order of words in the current sentence
+  setSelectedVoice(voice: SpeechSynthesisVoice | null): void {
+    this.selectedVoice = voice;
+  }
+
   checkSentenceOrder(): { index: number, type: string } {
     const order = ['subjects', 'actions', 'objects'];
     for (let i = 0; i < this.sentenceWords.length; i++) {
@@ -97,7 +100,6 @@ export class SentenceBuildingComponent {
     return { index: -1, type: '' };
   }
 
-  // Method to generate all possible sentences based on word categories
   generateAllSentences(): string[] {
     const sentences: string[] = [];
     const { subjects, actions, objects } = this.words;
@@ -113,25 +115,21 @@ export class SentenceBuildingComponent {
     return sentences;
   }
 
-  // Method to check if a user-inputted sentence matches any of the generated sentences
   checkUserSentence(sentence: string): boolean {
     const possibleSentences = this.generateAllSentences();
     return possibleSentences.includes(sentence);
   }
 
-  // Method to check if a word in the current sentence is in the correct part of speech order
   checkIncorrectWord(word: string, index: number): boolean {
     const expectedPartOfSpeech = ['subject', 'action', 'object'][index];
     return this.getWordPartOfSpeech(word) !== expectedPartOfSpeech;
   }
 
-  // Method to determine the part of speech of a given word
-  // Method to determine the part of speech of a given word
   getWordPartOfSpeech(word: string): string {
     if (this.words.subjects.includes(word)) return 'subject';
     if (this.words.actions.includes(word)) return 'action';
     if (this.words.objects.includes(word)) return 'object';
-    return 'unknown'; // Return unknown if word doesn't match any category
+    return 'unknown';
   }
 
   getWordStyle(index: number): any {
@@ -140,4 +138,3 @@ export class SentenceBuildingComponent {
     };
   }
 }
-

@@ -1,98 +1,93 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { VoiceService } from '../voice.service';
+import { EnglishVoiceService } from '../Utilities/english-voice.service';
+import { AfrikaansVoiceService } from '../Utilities/afrikaans-voice.service';
+import { ZuluVoiceService } from '../Utilities/zulu-voice.service';
+import { GlobalSettingsService } from '../Utilities/global-settings.service';
+import { RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,RouterModule],
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
-  voices: SpeechSynthesisVoice[] = [];
   englishVoices: SpeechSynthesisVoice[] = [];
   afrikaansVoices: SpeechSynthesisVoice[] = [];
   zuluVoices: SpeechSynthesisVoice[] = [];
   selectedVoiceEnglish: SpeechSynthesisVoice | null = null;
   selectedVoiceAfrikaans: SpeechSynthesisVoice | null = null;
   selectedVoiceZulu: SpeechSynthesisVoice | null = null;
-  voiceRate: number;
-  repeatWords: boolean;
-  language: 'English' | 'Afrikaans' | 'Zulu' = 'English';
+  voiceRate: number = 1;
+  repeatWords: boolean = false;
+  selectedLanguage: 'English' | 'Afrikaans' | 'Zulu' = 'English';
 
-  constructor(private voiceService: VoiceService) {
-    this.voiceRate = this.voiceService.getRate();
-    this.repeatWords = this.voiceService.getRepeat();
-  }
+  constructor(
+    public englishVoiceService: EnglishVoiceService,
+    private afrikaansVoiceService: AfrikaansVoiceService,
+    private zuluVoiceService: ZuluVoiceService,
+    private globalSettingsService: GlobalSettingsService
+  ) {}
 
   ngOnInit() {
-    this.voices = this.voiceService.getVoices();
-    this.filterVoices();
-    this.loadSettings();
+    this.loadVoices();
+    this.loadSavedSettings();
   }
 
-  filterVoices() {
-    this.englishVoices = this.voices.filter(voice => voice.lang.startsWith('en'));
-    this.afrikaansVoices = this.voices.filter(voice => voice.lang.startsWith('af'));
-    this.zuluVoices = this.voices.filter(voice => voice.lang.startsWith('zu'));
+  private loadVoices() {
+    this.englishVoices = this.englishVoiceService.getVoices();
+    this.afrikaansVoices = this.afrikaansVoiceService.getVoices();
+    this.zuluVoices = this.zuluVoiceService.getVoices();
   }
 
-  loadSettings() {
-    const savedVoiceEnglish = localStorage.getItem('selectedVoiceEnglish');
-    const savedVoiceAfrikaans = localStorage.getItem('selectedVoiceAfrikaans');
-    const savedVoiceZulu = localStorage.getItem('selectedVoiceZulu');
+  private loadSavedSettings() {
+    this.selectedVoiceEnglish = this.englishVoiceService.getSelectedVoice();
+    this.selectedVoiceAfrikaans = this.afrikaansVoiceService.getSelectedVoice();
+    this.selectedVoiceZulu = this.zuluVoiceService.getSelectedVoice();
 
-    if (savedVoiceEnglish) {
-      this.selectedVoiceEnglish = this.englishVoices.find(voice => voice.name === savedVoiceEnglish) || null;
+    const savedVoiceRate = localStorage.getItem('voiceRate');
+    const savedRepeatWords = localStorage.getItem('repeatWords');
+    if (savedVoiceRate) {
+      this.voiceRate = parseFloat(savedVoiceRate);
     }
-    if (savedVoiceAfrikaans) {
-      this.selectedVoiceAfrikaans = this.afrikaansVoices.find(voice => voice.name === savedVoiceAfrikaans) || null;
-    }
-    if (savedVoiceZulu) {
-      this.selectedVoiceZulu = this.zuluVoices.find(voice => voice.name === savedVoiceZulu) || null;
-    }
-
-    const savedRate = localStorage.getItem('voiceRate');
-    if (savedRate !== null) {
-      this.voiceRate = parseFloat(savedRate);
+    if (savedRepeatWords) {
+      this.repeatWords = savedRepeatWords === 'true';
     }
 
-    const savedRepeat = localStorage.getItem('repeatWords');
-    if (savedRepeat !== null) {
-      this.repeatWords = savedRepeat === 'true';
+    this.selectedLanguage = this.globalSettingsService.getLanguage() as 'English' | 'Afrikaans' | 'Zulu';
+  }
+
+  saveSelectedVoice(language: 'English' | 'Afrikaans' | 'Zulu') {
+    switch (language) {
+      case 'English':
+        this.englishVoiceService.setSelectedVoice(this.selectedVoiceEnglish);
+        break;
+      case 'Afrikaans':
+        this.afrikaansVoiceService.setSelectedVoice(this.selectedVoiceAfrikaans);
+        break;
+      case 'Zulu':
+        this.zuluVoiceService.setSelectedVoice(this.selectedVoiceZulu);
+        break;
     }
   }
 
-  saveSettings(): void {
-    localStorage.setItem('voiceRate', this.voiceRate.toString());
-    localStorage.setItem('selectedVoiceEnglish', this.selectedVoiceEnglish ? this.selectedVoiceEnglish.name : '');
-    localStorage.setItem('selectedVoiceAfrikaans', this.selectedVoiceAfrikaans ? this.selectedVoiceAfrikaans.name : '');
-    localStorage.setItem('selectedVoiceZulu', this.selectedVoiceZulu ? this.selectedVoiceZulu.name : '');
-    localStorage.setItem('repeatWords', this.repeatWords.toString());
+  changeLanguage(language: 'English' | 'Afrikaans' | 'Zulu') {
+    this.globalSettingsService.setLanguage(language);
+    this.selectedLanguage = language;
+    this.loadVoices();
   }
 
-  resetSettings(): void {
-    localStorage.removeItem('voiceRate');
-    localStorage.removeItem('selectedVoiceEnglish');
-    localStorage.removeItem('selectedVoiceAfrikaans');
-    localStorage.removeItem('selectedVoiceZulu');
-    localStorage.removeItem('repeatWords');
-    this.voiceRate = 1;
-    this.repeatWords = false;
-    this.selectedVoiceEnglish = this.englishVoices.length > 0 ? this.englishVoices[0] : null;
-    this.selectedVoiceAfrikaans = this.afrikaansVoices.length > 0 ? this.afrikaansVoices[0] : null;
-    this.selectedVoiceZulu = this.zuluVoices.length > 0 ? this.zuluVoices[0] : null;
-    this.voiceService.setRate(1);
-    this.voiceService.setRepeat(false);
-    this.voiceService.setSelectedVoice(this.selectedVoiceEnglish!);
-  }
-
-  setVoiceRate(rate: number): void {
+  setVoiceRate(rate: number) {
     this.voiceRate = rate;
     const mappedRate = this.mapVoiceRate(rate);
-    this.voiceService.setRate(mappedRate);
+    this.englishVoiceService.setRate(mappedRate);
+    this.afrikaansVoiceService.setRate(mappedRate);
+    this.zuluVoiceService.setRate(mappedRate);
+    localStorage.setItem('voiceRate', this.voiceRate.toString());
   }
 
   mapVoiceRate(rate: number): number {
@@ -109,34 +104,72 @@ export class SettingsComponent implements OnInit {
     return mapping[rate.toString()] || 1;
   }
 
-  onVoiceChange(language: 'English' | 'Afrikaans' | 'Zulu', event: Event) {
+  onVoiceChange(event: Event, language: 'English' | 'Afrikaans' | 'Zulu') {
     const selectElement = event.target as HTMLSelectElement;
-    const selectedVoice = this.voices.find(voice => voice.name === selectElement.value);
-    if (selectedVoice) {
-      if (language === 'English') {
-        this.selectedVoiceEnglish = selectedVoice;
-      } else if (language === 'Afrikaans') {
-        this.selectedVoiceAfrikaans = selectedVoice;
-      } else if (language === 'Zulu') {
-        this.selectedVoiceZulu = selectedVoice;
+    const selectedVoiceName = selectElement?.value;
+
+    if (selectedVoiceName) {
+      switch (language) {
+        case 'English':
+          this.selectedVoiceEnglish = this.englishVoiceService.getVoiceByName(selectedVoiceName);
+          this.saveSelectedVoice('English');
+          break;
+        case 'Afrikaans':
+          this.selectedVoiceAfrikaans = this.afrikaansVoiceService.getVoiceByName(selectedVoiceName);
+          this.saveSelectedVoice('Afrikaans');
+          break;
+        case 'Zulu':
+          this.selectedVoiceZulu = this.zuluVoiceService.getVoiceByName(selectedVoiceName);
+          this.saveSelectedVoice('Zulu');
+          break;
       }
-      this.voiceService.setSelectedVoice(selectedVoice);
-      this.saveSettings();
     }
   }
 
   onRepeatChange(event: Event) {
     const inputElement = event.target as HTMLInputElement;
-    this.repeatWords = inputElement.checked;
-    this.voiceService.setRepeat(this.repeatWords);
-    this.saveSettings();
+    this.repeatWords = inputElement?.checked ?? false;
+
+    switch (this.selectedLanguage) {
+      case 'English':
+        this.englishVoiceService.setRepeat(this.repeatWords);
+        break;
+      case 'Afrikaans':
+        if ('setRepeat' in this.afrikaansVoiceService) {
+          (this.afrikaansVoiceService as any).setRepeat(this.repeatWords);
+        }
+        break;
+      case 'Zulu':
+        if ('setRepeat' in this.zuluVoiceService) {
+          (this.zuluVoiceService as any).setRepeat(this.repeatWords);
+        }
+        break;
+    }
+    localStorage.setItem('repeatWords', this.repeatWords.toString());
   }
 
-  onLanguageChange(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const language = selectElement.value as 'English' | 'Afrikaans' | 'Zulu';
-    this.language = language;
-    this.voiceService.updateLanguage(language);
-    this.saveSettings();
+  saveSettings() {
+    this.englishVoiceService.setSelectedVoice(this.selectedVoiceEnglish);
+    this.afrikaansVoiceService.setSelectedVoice(this.selectedVoiceAfrikaans);
+    this.zuluVoiceService.setSelectedVoice(this.selectedVoiceZulu);
+    localStorage.setItem('voiceRate', this.voiceRate.toString());
+    localStorage.setItem('repeatWords', this.repeatWords.toString());
+  }
+
+  resetSettings() {
+    localStorage.removeItem('voiceRate');
+    localStorage.removeItem('selectedVoiceEnglish');
+    localStorage.removeItem('selectedVoiceAfrikaans');
+    localStorage.removeItem('selectedVoiceZulu');
+    localStorage.removeItem('repeatWords');
+    this.voiceRate = 1;
+    this.repeatWords = false;
+    this.selectedVoiceEnglish = this.englishVoices.length > 0 ? this.englishVoices[0] : null;
+    this.selectedVoiceAfrikaans = this.afrikaansVoices.length > 0 ? this.afrikaansVoices[0] : null;
+    this.selectedVoiceZulu = this.zuluVoices.length > 0 ? this.zuluVoices[0] : null;
+    this.setVoiceRate(1);
+    this.globalSettingsService.setLanguage('English');
+    this.selectedLanguage = 'English';
+    this.loadVoices();
   }
 }

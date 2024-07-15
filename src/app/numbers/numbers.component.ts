@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { VoiceService } from '../voice.service';
+import { VoiceService } from '../Utilities/voice.service';
 
 @Component({
   selector: 'app-numbers',
@@ -30,7 +30,31 @@ export class NumbersComponent implements OnInit {
     if (savedLanguage) {
       this.language = savedLanguage as 'English' | 'Afrikaans' | 'Zulu';
     }
-    this.voiceService.updateLanguage(this.language);
+
+    // Load the selected voice for the current language
+    this.loadSelectedVoice();
+  }
+
+  loadSelectedVoice() {
+    let selectedVoiceKey = '';
+    let langPrefix = '';
+    if (this.language === 'English') {
+      selectedVoiceKey = 'selectedVoiceEnglish';
+      langPrefix = 'en';
+    } else if (this.language === 'Afrikaans') {
+      selectedVoiceKey = 'selectedVoiceAfrikaans';
+      langPrefix = 'af';
+    } else if (this.language === 'Zulu') {
+      selectedVoiceKey = 'selectedVoiceZulu';
+      langPrefix = 'zu';
+    }
+    const savedVoiceId = localStorage.getItem(selectedVoiceKey);
+    if (savedVoiceId) {
+      const voice = this.voiceService.getVoices(langPrefix).find(v => this.voiceService.getVoiceId(v) === savedVoiceId);
+      if (voice) {
+        this.voiceService.setSelectedVoice(voice, this.language);
+      }
+    }
   }
 
   @HostListener('window:keydown', ['$event'])
@@ -91,63 +115,59 @@ export class NumbersComponent implements OnInit {
     this.currentNumber = number;
     this.updateNumberInWordsElement();
 
-    this.voiceService.playWords([this.numberInWords, number],
-      (word) => {
-        if (word === this.numberInWords) {
-          this.numberInWordsElement.nativeElement.classList.add('highlight');
-        } else if (word === number) {
-          this.currentNumberElement.nativeElement.classList.add('highlight');
+    const selectedVoice = this.voiceService.getSelectedVoice(this.language);
+    if (selectedVoice) {
+      this.voiceService.playWords([this.numberInWords, number], this.language,
+        (word) => {
+          if (word === this.numberInWords) {
+            this.numberInWordsElement.nativeElement.classList.add('highlight');
+          } else if (word === number) {
+            this.currentNumberElement.nativeElement.classList.add('highlight');
+          }
+        },
+        (word) => {
+          if (word === this.numberInWords) {
+            this.numberInWordsElement.nativeElement.classList.remove('highlight');
+          } else if (word === number) {
+            this.currentNumberElement.nativeElement.classList.remove('highlight');
+          }
         }
-      },
-      (word) => {
-        if (word === this.numberInWords) {
-          this.numberInWordsElement.nativeElement.classList.remove('highlight');
-        } else if (word === number) {
-          this.currentNumberElement.nativeElement.classList.remove('highlight');
-        }
-      }
-    );
-
-    await this.animateElement(this.numberInWordsElement.nativeElement, 1000);
-    await this.animateElement(this.currentNumberElement.nativeElement, 1000);
+      );
+    } else {
+      console.error('No voice selected or available.');
+    }
   }
 
   updateNumberInWordsElement() {
-    this.numberInWordsElement.nativeElement.innerText = this.numberInWords;
-    this.currentNumberElement.nativeElement.innerText = this.currentNumber;
+    const element = this.numberInWordsElement.nativeElement;
+    element.textContent = this.numberInWords;
   }
 
   animateElement(element: HTMLElement, duration: number) {
-    return new Promise<void>(resolve => {
-      element.style.transition = `all ${duration}ms`;
-      element.style.opacity = '0';
-      element.style.transform = 'scale(0.5)';
-      element.style.boxShadow = '0 0 0px yellow';
+    return new Promise(resolve => {
+      element.classList.add('animate');
       setTimeout(() => {
-        element.style.opacity = '1';
-        element.style.transform = 'scale(1.2)';
-        element.style.boxShadow = '0 0 10px yellow';
-        setTimeout(() => {
-          element.style.transform = 'scale(1)';
-          setTimeout(() => {
-            element.style.boxShadow = '0 0 0px yellow';
-            resolve();
-          }, duration);
-        }, duration);
-      }, 0);
+        element.classList.remove('animate');
+        resolve(true);
+      }, duration);
     });
   }
 
-  changeLanguage(language: 'English' | 'Afrikaans' | 'Zulu') {
-    this.language = language;
-    this.voiceService.updateLanguage(language);
-    localStorage.setItem('language', language);
+  async searchNumbers(query: string) {
+    query = query.toLowerCase();
+    this.searchResults = this.numbers.filter(num => num.includes(query));
+    this.updateNumberInWordsElement();
+  }
+
+  async onLanguageChange() {
+    localStorage.setItem('language', this.language);
+    this.loadSelectedVoice();
   }
 
   async readAllNumbers() {
-    for (let number of this.getNumbers()) {
+    for (const number of this.getNumbers()) {
       await this.playNumberAudio(number);
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Delay between numbers
     }
   }
 }
