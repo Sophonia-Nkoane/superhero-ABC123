@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { NetworkStatusService } from './online - offline/services/network-status.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +13,20 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 })
 export class AppComponent {
   title = 'superhero-ABC123';
+  isOnline: boolean = true;
+  private subscription: Subscription | undefined;
+
+  constructor(private networkStatusService: NetworkStatusService) {}
+
+  ngOnInit() {
+    this.subscription = this.networkStatusService.getNetworkStatus().subscribe(
+      status => this.isOnline = status
+    );
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
 }

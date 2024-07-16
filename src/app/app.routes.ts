@@ -6,8 +6,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { SettingsComponent } from './settings/settings.component';
 import { WordFamiliesComponent } from './word-families/word-families.component';
 import { DataManagerComponent } from './data-manager/data-manager.component';
-import { TestsComponent } from './tests/tests.component';
-
+import { learningComponent } from './learning/learning.component';
 
 
 export const routes: Routes = [
@@ -21,5 +20,5 @@ export const routes: Routes = [
     { path: '', component: DataManagerComponent },
   ] },
   { path: 'data-manager', component: DataManagerComponent },
-  { path: 'tests', component: TestsComponent }
+  { path: 'learning', component: learningComponent }
 ];

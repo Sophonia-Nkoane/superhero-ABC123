@@ -36,7 +36,9 @@ export class DataService {
 
   private readonly alphabet: string[] = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'r', 's', 't', 'v', 'w'];
   private readonly vowels: string[] = ['a', 'e', 'i', 'o', 'u'];
-
+  private section1Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(['map', 'frog','wet', 'hop', 'lad', 'lad','zoo', 'jug', 'box', 'kid', 'jump','vest', 'can', 'the', 'quiz', 'she', 'bin']);
+  private section2Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(['She is at the zoo.', 'My frog can hop.', 'He is at the dam.','My dog can jump.']);
+  private section3Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(['-og', '-in', '-op', '-at', 'jog', 'win', 'pop', 'mat', 'frog', 'bin', 'mop', 'cat', 'hop', 'fin', 'hop', 'pat']);
 
   constructor() {
     this.initializeData();
@@ -156,6 +158,75 @@ export class DataService {
 
   getVowels(): string[] {
     return this.vowels;
+  }
+
+  // Section 1 CRUD operations
+  getSection1Array(): Observable<string[]> {
+    return this.section1Array.asObservable();
+  }
+
+  addSection1Word(word: string): void {
+    const currentWords = this.section1Array.value;
+    if (!currentWords.includes(word)) {
+      this.section1Array.next([...currentWords, word]);
+    }
+  }
+
+  updateSection1Word(oldWord: string, newWord: string): void {
+    const currentWords = this.section1Array.value;
+    const updatedWords = currentWords.map(w => w === oldWord ? newWord : w);
+    this.section1Array.next(updatedWords);
+  }
+
+  deleteSection1Word(word: string): void {
+    const currentWords = this.section1Array.value;
+    this.section1Array.next(currentWords.filter(w => w !== word));
+  }
+
+  // Section 2 CRUD operations
+  getSection2Array(): Observable<string[]> {
+    return this.section2Array.asObservable();
+  }
+
+  addSection2Sentence(sentence: string): void {
+    const currentSentences = this.section2Array.value;
+    if (!currentSentences.includes(sentence)) {
+      this.section2Array.next([...currentSentences, sentence]);
+    }
+  }
+
+  updateSection2Sentence(oldSentence: string, newSentence: string): void {
+    const currentSentences = this.section2Array.value;
+    const updatedSentences = currentSentences.map(s => s === oldSentence ? newSentence : s);
+    this.section2Array.next(updatedSentences);
+  }
+
+  deleteSection2Sentence(sentence: string): void {
+    const currentSentences = this.section2Array.value;
+    this.section2Array.next(currentSentences.filter(s => s !== sentence));
+  }
+
+  // Section 3 CRUD operations
+  getSection3Array(): Observable<string[]> {
+    return this.section3Array.asObservable();
+  }
+
+  addSection3Word(word: string): void {
+    const currentWords = this.section3Array.value;
+    if (!currentWords.includes(word)) {
+      this.section3Array.next([...currentWords, word]);
+    }
+  }
+
+  updateSection3Word(oldWord: string, newWord: string): void {
+    const currentWords = this.section3Array.value;
+    const updatedWords = currentWords.map(w => w === oldWord ? newWord : w);
+    this.section3Array.next(updatedWords);
+  }
+
+  deleteSection3Word(word: string): void {
+    const currentWords = this.section3Array.value;
+    this.section3Array.next(currentWords.filter(w => w !== word));
   }
 
   // Words CRUD operations

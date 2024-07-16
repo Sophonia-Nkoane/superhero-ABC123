@@ -7,9 +7,11 @@
   <div class="section">
     <h3>Section 1</h3>
     <div class="alphabet-container">
-      <button *ngFor="let word of section1Array" (click)="playSpeechWithPhonetics(word)">
-        {{ word }}
-      </button>
+      <ng-container *ngIf="section1Array$ | async as section1Array">
+        <button *ngFor="let word of section1Array" (click)="playSpeechWithPhonetics(word)">
+          {{ word }}
+        </button>
+      </ng-container>
     </div>
   </div>
 
@@ -17,9 +19,11 @@
   <div class="section">
     <h3>Section 2</h3>
     <div class="alphabet-container">
-      <button *ngFor="let sentence of section2Array" (click)="playSpeech(sentence)">
-        {{ sentence }}
-      </button>
+      <ng-container *ngIf="section2Array$ | async as section2Array">
+        <button *ngFor="let sentence of section2Array" (click)="playSpeech(sentence)">
+          {{ sentence }}
+        </button>
+      </ng-container>
     </div>
   </div>
 
