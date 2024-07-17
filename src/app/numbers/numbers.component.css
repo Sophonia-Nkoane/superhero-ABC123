@@ -3,58 +3,53 @@ Styles for Number Converter Component
 */
 
 .spacing {
-  padding-left: 20px; /* Left padding */
-  padding-right: 20px; /* Right padding */
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
-/* Toggle container for number type */
 .toggle-container {
-  display: inline-flex; /* Inline-flex container */
-  align-items: center; /* Center items vertically */
-  margin-left: auto; /* Auto margin on left */
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
 }
 
-/* Styling for number toggles */
 .toggle-number {
-  font-size: 18px; /* Font size */
-  margin: 0 5px; /* Margin around numbers */
-  cursor: pointer; /* Cursor style */
+  font-size: 18px;
+  margin: 0 5px;
+  cursor: pointer;
 }
 
 .toggle-number:hover {
-  text-decoration: underline; /* Underline on hover */
+  text-decoration: underline;
 }
 
 .toggle-number.active {
-  font-weight: bold; /* Bold font for active number */
-  color: #333; /* Dark color for active number */
+  font-weight: bold;
+  color: #333;
 }
 
-/* Styling for keyboard rows */
 .keyboard-row {
-  display: flex; /* Flex container */
-  flex-wrap: wrap; /* Wrap items */
-  justify-content: center; /* Center content horizontally */
-  padding: 20px; /* Padding inside the keyboard row */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
 }
 
 .number-row span {
-  font-size: 36px; /* Font size */
-  margin: -4px; /* Negative margin for spacing */
+  font-size: 36px;
+  margin: -4px;
 }
 
-/* Styling for the number display */
 #number-in-words {
-  text-align: center; /* Center text */
-  display: block; /* Block element */
-  margin: 0 auto; /* Center horizontally */
-  font-size: 60px; /* Large font size */
-  padding: 20px; /* Padding */
-  border: 1px solid #ccc; /* Border */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow */
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+  font-size: 60px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Additional styling for number display */
 .number-display {
   display: flex;
   flex-direction: column;
@@ -63,39 +58,17 @@ Styles for Number Converter Component
 
 .number-in-words,
 .current-number {
-  font-size: 2em; /* Larger font size for words */
-  margin-bottom: 10px; /* Margin below */
+  font-size: 2em;
+  margin-bottom: 10px;
   transition: all 0.5s ease-in-out;
 }
 
-/* Button styling */
-button {
-  background-color: #4CAF50; /* Green background */
-  color: #fff; /* White text color */
-  padding: 10px 12px; /* Padding inside button */
-  border: none; /* No border */
-  cursor: pointer; /* Cursor style */
-  font-size: 36px; /* Font size */
-  transition: ease-in-out 0.3s; /* Transition effect */
+/* Use global button styles, but adjust size for this component */
+.keyboard-row button {
+  font-size: 36px;
+  padding: 10px 12px;
 }
 
-button:hover {
-  background-color: #3e8e41; /* Darker green on hover */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Box shadow on hover */
-}
-
-button:active {
-  transform: scale(0.95); /* Scale down on active */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); /* Stronger box shadow on active */
-}
-
-button.active {
-  background-color: #333; /* Dark background for active state */
-  color: #fff; /* White text color */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); /* Stronger box shadow */
-}
-
-/* Animation for fade-in and zoom */
 @keyframes fadeInZoom {
   0% {
     opacity: 0;
@@ -107,31 +80,30 @@ button.active {
   }
 }
 
-/* Media queries for responsive design */
 @media (max-width: 768px) {
   .keyboard-row span {
-    font-size: 24px; /* Adjusted font size */
+    font-size: 24px;
   }
-  button {
-    font-size: 24px; /* Adjusted font size */
-    padding: 8px 16px; /* Adjusted padding */
+  .keyboard-row button {
+    font-size: 24px;
+    padding: 8px 16px;
   }
   .search-input[type="text"] {
-    padding: 16px 12px; /* Adjusted padding */
-    font-size: 24px; /* Adjusted font size */
+    padding: 16px 12px;
+    font-size: 24px;
   }
 }
 
 @media (max-width: 480px) {
   .keyboard-row {
-    font-size: 18px; /* Adjusted font size */
+    font-size: 18px;
   }
-  button {
-    font-size: 18px; /* Adjusted font size */
-    padding: 6px 12px; /* Adjusted padding */
+  .keyboard-row button {
+    font-size: 18px;
+    padding: 6px 12px;
   }
   .search-input[type="text"] {
-    padding: 12px 8px; /* Adjusted padding */
-    font-size: 18px; /* Adjusted font size */
+    padding: 12px 8px;
+    font-size: 18px;
   }
 }

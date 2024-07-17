@@ -94,32 +94,3 @@ tr:hover {
   justify-content: center;
   margin: 20px 0;
 }
-
-/* Button styling */
-button {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  margin: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  border-radius: 5px;
-}
-
-/* Button hover effect */
-button:hover {
-  background-color: #3e8e41;
-}
-
-/* Disabled button styling */
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-/* Margin between buttons */
-button + button {
-  margin-left: 10px;
-}

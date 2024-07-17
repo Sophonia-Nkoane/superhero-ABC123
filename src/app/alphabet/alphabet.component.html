@@ -39,8 +39,8 @@
 
 <!-- Auto Read Toggle Section (Visible in all modes except 'objects') -->
 <div class="auto-read-toggle" *ngIf="mode !== 'objects'">
-  <button type="button" class="btn btn-outline-default" (click)="toggleAutoRead()">
-    {{ isAutoRead ? 'Stop Reading' : 'Read' }}
+  <button class="btn btn-outline-success" type="button" (click)="toggleAutoRead()">
+    {{ isAutoRead ? 'Stop Reading' : 'Read All' }}
   </button>
 </div>
 
@@ -54,7 +54,7 @@
   <!-- Loop through each letter in the filtered alphabet array -->
   <span *ngFor="let letter of filteredAlphabet">
     <!-- Button for each letter, triggers playPhoneticSpeech method on click -->
-    <button type="button" class="btn btn-outline-default" (click)="playPhoneticSpeech(letter)">
+    <button type="button" (click)="playPhoneticSpeech(letter)">
       <!-- Conditionally display lowercase for phonics mode, uppercase for other modes, and object name for objects mode -->
       <span *ngIf="mode === 'phonics'">{{ letter.toLowerCase() }}</span>
       <span *ngIf="mode === 'objects'">{{ getObject(letter) }}</span>

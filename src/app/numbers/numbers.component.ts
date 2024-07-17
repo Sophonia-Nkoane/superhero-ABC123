@@ -14,6 +14,8 @@ export class NumbersComponent implements OnInit {
   numbers = Array.from({ length: 101 }, (_, i) => i.toString()).slice(0, 100);
   numberInWords = '';
   currentNumber = '';
+  isReading = false; // Flag to indicate if the read all process is ongoing
+  stopRequested = false; // Flag to indicate if stop was requested
   searchResults: string[] = [];
   increment = '1';
   increments = ['1', '2', '5', '10', '20'];
@@ -109,7 +111,7 @@ export class NumbersComponent implements OnInit {
     return !isNaN(num) && num >= 0 && num <= 9;
   }
 
-  async playNumberAudio(number: string) {
+  playNumberAudio(number: string) {
     const num = parseInt(number);
     this.numberInWords = this.num2words(num);
     this.currentNumber = number;
@@ -153,7 +155,7 @@ export class NumbersComponent implements OnInit {
     });
   }
 
-  async searchNumbers(query: string) {
+  searchNumbers(query: string) {
     query = query.toLowerCase();
     this.searchResults = this.numbers.filter(num => num.includes(query));
     this.updateNumberInWordsElement();
@@ -165,9 +167,31 @@ export class NumbersComponent implements OnInit {
   }
 
   async readAllNumbers() {
+    this.isReading = true;
+    this.stopRequested = false; // Reset the stop flag
     for (const number of this.getNumbers()) {
+      if (this.stopRequested) {
+        break;
+      }
       await this.playNumberAudio(number);
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Delay between numbers
+      await this.delay(5000); // Delay between numbers
     }
+    this.isReading = false;
+  }
+
+  stopReading() {
+    this.stopRequested = true;
+  }
+
+  toggleAutoRead() {
+    if (this.isReading) {
+      this.stopReading();
+    } else {
+      this.readAllNumbers();
+    }
+  }
+
+  delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }

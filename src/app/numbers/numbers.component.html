@@ -8,14 +8,18 @@
         <span class="toggle-number" (click)="toggleIncrement('10')">10</span>
         <span class="toggle-number" (click)="toggleIncrement('20')">20</span>
       </span>
-      <button (click)="readAllNumbers()">Read All</button>
     </h1>
-
-    <div class="number-column">
-      <span *ngFor="let number of getNumbers()">
-        <button (click)="playNumberAudio(number);">{{ number }}</button>
-      </span>
+    <div class="auto-read-toggle" >
+      <button class="btn btn-outline-success" type="button" (click)="toggleAutoRead()">
+        {{ isReading ? 'Stop Reading' : 'Read All' }}
+      </button>
     </div>
+  </div>
+
+  <div class="number-column">
+    <span *ngFor="let number of getNumbers()">
+      <button (click)="playNumberAudio(number);">{{ number }}</button>
+    </span>
   </div>
 
   <!-- Displaying the number in words and the numerical value -->

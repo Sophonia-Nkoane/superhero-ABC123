@@ -36,71 +36,31 @@ export class DataService {
 
   private readonly alphabet: string[] = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'r', 's', 't', 'v', 'w'];
   private readonly vowels: string[] = ['a', 'e', 'i', 'o', 'u'];
-  private section1Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(['map', 'frog','wet', 'hop', 'lad', 'lad','zoo', 'jug', 'box', 'kid', 'jump','vest', 'can', 'the', 'quiz', 'she', 'bin']);
-  private section2Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(['She is at the zoo.', 'My frog can hop.', 'He is at the dam.','My dog can jump.']);
-  private section3Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(['-og', '-in', '-op', '-at', 'jog', 'win', 'pop', 'mat', 'frog', 'bin', 'mop', 'cat', 'hop', 'fin', 'hop', 'pat']);
+  private section1Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  private section2Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  private section3Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
   constructor() {
     this.initializeData();
   }
 
   private initializeData(): void {
-    // Initialize word families
-    const initialWordFamilies: WordFamily[] = [
-      { id: 1, group: 'Vowels', prefix: 'at', words: ['cat', 'hat', 'mat', 'rat', 'sat', 'flat', 'chat', 'spat'] },
-      { id: 2, group: 'Vowels', prefix: 'at', words: ['cat', 'hat', 'mat', 'rat', 'sat', 'flat', 'chat', 'spat'] },
-      { id: 3, group: 'Vowels', prefix: 'an', words: ['can', 'fan', 'man', 'van', 'tan', 'pan', 'scan', 'plan'] },
-      { id: 4, group: 'Consonants', prefix: 'in', words: ['pin', 'tin', 'win', 'din', 'kin', 'lin', 'min', 'sin'] },
-      { id: 5, group: 'Consonants', prefix: 'en', words: ['pen', 'ten', 'hen', 'men', 'den', 'len', 'wen', 'gen'] },
-      { id: 6, group: 'Vowels', prefix: 'ot', words: ['not', 'hot', 'pot', 'rot', 'tot', 'dot', 'got', 'lot'] },
-      { id: 7, group: 'Vowels', prefix: 'un', words: ['fun', 'run', 'sun', 'bun', 'gun', 'hun', 'mun', 'pun'] },
-      { id: 8, group: 'Consonants', prefix: 'et', words: ['get', 'set', 'vet', 'bet', 'jet', 'let', 'met', 'net'] },
-      { id: 9, group: 'Consonants', prefix: 'it', words: ['sit', 'kit', 'lit', 'mit', 'nit', 'pit', 'rit', 'wit'] },
-      { id: 10, group: 'Consonants', prefix: 'ut', words: ['cut', 'gut', 'hut', 'lut', 'mut', 'nut', 'put', 'rut'] },
-      { id: 11, group: 'Vowels', prefix: 'am', words: ['cam', 'ham', 'jam', 'lam', 'mam', 'ram', 'sam', 'dam'] },
-      { id: 12, group: 'Vowels', prefix: 'em', words: ['gem', 'hem', 'lem', 'mem', 'nem', 'rem', 'sem', 'them'] },
-      { id: 13, group: 'Consonants', prefix: 'im', words: ['him', 'lim', 'rim', 'sim', 'tim', 'vim', 'whim', 'brim'] }
-    ];
+    // Load data from localStorage or use default values
+    this.wordFamilies.next(this.getFromLocalStorage('wordFamilies', []));
+    this.objects.next(this.getFromLocalStorage('objects', []));
+    this.words.next(this.getFromLocalStorage('words', { subjects: [], actions: [], objects: [] }));
+    this.section1Array.next(this.getFromLocalStorage('section1', []));
+    this.section2Array.next(this.getFromLocalStorage('section2', []));
+    this.section3Array.next(this.getFromLocalStorage('section3', []));
+  }
 
-    this.wordFamilies.next(initialWordFamilies);
+  private getFromLocalStorage<T>(key: string, defaultValue: T): T {
+    const storedValue = localStorage.getItem(key);
+    return storedValue ? JSON.parse(storedValue) : defaultValue;
+  }
 
-    // Initialize objects
-    const initialObjects: Object[] = [
-      { id: 1, letter: 'A', object: 'Apple', icon: '🍎' },
-      { id: 2, letter: 'B', object: 'Boy', icon: '👦' },
-      { id: 3, letter: 'C', object: 'Cat', icon: '🐈' },
-      { id: 4, letter: 'D', object: 'Dog', icon: '🐕' },
-      { id: 5, letter: 'E', object: 'Elephant', icon: '🐘' },
-      { id: 6, letter: 'F', object: 'Fish', icon: '🐟' },
-      { id: 7, letter: 'G', object: 'Girl', icon: '👧' },
-      { id: 8, letter: 'H', object: 'House', icon: '🏠' },
-      { id: 9, letter: 'I', object: 'Ice-cream', icon: '🍦' },
-      { id: 10, letter: 'J', object: 'Jet', icon: '🛩️' },
-      { id: 11, letter: 'K', object: 'Kite', icon: '🪁' },
-      { id: 12, letter: 'L', object: 'Lion', icon: '🦁' },
-      { id: 13, letter: 'M', object: 'Mouse', icon: '🐭' },
-      { id: 14, letter: 'N', object: 'Nose', icon: '👃' },
-      { id: 15, letter: 'O', object: 'Ocean', icon: '🌊' },
-      { id: 16, letter: 'P', object: 'Penguin', icon: '🐧' },
-      { id: 17, letter: 'Q', object: 'Queen', icon: '👑' },
-      { id: 18, letter: 'R', object: 'Robot', icon: '🤖' },
-      { id: 19, letter: 'S', object: 'Sun', icon: '☀️' },
-      { id: 20, letter: 'T', object: 'Tiger', icon: '🐯' },
-      { id: 21, letter: 'U', object: 'Umbrella', icon: '☔️' },
-      { id: 22, letter: 'V', object: 'Violin', icon: '🎻' },
-      { id: 23, letter: 'W', object: 'Whale', icon: '🐳' },
-      { id: 24, letter: 'X', object: 'X-ray', icon: '🔍' },
-      { id: 25, letter: 'Y', object: 'Yacht', icon: '🛥️' },
-      { id: 26, letter: 'Z', object: 'Zebra', icon: '🦓' },
-    ];
-    this.objects.next(initialObjects);
-
-    const initialWords: Words = {
-      subjects: ["I", "The boy", "The girl", "He", "She", "It", "The dog", "The cat", "We", "They"],
-      actions: ["Eat", "Play", "Run", "Jump", "Read", "Write", "Draw", "Paint", "Sing", "Dance"],
-      objects: ["Apples", "Ball", "Book", "Toy", "Game", "Pencil", "Paper", "Crayon", "Paintbrush", "Guitar"]
-    };
-    this.words.next(initialWords);
+  private saveToLocalStorage<T>(key: string, value: T): void {
+    localStorage.setItem(key, JSON.stringify(value));
   }
 
   // Word Families CRUD operations
@@ -111,7 +71,9 @@ export class DataService {
   addWordFamily(wordFamily: Omit<WordFamily, 'id'>): void {
     const currentWordFamilies = this.wordFamilies.value;
     const newId = currentWordFamilies.length > 0 ? Math.max(...currentWordFamilies.map(wf => wf.id)) + 1 : 1;
-    this.wordFamilies.next([...currentWordFamilies, { ...wordFamily, id: newId }]);
+    const updatedWordFamilies = [...currentWordFamilies, { ...wordFamily, id: newId }];
+    this.wordFamilies.next(updatedWordFamilies);
+    this.saveToLocalStorage('wordFamilies', updatedWordFamilies);
   }
 
   updateWordFamily(id: number, updatedWordFamily: Partial<WordFamily>): void {
@@ -120,11 +82,14 @@ export class DataService {
       wf.id === id ? { ...wf, ...updatedWordFamily } : wf
     );
     this.wordFamilies.next(updatedWordFamilies);
+    this.saveToLocalStorage('wordFamilies', updatedWordFamilies);
   }
 
   deleteWordFamily(id: number): void {
     const currentWordFamilies = this.wordFamilies.value;
-    this.wordFamilies.next(currentWordFamilies.filter(wf => wf.id !== id));
+    const updatedWordFamilies = currentWordFamilies.filter(wf => wf.id !== id);
+    this.wordFamilies.next(updatedWordFamilies);
+    this.saveToLocalStorage('wordFamilies', updatedWordFamilies);
   }
 
   // Objects CRUD operations
@@ -135,7 +100,9 @@ export class DataService {
   addObject(object: Omit<Object, 'id'>): void {
     const currentObjects = this.objects.value;
     const newId = currentObjects.length > 0 ? Math.max(...currentObjects.map(obj => obj.id)) + 1 : 1;
-    this.objects.next([...currentObjects, { ...object, id: newId }]);
+    const updatedObjects = [...currentObjects, { ...object, id: newId }];
+    this.objects.next(updatedObjects);
+    this.saveToLocalStorage('objects', updatedObjects);
   }
 
   updateObject(id: number, updatedObject: Partial<Object>): void {
@@ -144,11 +111,14 @@ export class DataService {
       obj.id === id ? { ...obj, ...updatedObject } : obj
     );
     this.objects.next(updatedObjects);
+    this.saveToLocalStorage('objects', updatedObjects);
   }
 
   deleteObject(id: number): void {
     const currentObjects = this.objects.value;
-    this.objects.next(currentObjects.filter(obj => obj.id !== id));
+    const updatedObjects = currentObjects.filter(obj => obj.id !== id);
+    this.objects.next(updatedObjects);
+    this.saveToLocalStorage('objects', updatedObjects);
   }
 
   // Methods for alphabet and vowels
@@ -168,7 +138,9 @@ export class DataService {
   addSection1Word(word: string): void {
     const currentWords = this.section1Array.value;
     if (!currentWords.includes(word)) {
-      this.section1Array.next([...currentWords, word]);
+      const updatedWords = [...currentWords, word];
+      this.section1Array.next(updatedWords);
+      this.saveToLocalStorage('section1', updatedWords);
     }
   }
 
@@ -176,11 +148,14 @@ export class DataService {
     const currentWords = this.section1Array.value;
     const updatedWords = currentWords.map(w => w === oldWord ? newWord : w);
     this.section1Array.next(updatedWords);
+    this.saveToLocalStorage('section1', updatedWords);
   }
 
   deleteSection1Word(word: string): void {
     const currentWords = this.section1Array.value;
-    this.section1Array.next(currentWords.filter(w => w !== word));
+    const updatedWords = currentWords.filter(w => w !== word);
+    this.section1Array.next(updatedWords);
+    this.saveToLocalStorage('section1', updatedWords);
   }
 
   // Section 2 CRUD operations
@@ -191,7 +166,9 @@ export class DataService {
   addSection2Sentence(sentence: string): void {
     const currentSentences = this.section2Array.value;
     if (!currentSentences.includes(sentence)) {
-      this.section2Array.next([...currentSentences, sentence]);
+      const updatedSentences = [...currentSentences, sentence];
+      this.section2Array.next(updatedSentences);
+      this.saveToLocalStorage('section2', updatedSentences);
     }
   }
 
@@ -199,11 +176,14 @@ export class DataService {
     const currentSentences = this.section2Array.value;
     const updatedSentences = currentSentences.map(s => s === oldSentence ? newSentence : s);
     this.section2Array.next(updatedSentences);
+    this.saveToLocalStorage('section2', updatedSentences);
   }
 
   deleteSection2Sentence(sentence: string): void {
     const currentSentences = this.section2Array.value;
-    this.section2Array.next(currentSentences.filter(s => s !== sentence));
+    const updatedSentences = currentSentences.filter(s => s !== sentence);
+    this.section2Array.next(updatedSentences);
+    this.saveToLocalStorage('section2', updatedSentences);
   }
 
   // Section 3 CRUD operations
@@ -214,7 +194,9 @@ export class DataService {
   addSection3Word(word: string): void {
     const currentWords = this.section3Array.value;
     if (!currentWords.includes(word)) {
-      this.section3Array.next([...currentWords, word]);
+      const updatedWords = [...currentWords, word];
+      this.section3Array.next(updatedWords);
+      this.saveToLocalStorage('section3', updatedWords);
     }
   }
 
@@ -222,11 +204,14 @@ export class DataService {
     const currentWords = this.section3Array.value;
     const updatedWords = currentWords.map(w => w === oldWord ? newWord : w);
     this.section3Array.next(updatedWords);
+    this.saveToLocalStorage('section3', updatedWords);
   }
 
   deleteSection3Word(word: string): void {
     const currentWords = this.section3Array.value;
-    this.section3Array.next(currentWords.filter(w => w !== word));
+    const updatedWords = currentWords.filter(w => w !== word);
+    this.section3Array.next(updatedWords);
+    this.saveToLocalStorage('section3', updatedWords);
   }
 
   // Words CRUD operations
@@ -235,25 +220,30 @@ export class DataService {
   }
 
   updateWords(newWords: Partial<Words>): void {
-      const currentWords = this.words.value;
-      const updatedWords = { ...currentWords, ...newWords } as Words;
-      this.words.next(updatedWords);
+    const currentWords = this.words.value;
+    const updatedWords = { ...currentWords, ...newWords } as Words;
+    this.words.next(updatedWords);
+    this.saveToLocalStorage('words', updatedWords);
   }
 
   addWord(category: keyof Words, word: string): void {
     const currentWords = this.words.value;
     if (currentWords[category].includes(word)) return; // Prevent duplicates
-    this.words.next({
+    const updatedWords = {
       ...currentWords,
       [category]: [...currentWords[category], word]
-    });
+    };
+    this.words.next(updatedWords);
+    this.saveToLocalStorage('words', updatedWords);
   }
 
   removeWord(category: keyof Words, word: string): void {
     const currentWords = this.words.value;
-    this.words.next({
+    const updatedWords = {
       ...currentWords,
       [category]: currentWords[category].filter(w => w !== word)
-    });
+    };
+    this.words.next(updatedWords);
+    this.saveToLocalStorage('words', updatedWords);
   }
 }
