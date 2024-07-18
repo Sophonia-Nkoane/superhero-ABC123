@@ -40,18 +40,71 @@ export class DataService {
   private section2Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   private section3Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
+  private readonly defaultWordFamilies: WordFamily[] = [
+    { id: 1, group: 'Vowels', prefix: 'at', words: ['cat', 'hat', 'mat', 'rat', 'sat', 'flat', 'chat', 'spat'] },
+    { id: 2, group: 'Vowels', prefix: 'an', words: ['can', 'fan', 'man', 'van', 'tan', 'pan', 'scan', 'plan'] },
+    { id: 3, group: 'Consonants', prefix: 'in', words: ['pin', 'tin', 'win', 'din', 'kin', 'lin', 'min', 'sin'] },
+    { id: 4, group: 'Consonants', prefix: 'en', words: ['pen', 'ten', 'hen', 'men', 'den', 'len', 'wen', 'gen'] },
+    { id: 5, group: 'Vowels', prefix: 'ot', words: ['not', 'hot', 'pot', 'rot', 'tot', 'dot', 'got', 'lot'] },
+    { id: 6, group: 'Vowels', prefix: 'un', words: ['fun', 'run', 'sun', 'bun', 'gun', 'hun', 'mun', 'pun'] },
+    { id: 7, group: 'Consonants', prefix: 'et', words: ['get', 'set', 'vet', 'bet', 'jet', 'let', 'met', 'net'] },
+    { id: 8, group: 'Consonants', prefix: 'it', words: ['sit', 'kit', 'lit', 'mit', 'nit', 'pit', 'rit', 'wit'] },
+    { id: 9, group: 'Consonants', prefix: 'ut', words: ['cut', 'gut', 'hut', 'lut', 'mut', 'nut', 'put', 'rut'] },
+    { id: 10, group: 'Vowels', prefix: 'am', words: ['cam', 'ham', 'jam', 'lam', 'mam', 'ram', 'sam', 'dam'] },
+    { id: 11, group: 'Vowels', prefix: 'em', words: ['gem', 'hem', 'lem', 'mem', 'nem', 'rem', 'sem', 'them'] },
+    { id: 12, group: 'Consonants', prefix: 'im', words: ['him', 'lim', 'rim', 'sim', 'tim', 'vim', 'whim', 'brim'] }
+  ];
+
+  private readonly defaultObjects: Object[] = [
+    { id: 1, letter: 'A', object: 'Apple', icon: '🍎' },
+    { id: 2, letter: 'B', object: 'Boy', icon: '👦' },
+    { id: 3, letter: 'C', object: 'Cat', icon: '🐈' },
+    { id: 4, letter: 'D', object: 'Dog', icon: '🐕' },
+    { id: 5, letter: 'E', object: 'Elephant', icon: '🐘' },
+    { id: 6, letter: 'F', object: 'Fish', icon: '🐟' },
+    { id: 7, letter: 'G', object: 'Girl', icon: '👧' },
+    { id: 8, letter: 'H', object: 'House', icon: '🏠' },
+    { id: 9, letter: 'I', object: 'Ice-cream', icon: '🍦' },
+    { id: 10, letter: 'J', object: 'Jet', icon: '🛩️' },
+    { id: 11, letter: 'K', object: 'Kite', icon: '🪁' },
+    { id: 12, letter: 'L', object: 'Lion', icon: '🦁' },
+    { id: 13, letter: 'M', object: 'Mouse', icon: '🐭' },
+    { id: 14, letter: 'N', object: 'Nose', icon: '👃' },
+    { id: 15, letter: 'O', object: 'Ocean', icon: '🌊' },
+    { id: 16, letter: 'P', object: 'Penguin', icon: '🐧' },
+    { id: 17, letter: 'Q', object: 'Queen', icon: '👑' },
+    { id: 18, letter: 'R', object: 'Robot', icon: '🤖' },
+    { id: 19, letter: 'S', object: 'Sun', icon: '☀️' },
+    { id: 20, letter: 'T', object: 'Tiger', icon: '🐯' },
+    { id: 21, letter: 'U', object: 'Umbrella', icon: '☔️' },
+    { id: 22, letter: 'V', object: 'Violin', icon: '🎻' },
+    { id: 23, letter: 'W', object: 'Whale', icon: '🐳' },
+    { id: 24, letter: 'X', object: 'X-ray', icon: '🔍' },
+    { id: 25, letter: 'Y', object: 'Yacht', icon: '🛥️' },
+    { id: 26, letter: 'Z', object: 'Zebra', icon: '🦓' },
+  ];
+
+  private readonly defaultWords: Words = {
+    subjects: ["I", "The boy", "The girl", "He", "She", "It", "The dog", "The cat", "We", "They"],
+    actions: ["Eat", "Play", "Run", "Jump", "Read", "Write", "Draw", "Paint", "Sing", "Dance"],
+    objects: ["Apples", "Ball", "Book", "Toy", "Game", "Pencil", "Paper", "Crayon", "Paintbrush", "Guitar"]
+  };
+
+  private readonly defaultSection1: string[] = ['map', 'frog','wet', 'hop', 'lad', 'lad','zoo', 'jug', 'box', 'kid', 'jump','vest', 'can', 'the', 'quiz', 'she', 'bin'];
+  private readonly defaultSection2: string[] = ['She is at the zoo.', 'My frog can hop.', 'He is at the dam.','My dog can jump.'];
+  private readonly defaultSection3: string[] = ['-og', '-in', '-op', '-at', 'jog', 'win', 'pop', 'mat', 'frog', 'bin', 'mop', 'cat', 'hop', 'fin', 'hop', 'pat'];
+
   constructor() {
     this.initializeData();
   }
 
   private initializeData(): void {
-    // Load data from localStorage or use default values
-    this.wordFamilies.next(this.getFromLocalStorage('wordFamilies', []));
-    this.objects.next(this.getFromLocalStorage('objects', []));
-    this.words.next(this.getFromLocalStorage('words', { subjects: [], actions: [], objects: [] }));
-    this.section1Array.next(this.getFromLocalStorage('section1', []));
-    this.section2Array.next(this.getFromLocalStorage('section2', []));
-    this.section3Array.next(this.getFromLocalStorage('section3', []));
+    this.wordFamilies.next(this.getFromLocalStorage('wordFamilies', this.defaultWordFamilies));
+    this.objects.next(this.getFromLocalStorage('objects', this.defaultObjects));
+    this.words.next(this.getFromLocalStorage('words', this.defaultWords));
+    this.section1Array.next(this.getFromLocalStorage('section1', this.defaultSection1));
+    this.section2Array.next(this.getFromLocalStorage('section2', this.defaultSection2));
+    this.section3Array.next(this.getFromLocalStorage('section3', this.defaultSection3));
   }
 
   private getFromLocalStorage<T>(key: string, defaultValue: T): T {
@@ -61,6 +114,22 @@ export class DataService {
 
   private saveToLocalStorage<T>(key: string, value: T): void {
     localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  resetToDefaults(): void {
+    this.wordFamilies.next(this.defaultWordFamilies);
+    this.objects.next(this.defaultObjects);
+    this.words.next(this.defaultWords);
+    this.section1Array.next(this.defaultSection1);
+    this.section2Array.next(this.defaultSection2);
+    this.section3Array.next(this.defaultSection3);
+
+    this.saveToLocalStorage('wordFamilies', this.defaultWordFamilies);
+    this.saveToLocalStorage('objects', this.defaultObjects);
+    this.saveToLocalStorage('words', this.defaultWords);
+    this.saveToLocalStorage('section1', this.defaultSection1);
+    this.saveToLocalStorage('section2', this.defaultSection2);
+    this.saveToLocalStorage('section3', this.defaultSection3);
   }
 
   // Word Families CRUD operations

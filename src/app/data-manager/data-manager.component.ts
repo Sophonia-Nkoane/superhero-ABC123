@@ -42,6 +42,12 @@ export class DataManagerComponent implements OnInit {
 
   ngOnInit() {}
 
+  resetData() {
+    if (confirm('Are you sure you want to reset all data to default values? This action cannot be undone.')) {
+      this.dataService.resetToDefaults();
+    }
+  }
+
   addWordFamily() {
     if (this.newWordFamily.group && this.newWordFamily.prefix && this.newWordFamily.words) {
       this.dataService.addWordFamily({

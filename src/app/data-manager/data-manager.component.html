@@ -1,5 +1,6 @@
 <div class="container">
   <h2>Manage Word Families</h2>
+  <button (click)="resetData()" class="btn btn-outline-danger">reset</button>
 
   <!-- Add Word Family Form -->
   <form (ngSubmit)="addWordFamily()" #newWordFamilyForm="ngForm" class="mb-4">
