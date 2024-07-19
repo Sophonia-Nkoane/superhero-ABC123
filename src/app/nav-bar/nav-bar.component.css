@@ -21,7 +21,7 @@
 .navbar-content nav {
   display: flex;
   align-items: center;
-  transition: max-height 0.5s;
+  transition: max-height 0.5s, opacity 0.5s;
 }
 
 .navbar-content nav a {
@@ -39,7 +39,6 @@
 @media (max-width: 768px) {
   .navbar-content {
     flex-direction: column;
-    align-items: flex-start;
   }
 
   .navbar-toggle {
@@ -54,7 +53,9 @@
   }
 
   .navbar-content nav.show {
-    display: flex;
+    display: ruby;
+    opacity: 1;
+    max-height: 500px; /* Adjust as needed */
   }
 
   .navbar-content nav a {

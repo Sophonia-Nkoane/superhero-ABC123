@@ -25,38 +25,6 @@ h1 {
   margin: 0 auto; /* Centering the container horizontally */
 }
 
-/* Action Buttons */
-.action-button {
-  background-color: #4CAF50; /* Green background color */
-  color: #fff; /* White text color */
-  padding: 10px 20px; /* Padding inside the button */
-  border: none; /* No border */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Cursor style */
-  margin: 0 10px; /* Margin around buttons */
-  flex-shrink: 0; /* Prevents shrinking in flex layout */
-}
-
-.action-button:hover {
-  background-color: #3e8e41; /* Darker green on hover */
-}
-
-/* Word Buttons */
-.word-button {
-  background-color: #4CAF50; /* Green background color */
-  color: #fff; /* White text color */
-  padding: 5px 10px; /* Padding inside the button */
-  border: none; /* No border */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Cursor style */
-  margin: 0.2%; /* Margin around buttons */
-  flex-basis: 8%; /* Basis for flexbox sizing */
-}
-
-.word-button:hover {
-  background-color: #3e8e41; /* Darker green on hover */
-}
-
 /* Checkbox Input */
 .input-container {
   margin-top: 10px; /* Top margin for spacing */
@@ -70,7 +38,7 @@ input[type="checkbox"] {
 
 /* Boxes and Layout */
 .box {
-  display: flex; /* Flex container */
+  display: ruby-text; /* Flex container */
   justify-content: center; /* Center content horizontally */
   flex-wrap: wrap; /* Wrap items to new line as needed */
   margin-bottom: 15px; /* Bottom margin for spacing */
