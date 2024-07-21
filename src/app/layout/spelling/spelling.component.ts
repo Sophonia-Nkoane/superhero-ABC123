@@ -51,7 +51,7 @@ export class SpellingComponent implements OnInit {
       const letter = letters[i];
       this.voiceService.playText(letter, language);
       if (i < letters.length - 1) {
-        this.voiceService.playText(' . ', language);
+        this.voiceService.playText('  ', language);
       }
     }
 
