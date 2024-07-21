@@ -45,13 +45,14 @@ export class SpellingComponent implements OnInit {
     // Play full word
     this.voiceService.playText(word, language);
 
-    // Play each letter with spacing and full stop
+    // Play each letter with spacing
     const letters = word.split('');
     for (let i = 0; i < letters.length; i++) {
       const letter = letters[i];
       this.voiceService.playText(letter, language);
       if (i < letters.length - 1) {
-        this.voiceService.playText('  ', language);
+        // Add a pause between letters (e.g., 500ms)
+        setTimeout(() => {}, 500);
       }
     }
 
@@ -76,24 +77,23 @@ export class SpellingComponent implements OnInit {
   }
 
   checkAnswer(event: Event, word: string): void {
-    event.preventDefault(); // Prevent default behavior
+    event.preventDefault();
 
     const inputElement = event.target as HTMLInputElement;
-    const input = inputElement.value;
+    const input = inputElement.value.toLowerCase(); // Convert input to lowercase
     const missingLetterData = this.missingLettersMap.get(word);
 
     if (missingLetterData) {
       const { letters, indexes } = missingLetterData;
-      const userInput = this.userInputs.get(word) || new Set();
+      let userInput = this.userInputs.get(word) || new Set();
 
       if (letters.includes(input)) {
         // Correct input
         userInput.add(input);
         this.userInputs.set(word, userInput);
-        inputElement.style.border = '1px solid green'; // Highlight input field
-        inputElement.disabled = true; // Disable input field
+        inputElement.style.border = '1px solid green';
+        inputElement.disabled = true;
 
-        // Move to the next input field if necessary
         if (this.level === 2 || this.level === 3) {
           if (this.allLettersEntered(word)) {
             this.playWordAudio(word);
@@ -101,14 +101,14 @@ export class SpellingComponent implements OnInit {
             this.focusNextInput(inputElement);
           }
         } else if (this.level === 1) {
-          this.playWordAudio(word); // Play sound after just one correct letter
+          this.playWordAudio(word);
         }
       } else {
         // Incorrect input
         this.attemptCount++;
-        inputElement.value = ''; // Clear incorrect input
-        inputElement.style.border = '1px solid red'; // Highlight input field in red
-        alert('Incorrect. Try again!'); // Show popup for incorrect input
+        inputElement.value = '';
+        inputElement.style.border = '1px solid red';
+        alert('Incorrect. Try again!');
       }
     }
   }
@@ -118,7 +118,7 @@ export class SpellingComponent implements OnInit {
     if (missingLetterData) {
       const { letters } = missingLetterData;
       const userInput = this.userInputs.get(word) || new Set();
-      return letters.every(letter => userInput.has(letter));
+      return letters.every(letter => userInput.has(letter.toLowerCase()));
     }
     return false;
   }
