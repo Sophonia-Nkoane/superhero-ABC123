@@ -1,4 +1,5 @@
 <!-- Header Section -->
+<div class="spacing">
   <h1>Alphabet</h1>
   <div class="nav-wrapper">
     <ul class="nav nav-pills nav-fill" role="tablist">
@@ -37,32 +38,33 @@
     </ul>
   </div>
 
-<!-- Auto Read Toggle Section (Visible in all modes except 'objects') -->
-<div class="auto-read-toggle" *ngIf="mode !== 'objects'">
-  <button class="btn btn-outline-success" type="button" (click)="toggleAutoRead()">
-    {{ isAutoRead ? 'Stop Reading' : 'Read All' }}
-  </button>
-</div>
-
-<!-- Search Input Section -->
-<div class="search-container">
-  <input type="text" [(ngModel)]="searchLetter" placeholder="Search letter">
-</div>
-
-<!-- Alphabet Row Section -->
-<div class="alphabet-row">
-  <!-- Loop through each letter in the filtered alphabet array -->
-  <span *ngFor="let letter of filteredAlphabet">
-    <!-- Button for each letter, triggers playPhoneticSpeech method on click -->
-    <button type="button" (click)="playPhoneticSpeech(letter)">
-      <!-- Conditionally display lowercase for phonics mode, uppercase for other modes, and object name for objects mode -->
-      <span *ngIf="mode === 'phonics'">{{ letter.toLowerCase() }}</span>
-      <span *ngIf="mode === 'objects'">{{ getObject(letter) }}</span>
-      <span *ngIf="mode !== 'phonics' && mode !== 'objects'">{{ letter.toUpperCase() }}</span>
-      <!-- Display the icon if mode is 'all' or 'objects' -->
-      <span *ngIf="mode === 'all' || mode === 'objects'">
-        <span>{{ getObjectIcon(letter) }}</span>
-      </span>
+  <!-- Auto Read Toggle Section (Visible in all modes except 'objects') -->
+  <div class="auto-read-toggle" *ngIf="mode !== 'objects'">
+    <button class="btn btn-outline-success" type="button" (click)="toggleAutoRead()">
+      {{ isAutoRead ? 'Stop Reading' : 'Auto Read' }}
     </button>
-  </span>
+  </div>
+
+  <!-- Search Input Section -->
+  <div class="search-container">
+    <input type="text" [(ngModel)]="searchLetter" placeholder="Search letter">
+  </div>
+
+  <!-- Alphabet Row Section -->
+  <div class="alphabet-row">
+    <!-- Loop through each letter in the filtered alphabet array -->
+    <span *ngFor="let letter of filteredAlphabet">
+      <!-- Button for each letter, triggers playPhoneticSpeech method on click -->
+      <button type="button" (click)="playPhoneticSpeech(letter)">
+        <!-- Conditionally display lowercase for phonics mode, uppercase for other modes, and object name for objects mode -->
+        <span *ngIf="mode === 'phonics'">{{ letter.toLowerCase() }}</span>
+        <span *ngIf="mode === 'objects'">{{ getObject(letter) }}</span>
+        <span *ngIf="mode !== 'phonics' && mode !== 'objects'">{{ letter.toUpperCase() }}</span>
+        <!-- Display the icon if mode is 'all' or 'objects' -->
+        <span *ngIf="mode === 'all' || mode === 'objects'">
+          <span>{{ getObjectIcon(letter) }}</span>
+        </span>
+      </button>
+    </span>
+  </div>
 </div>

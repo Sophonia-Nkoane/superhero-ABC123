@@ -1,6 +1,5 @@
 /*
-Styles for Number Converter Component
-*/
+/*Styles for Number Converter Component*/
 
 .spacing {
   padding-left: 20px;
@@ -36,8 +35,7 @@ Styles for Number Converter Component
 }
 
 .number-row span {
-  font-size: 36px;
-  margin: -4px;
+  font-size: 46px;
 }
 
 #number-in-words {
@@ -81,6 +79,9 @@ Styles for Number Converter Component
 }
 
 @media (max-width: 768px) {
+  .number-row span {
+    font-size: 30px;
+  }
   .keyboard-row span {
     font-size: 24px;
   }
@@ -95,6 +96,9 @@ Styles for Number Converter Component
 }
 
 @media (max-width: 480px) {
+  .number-row span {
+    font-size: 30px;
+  }
   .keyboard-row {
     font-size: 18px;
   }

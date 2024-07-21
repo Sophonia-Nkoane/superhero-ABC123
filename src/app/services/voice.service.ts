@@ -14,7 +14,7 @@ export class VoiceService {
   phonetics: { [key: string]: string } = {
     A: 'ah', B: 'bah', C: 'kuh', D: 'duh', E: 'eh', F: 'fuh', G: 'gah', H: 'hah',
     I: 'i', J: 'jar', K: 'kuh', L: 'la', M: 'm', N: 'nuh', O: 'oh', P: 'puh',
-    Q: 'qua', R: 'rah', S: 'sah', T: 'tuh', U: 'uh', V: 'vuh', W: 'wuh', X: 'ksuh',
+    Q: 'qua', R: 'rah', S: '/s/', T: 'tuh', U: 'uh', V: 'vuh', W: 'wuh', X: 'ks',
     Y: 'yah', Z: 'zah'
   };
 

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { VoiceService } from '../Utilities/voice.service';
-import { DataService , Words } from '../data.service';
+import { VoiceService } from '../../services/voice.service';
+import { DataService , Words } from '../../services/data.service';
 
 @Component({
   selector: 'app-sentence-building',

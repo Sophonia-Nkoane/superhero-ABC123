@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { VoiceService } from '../Utilities/voice.service';
+import { VoiceService } from '../../services/voice.service';
 
 @Component({
   selector: 'app-numbers',

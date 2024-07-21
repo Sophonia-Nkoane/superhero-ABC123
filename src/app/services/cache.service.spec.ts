@@ -1,7 +1,7 @@
 /* tslint:disable:no-unused-variable */
 
 import { TestBed, async, inject } from '@angular/core/testing';
-import { CacheService } from './cache.service';
+import { CacheService } from '../services/cache.service';
 
 describe('Service: Cache', () => {
   beforeEach(() => {

@@ -1,0 +1,43 @@
+.test-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.word-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.word-container input {
+  margin: 5px;
+  padding: 10px;
+  font-size: 18px;
+}
+
+.word-container button {
+  margin: 5px;
+  padding: 10px;
+  font-size: 18px;
+}
+
+.word-blocks {
+  display: flex;
+  align-items: center;
+}
+
+.word-blocks span {
+  padding: 5px;
+  margin-right: 5px;
+  width: 30px;
+  text-align: center;
+}
+
+.section {
+  margin-top: 20px;
+}
+
+.selected-word {
+  margin-top: 20px;
+}

@@ -1,0 +1,49 @@
+<div class="test-container">
+  <div class="selected-word">
+    <p>{{ selectedWord.split('').join(' . ') }}</p>
+  </div>
+
+  <!-- Level Selector -->
+  <div class="level-selector">
+    <label>
+      <input type="radio" name="level" value="1" (change)="setLevel(1)" [checked]="level === 1" /> Level 1
+    </label>
+    <label>
+      <input type="radio" name="level" value="2" (change)="setLevel(2)" [checked]="level === 2" /> Level 2
+    </label>
+    <label>
+      <input type="radio" name="level" value="3" (change)="setLevel(3)" [checked]="level === 3" /> Level 3
+    </label>
+  </div>
+
+
+  <!-- Spelling Section -->
+  <div class="section">
+    <h3>Spelling</h3>
+    <div class="word-container">
+      <ng-container *ngIf="section1Array$ | async as section1Array">
+        <div *ngFor="let word of section1Array">
+          <div class="word-blocks">
+            <ng-container *ngFor="let block of getWordBlocks(word); let i = index">
+              <ng-container *ngIf="block !== ''">
+                <span>{{ block }}</span>
+              </ng-container>
+              <ng-container *ngIf="block === ''">
+                <input #userInput type="text" maxlength="1"
+                  [style.border]="userInputs.get(word) === missingLettersMap.get(word)?.letters ? '1px solid green' : '1px solid #ccc'"
+                  [attr.data-word]="word"
+                  style="padding: 5px; width: 30px;"
+                  (input)="checkAnswer($event, word)" />
+              </ng-container>
+            </ng-container>
+          </div>
+          <button (click)="playWordAudio(word)">Play</button>
+          <button *ngIf="attemptCount >= 5" (click)="hint(word)">Hint</button>
+          <div *ngIf="userInputs.get(word) === missingLettersMap.get(word)?.letters">
+            <p>Correct!</p>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

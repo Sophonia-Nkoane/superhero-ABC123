@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { offlineCacheInterceptor } from './online - offline/OfflineCacheInterceptor';
+import { offlineCacheInterceptor } from './Utilities/OfflineCacheInterceptor';
 import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {

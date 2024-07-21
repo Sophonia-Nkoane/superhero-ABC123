@@ -1,12 +1,13 @@
 import { Routes } from '@angular/router';
-import { AlphabetComponent } from './alphabet/alphabet.component';
-import { SentenceBuildingComponent } from './sentence-building/sentence-building.component';
-import { NumbersComponent } from './numbers/numbers.component';
-import { WelcomeComponent } from './welcome/welcome.component';
+import { AlphabetComponent } from './layout/alphabet/alphabet.component';
+import { SentenceBuildingComponent } from './layout/sentence-building/sentence-building.component';
+import { NumbersComponent } from './layout/numbers/numbers.component';
+import { WelcomeComponent } from './layout/welcome/welcome.component';
 import { SettingsComponent } from './settings/settings.component';
-import { WordFamiliesComponent } from './word-families/word-families.component';
+import { WordFamiliesComponent } from './layout/word-families/word-families.component';
 import { DataManagerComponent } from './data-manager/data-manager.component';
-import { learningComponent } from './learning/learning.component';
+import { learningComponent } from './layout/learning/learning.component';
+import { SpellingComponent } from './layout/spelling/spelling.component';
 
 
 export const routes: Routes = [
@@ -20,5 +21,6 @@ export const routes: Routes = [
     { path: '', component: DataManagerComponent },
   ] },
   { path: 'data-manager', component: DataManagerComponent },
-  { path: 'learning', component: learningComponent }
+  { path: 'learning', component: learningComponent },
+  { path: 'spelling', component: SpellingComponent }
 ];

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { EnglishVoiceService } from '../Utilities/english-voice.service';
-import { AfrikaansVoiceService } from '../Utilities/afrikaans-voice.service';
-import { ZuluVoiceService } from '../Utilities/zulu-voice.service';
-import { GlobalSettingsService } from '../Utilities/global-settings.service';
+import { EnglishVoiceService } from '../services/english-voice.service';
+import { AfrikaansVoiceService } from '../services/afrikaans-voice.service';
+import { ZuluVoiceService } from '../services/zulu-voice.service';
+import { GlobalSettingsService } from '../services/global-settings.service';
 import { RouterModule } from '@angular/router';
 
 

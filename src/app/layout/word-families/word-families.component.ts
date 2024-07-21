@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { VoiceService } from '../Utilities/voice.service';
-import { WORD_FAMILIES, WordFamily, alphabet, vowels } from '../Utilities/word-management';
+import { VoiceService } from '../../services/voice.service';
+import { WORD_FAMILIES, WordFamily, alphabet, vowels } from '../../Utilities/word-management';
 
 @Component({
   selector: 'app-word-families',

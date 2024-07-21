@@ -1,8 +1,8 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { VoiceService } from '../Utilities/voice.service';
-import { DataService, Object as DataObject  } from '../data.service'; // Import the objects }
+import { VoiceService } from '../../services/voice.service';
+import { DataService, Object as DataObject  } from '../../services/data.service'; // Import the objects }
 
 @Component({
   selector: 'app-alphabet',

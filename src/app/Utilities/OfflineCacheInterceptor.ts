@@ -2,8 +2,8 @@ import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { NetworkStatusService } from './services/network-status.service';
-import { CacheService } from './services/cache.service';
+import { NetworkStatusService } from '../services/network-status.service';
+import { CacheService } from '../services/cache.service';
 
 
 export const offlineCacheInterceptor: HttpInterceptorFn = (req, next) => {

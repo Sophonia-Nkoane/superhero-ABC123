@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService, WordFamily, Object as DataObject, Words } from '../data.service';
+import { DataService, WordFamily, Object as DataObject, Words } from '../services/data.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';

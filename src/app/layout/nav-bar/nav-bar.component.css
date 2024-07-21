@@ -32,11 +32,11 @@
 
 .navbar-content nav a.active {
   font-weight: bold;
-  color: blue; /* Change this to whatever highlight color you want */
+  color: palevioletred;
 }
 
 /* Responsive styles */
-@media (max-width: 768px) {
+@media (max-width: 990px) {
   .navbar-content {
     flex-direction: column;
   }
@@ -53,7 +53,9 @@
   }
 
   .navbar-content nav.show {
-    display: ruby;
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Center icons */
     opacity: 1;
     max-height: 500px; /* Adjust as needed */
   }
@@ -62,5 +64,17 @@
     margin-bottom: 1rem;
     width: 100%;
     text-align: center;
+    font-size: 0; /* Set font size to 0 to hide text */
+  }
+
+  /* Hide text and only show icons */
+  .navbar-content nav a span {
+    display: none; /* Hide text */
+  }
+
+  .navbar-content nav a svg {
+    width: 24px; /* Adjust icon size as needed */
+    height: 24px; /* Adjust icon size as needed */
+    margin-bottom: 10px; /* Space icons */
   }
 }

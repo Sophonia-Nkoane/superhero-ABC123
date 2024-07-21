@@ -1,4 +1,8 @@
 /* alphabet.component.css */
+.spacing {
+  padding-left: 20px;
+  padding-right: 20px;
+}
 
 /* Container for the alphabet letters, arranged in a flexible row */
 .alphabet-row {
@@ -105,6 +109,10 @@ input[type="text"]:focus {
   .nav {
     flex-wrap: wrap;
     justify-content: center;
+  }
+
+  .alphabet-row span {
+    font-size: 30px;
   }
 
   .button-text {
