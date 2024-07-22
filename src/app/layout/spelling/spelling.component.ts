@@ -22,6 +22,7 @@ export class SpellingComponent implements OnInit {
   missingLettersMap: Map<string, { letters: string[], indexes: number[] }> = new Map(); // Updated to handle multiple letters
   userInputs: Map<string, Set<string>> = new Map(); // Map to track user inputs
   expectedLetterIndex: number = 0;
+  usePhonetics: boolean = false; // New property for the toggle
 
   // Array for section 1
   section1Array$: Observable<string[]>;
@@ -42,24 +43,54 @@ export class SpellingComponent implements OnInit {
   playWordAudio(word: string): void {
     const language: 'English' = 'English';
 
-    // Play full word
-    this.voiceService.playText(word, language);
+    if (this.usePhonetics) {
+      this.playPhoneticsSound(word, language);
+    } else {
+      // Play full word
+      this.voiceService.playText(word, language);
 
-    // Play each letter with spacing
+      // Play each letter with spacing
+      const letters = word.split('');
+      for (let i = 0; i < letters.length; i++) {
+        const letter = letters[i];
+        this.voiceService.playText(letter, language);
+        if (i < letters.length - 1) {
+          // Add a pause between letters (e.g., 500ms)
+          setTimeout(() => {}, 500);
+        }
+      }
+
+      // Play full word again
+      setTimeout(() => {
+        this.voiceService.playText(word, language);
+      }, 2000);
+    }
+  }
+
+  playPhoneticsSound(word: string, language: 'English'): void {
+    // Play full word phonetic
+    const wordPhonetic = this.voiceService.getPhonetic(word);
+    this.voiceService.playText(wordPhonetic, language);
+
+    // Play each letter's phonetic with spacing
     const letters = word.split('');
     for (let i = 0; i < letters.length; i++) {
-      const letter = letters[i];
-      this.voiceService.playText(letter, language);
+      const letterPhonetic = this.voiceService.getPhonetic(letters[i]);
+      this.voiceService.playText(letterPhonetic, language);
       if (i < letters.length - 1) {
-        // Add a pause between letters (e.g., 500ms)
+        // Add a pause between phonetics (e.g., 500ms)
         setTimeout(() => {}, 500);
       }
     }
 
-    // Play full word again
+    // Play full word phonetic again
     setTimeout(() => {
-      this.voiceService.playText(word, language);
+      this.voiceService.playText(wordPhonetic, language);
     }, 2000);
+  }
+
+  togglePhonetics(): void {
+    this.usePhonetics = !this.usePhonetics;
   }
 
   hint(word: string): void {

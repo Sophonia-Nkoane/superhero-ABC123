@@ -16,30 +16,39 @@
     </label>
   </div>
 
+  <!-- Phonetics Toggle -->
+  <div class="phonetics-toggle">
+    <label>
+      <input type="checkbox" [checked]="usePhonetics" (change)="togglePhonetics()">
+      Use Phonetics
+    </label>
+  </div>
 
   <!-- Spelling Section -->
   <div class="section">
     <h3>Spelling</h3>
     <div class="word-container">
       <ng-container *ngIf="section1Array$ | async as section1Array">
-        <div *ngFor="let word of section1Array">
+        <div *ngFor="let word of section1Array" class="word-item">
           <div class="word-blocks">
             <ng-container *ngFor="let block of getWordBlocks(word); let i = index">
               <ng-container *ngIf="block !== ''">
-                <span>{{ block }}</span>
+                <span class="letter-block">{{ block }}</span>
               </ng-container>
               <ng-container *ngIf="block === ''">
                 <input #userInput type="text" maxlength="1"
-                  [style.border]="userInputs.get(word) === missingLettersMap.get(word)?.letters ? '1px solid green' : '1px solid #ccc'"
+                  [class.correct]="userInputs.get(word)?.has(missingLettersMap.get(word)?.letters[i] || '')"
                   [attr.data-word]="word"
-                  style="padding: 5px; width: 30px;"
+                  class="letter-input"
                   (input)="checkAnswer($event, word)" />
               </ng-container>
             </ng-container>
           </div>
-          <button (click)="playWordAudio(word)">Play</button>
-          <button *ngIf="attemptCount >= 5" (click)="hint(word)">Hint</button>
-          <div *ngIf="userInputs.get(word) === missingLettersMap.get(word)?.letters">
+          <div class="word-actions">
+            <button (click)="playWordAudio(word)">{{ usePhonetics ? 'Play Phonetics' : 'Play Word' }}</button>
+            <button *ngIf="attemptCount >= 5" (click)="hint(word)">Hint</button>
+          </div>
+          <div *ngIf="allLettersEntered(word)" class="feedback correct">
             <p>Correct!</p>
           </div>
         </div>
