@@ -37,7 +37,7 @@
               </ng-container>
               <ng-container *ngIf="block === ''">
                 <input #userInput type="text" maxlength="1"
-                  [class.correct]="userInputs.get(word)?.has(missingLettersMap.get(word)?.letters[i] || '')"
+                  [class.correct]="userInputs.get(word)?.has(missingLettersMap.get(word)?.letters?.[i] || '')"
                   [attr.data-word]="word"
                   class="letter-input"
                   (input)="checkAnswer($event, word)" />
