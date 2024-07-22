@@ -16,7 +16,6 @@
     </label>
   </div>
 
-
   <!-- Spelling Section -->
   <div class="section">
     <h3>Spelling</h3>
@@ -25,21 +24,22 @@
         <div *ngFor="let word of section1Array">
           <div class="word-blocks">
             <ng-container *ngFor="let block of getWordBlocks(word); let i = index">
-              <ng-container *ngIf="block !== ''">
+              <ng-container *ngIf="block !== '_'">
                 <span>{{ block }}</span>
               </ng-container>
-              <ng-container *ngIf="block === ''">
-                <input #userInput type="text" maxlength="1"
-                  [style.border]="userInputs.get(word) === missingLettersMap.get(word)?.letters ? '1px solid green' : '1px solid #ccc'"
+              <ng-container *ngIf="block === '_'">
+                <input #userInput type="text" inputmode="lowercase" autocapitalize="none" maxlength="1"
+                  [ngModel]="userInputs.get(word)?.get(i) || ''"
+                  (ngModelChange)="updateUserInput($event, word, i)"
+                  [style.border]="userInputs.get(word) && userInputs.get(word)?.get(i) === word[i] ? '1px solid green' : '1px solid #ccc'"
                   [attr.data-word]="word"
-                  style="padding: 5px; width: 30px;"
-                  (input)="checkAnswer($event, word)" />
+                  style="padding: 5px; width: 30px;" />
               </ng-container>
             </ng-container>
           </div>
           <button (click)="playWordAudio(word)">Play</button>
           <button *ngIf="attemptCount >= 5" (click)="hint(word)">Hint</button>
-          <div *ngIf="userInputs.get(word) === missingLettersMap.get(word)?.letters">
+          <div *ngIf="allLettersEntered(word)">
             <p>Correct!</p>
           </div>
         </div>
