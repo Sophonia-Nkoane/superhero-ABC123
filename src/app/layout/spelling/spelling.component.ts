@@ -19,13 +19,14 @@ export class SpellingComponent implements OnInit {
   filteredWords: string[] = [];
   attemptCount: number = 0;
   level: number = 1;
-  missingLettersMap: Map<string, { letters: string[], indexes: number[] }> = new Map(); // Updated to handle multiple letters
-  userInputs: Map<string, Set<string>> = new Map(); // Map to track user inputs
+  missingLettersMap: Map<string, { letters: string[], indexes: number[] }> = new Map();
+  userInputs: Map<string, Set<string>> = new Map();
   expectedLetterIndex: number = 0;
-  usePhonetics: boolean = false; // New property for the toggle
+  currentInputIndex: Map<string, number> = new Map();
 
-  // Array for section 1
   section1Array$: Observable<string[]>;
+
+  usePhonetics: boolean = false;
 
   @ViewChildren('userInput') inputElements: QueryList<ElementRef<HTMLInputElement>> | null = null;
 
@@ -37,6 +38,10 @@ export class SpellingComponent implements OnInit {
     this.dataService.getWords().subscribe(wordsObj => {
       this.words = wordsObj['words'];
       this.filteredWords = this.words;
+    });
+
+    this.section1Array$.subscribe(words => {
+      words.forEach(word => this.currentInputIndex.set(word, 0));
     });
   }
 
@@ -111,19 +116,22 @@ export class SpellingComponent implements OnInit {
     event.preventDefault();
 
     const inputElement = event.target as HTMLInputElement;
-    const input = inputElement.value.toLowerCase(); // Convert input to lowercase
+    const input = inputElement.value.toLowerCase();
     const missingLetterData = this.missingLettersMap.get(word);
 
     if (missingLetterData) {
       const { letters, indexes } = missingLetterData;
       let userInput = this.userInputs.get(word) || new Set();
+      const currentIndex = this.currentInputIndex.get(word) || 0;
 
-      if (letters.includes(input)) {
+      if (input === letters[currentIndex].toLowerCase()) {
         // Correct input
         userInput.add(input);
         this.userInputs.set(word, userInput);
         inputElement.style.border = '1px solid green';
         inputElement.disabled = true;
+
+        this.currentInputIndex.set(word, currentIndex + 1);
 
         if (this.level === 2 || this.level === 3) {
           if (this.allLettersEntered(word)) {
@@ -161,7 +169,11 @@ export class SpellingComponent implements OnInit {
       const nextIndex = currentIndex + 1;
       if (nextIndex < inputArray.length) {
         const nextInput = inputArray[nextIndex].nativeElement as HTMLInputElement;
-        nextInput.focus();
+        if (!nextInput.disabled) {
+          nextInput.focus();
+        } else {
+          this.focusNextInput(nextInput); // Recursively call to find next enabled input
+        }
       }
     }
   }
@@ -222,21 +234,23 @@ export class SpellingComponent implements OnInit {
     this.level = newLevel;
     this.expectedLetterIndex = 0;
     this.attemptCount = 0;
-    this.missingLettersMap.clear(); // Clear missing letters map when level changes
-    this.userInputs.clear(); // Clear user inputs map when level changes
+    this.missingLettersMap.clear();
+    this.userInputs.clear();
 
-    // Reset selected word and filtered words
     this.selectedWord = '';
     this.filteredWords = this.words;
 
-    // Reset input fields
     if (this.inputElements) {
       this.inputElements.forEach(input => {
         const nativeInput = input.nativeElement as HTMLInputElement;
         nativeInput.value = '';
-        nativeInput.style.border = '1px solid #ccc'; // Reset border style
-        nativeInput.disabled = false; // Ensure input is enabled
+        nativeInput.style.border = '1px solid #ccc';
+        nativeInput.disabled = false;
       });
     }
+
+    this.section1Array$.subscribe(words => {
+      words.forEach(word => this.currentInputIndex.set(word, 0));
+    });
   }
 }
