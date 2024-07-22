@@ -19,10 +19,9 @@ export class SpellingComponent implements OnInit {
   filteredWords: string[] = [];
   attemptCount: number = 0;
   level: number = 1;
-  missingLettersMap: Map<string, { letters: string[], indexes: number[] }> = new Map();
-  userInputs: Map<string, Map<number, string>> = new Map();
+  missingLettersMap: Map<string, { letters: string[], indexes: number[] }> = new Map(); // Updated to handle multiple letters
+  userInputs: Map<string, Set<string>> = new Map(); // Map to track user inputs
   expectedLetterIndex: number = 0;
-  modifiedWords: Map<string, string> = new Map();
 
   // Array for section 1
   section1Array$: Observable<string[]>;
@@ -37,9 +36,6 @@ export class SpellingComponent implements OnInit {
     this.dataService.getWords().subscribe(wordsObj => {
       this.words = wordsObj['words'];
       this.filteredWords = this.words;
-      this.words.forEach(word => {
-        this.setMissingLetterForWord(word, word.split(''));
-      });
     });
   }
 
@@ -70,8 +66,8 @@ export class SpellingComponent implements OnInit {
     const missingLetterData = this.missingLettersMap.get(word);
     if (missingLetterData) {
       const { letters } = missingLetterData;
-      const userInput = this.userInputs.get(word) || new Map<number, string>();
-      const missingLetters = letters.filter((_, index) => !userInput.has(index));
+      const userInput = this.userInputs.get(word) || new Set();
+      const missingLetters = letters.filter(letter => !userInput.has(letter));
       if (missingLetters.length === 0) {
         alert('All letters are correctly entered!');
       } else {
@@ -80,111 +76,51 @@ export class SpellingComponent implements OnInit {
     }
   }
 
-  updateUserInput(value: string, word: string, index: number): void {
-    if (!this.userInputs.has(word)) {
-      this.userInputs.set(word, new Map<number, string>());
-    }
-    const wordInputs = this.userInputs.get(word)!;
-    wordInputs.set(index, value);
+  checkAnswer(event: Event, word: string): void {
+    event.preventDefault();
 
-    if (this.level > 1) {
-      this.checkLetterOrder(word, index);
-    }
+    const inputElement = event.target as HTMLInputElement;
+    const input = inputElement.value.toLowerCase(); // Convert input to lowercase
+    const missingLetterData = this.missingLettersMap.get(word);
 
-    if (this.allLettersEntered(word)) {
-      this.checkAnswer(word);
-    }
-  }
+    if (missingLetterData) {
+      const { letters, indexes } = missingLetterData;
+      let userInput = this.userInputs.get(word) || new Set();
 
-  checkLetterOrder(word: string, currentIndex: number): void {
-    const wordInputs = this.userInputs.get(word)!;
-    const enteredLetter = wordInputs.get(currentIndex);
+      if (letters.includes(input)) {
+        // Correct input
+        userInput.add(input);
+        this.userInputs.set(word, userInput);
+        inputElement.style.border = '1px solid green';
+        inputElement.disabled = true;
 
-    if (enteredLetter !== word[currentIndex]) {
-      alert(`Incorrect letter order. The correct letter at this position is '${word[currentIndex]}'.`);
-      wordInputs.set(currentIndex, '');
-
-      // Focus back on the current input
-      if (this.inputElements) {
-        const inputArray = this.inputElements.toArray();
-        const currentInput = inputArray[currentIndex]?.nativeElement as HTMLInputElement;
-        if (currentInput) {
-          currentInput.focus();
-        }
-      }
-    } else {
-      // If correct, move to the next input
-      const nextInput = this.inputElements?.toArray()[currentIndex + 1]?.nativeElement;
-      if (nextInput) {
-        this.focusNextInput(nextInput);
-      }
-    }
-  }
-
-  checkAnswer(word: string): void {
-    const wordInputs = this.userInputs.get(word);
-    if (!wordInputs) return;
-
-    const correctOrder = Array.from(wordInputs.values()).join('') === word;
-
-    if (correctOrder) {
-      const missingLetterData = this.missingLettersMap.get(word);
-      if (missingLetterData) {
-        const { indexes } = missingLetterData;
-
-        for (let i = 0; i < word.length; i++) {
-          if (indexes.includes(i)) {
-            // Check only missing letter positions
-            if (wordInputs.get(i) !== word[i]) {
-              this.attemptCount++;
-              this.userInputs.get(word)!.forEach((_, i) => {
-                this.userInputs.get(word)!.set(i, '');
-              });
-              alert(`Incorrect. The correct order is: ${word}. Try again!`);
-              return;
-            }
+        if (this.level === 2 || this.level === 3) {
+          if (this.allLettersEntered(word)) {
+            this.playWordAudio(word);
           } else {
-            // Ensure non-missing positions are unchanged
-            if (wordInputs.has(i) && wordInputs.get(i) !== word[i]) {
-              this.attemptCount++;
-              this.userInputs.get(word)!.forEach((_, i) => {
-                this.userInputs.get(word)!.set(i, '');
-              });
-              alert(`Incorrect. The correct order is: ${word}. Try again!`);
-              return;
-            }
+            this.focusNextInput(inputElement);
           }
+        } else if (this.level === 1) {
+          this.playWordAudio(word);
         }
+      } else {
+        // Incorrect input
+        this.attemptCount++;
+        inputElement.value = '';
+        inputElement.style.border = '1px solid red';
+        alert('Incorrect. Try again!');
       }
-      // Correct input
-      this.playWordAudio(word);
-    } else {
-      // Incorrect input
-      this.attemptCount++;
-      this.userInputs.get(word)!.forEach((_, i) => {
-        this.userInputs.get(word)!.set(i, '');
-      });
-      alert(`Incorrect. The correct order is: ${word}. Try again!`);
     }
   }
 
   allLettersEntered(word: string): boolean {
-    const wordInputs = this.userInputs.get(word);
-    if (!wordInputs) return false;
-
     const missingLetterData = this.missingLettersMap.get(word);
     if (missingLetterData) {
-      const { indexes } = missingLetterData;
-      return indexes.every(index => wordInputs.get(index) === word[index]);
+      const { letters } = missingLetterData;
+      const userInput = this.userInputs.get(word) || new Set();
+      return letters.every(letter => userInput.has(letter.toLowerCase()));
     }
     return false;
-  }
-
-  getCurrentInputIndex(inputElement: HTMLInputElement): number {
-    if (this.inputElements) {
-      return this.inputElements.toArray().findIndex(el => el.nativeElement === inputElement);
-    }
-    return -1;
   }
 
   focusNextInput(currentInput: HTMLInputElement): void {
@@ -194,9 +130,7 @@ export class SpellingComponent implements OnInit {
       const nextIndex = currentIndex + 1;
       if (nextIndex < inputArray.length) {
         const nextInput = inputArray[nextIndex].nativeElement as HTMLInputElement;
-        if (nextInput.value === '') {
-          nextInput.focus();
-        }
+        nextInput.focus();
       }
     }
   }
@@ -211,11 +145,11 @@ export class SpellingComponent implements OnInit {
     if (missingLetterData) {
       const { letters: missingLetters, indexes } = missingLetterData;
       if (this.level === 1) {
-        return letters.map((char, i) => i === indexes[0] ? '_' : char);
+        return letters.map((char, i) => i === indexes[0] ? '' : char);
       } else if (this.level === 2) {
-        return letters.map((char, i) => indexes.includes(i) ? '_' : char);
+        return letters.map((char, i) => indexes.includes(i) ? '' : char);
       } else if (this.level === 3) {
-        return new Array(letters.length).fill('_');
+        return new Array(letters.length).fill('');
       }
     }
     return letters;
@@ -224,35 +158,54 @@ export class SpellingComponent implements OnInit {
   setMissingLetterForWord(word: string, letters: string[]): void {
     if (this.level === 1) {
       const missingIndex = Math.floor(Math.random() * letters.length);
-      const modifiedWord = word.split('');
-      modifiedWord[missingIndex] = '_';
-      this.modifiedWords.set(word, modifiedWord.join(''));
+      this.missingLettersMap.set(word, {
+        letters: [letters[missingIndex]],
+        indexes: [missingIndex]
+      });
     } else if (this.level === 2) {
       const missingIndexes = this.getTwoRandomIndexes(letters.length);
-      const modifiedWord = word.split('');
-      missingIndexes.forEach(index => modifiedWord[index] = '_');
-      this.modifiedWords.set(word, modifiedWord.join(''));
+      const missingLetters = missingIndexes.map(index => letters[index]);
+      this.missingLettersMap.set(word, {
+        letters: missingLetters,
+        indexes: missingIndexes
+      });
     } else if (this.level === 3) {
       // All letters are missing in level 3
-      this.modifiedWords.set(word, '_'.repeat(word.length));
+      this.missingLettersMap.set(word, {
+        letters: letters,
+        indexes: letters.map((_, index) => index)
+      });
     }
   }
 
   getTwoRandomIndexes(length: number): number[] {
-    const indexes: number[] = [];
-    while (indexes.length < 2) {
-      const randomIndex = Math.floor(Math.random() * length);
-      if (!indexes.includes(randomIndex)) {
-        indexes.push(randomIndex);
-      }
+    const index1 = Math.floor(Math.random() * length);
+    let index2 = Math.floor(Math.random() * length);
+    while (index2 === index1) {
+      index2 = Math.floor(Math.random() * length);
     }
-    return indexes;
+    return [index1, index2];
   }
 
   setLevel(newLevel: number): void {
     this.level = newLevel;
+    this.expectedLetterIndex = 0;
     this.attemptCount = 0;
-    this.userInputs.clear();
-    this.missingLettersMap.clear();
+    this.missingLettersMap.clear(); // Clear missing letters map when level changes
+    this.userInputs.clear(); // Clear user inputs map when level changes
+
+    // Reset selected word and filtered words
+    this.selectedWord = '';
+    this.filteredWords = this.words;
+
+    // Reset input fields
+    if (this.inputElements) {
+      this.inputElements.forEach(input => {
+        const nativeInput = input.nativeElement as HTMLInputElement;
+        nativeInput.value = '';
+        nativeInput.style.border = '1px solid #ccc'; // Reset border style
+        nativeInput.disabled = false; // Ensure input is enabled
+      });
+    }
   }
 }
