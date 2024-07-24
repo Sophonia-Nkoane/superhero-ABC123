@@ -1,0 +1,34 @@
+.section {
+  margin: 20px;
+}
+
+.number-inputs {
+  margin-bottom: 10px;
+}
+
+.result-display {
+  display: flex;
+  align-items: center;
+}
+
+.blocks {
+  display: flex;
+  margin: 0 5px;
+}
+
+.block {
+  width: 30px;
+  height: 30px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5px;
+}
+
+.symbol, .equals {
+  margin: 0 10px;
+  font-size: 24px;
+  font-weight: bold;
+}

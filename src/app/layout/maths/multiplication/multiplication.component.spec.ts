@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WordFamiliesComponent } from './word-families.component';
+import { MultiplicationComponent } from './multiplication.component';
 
-describe('WordFamiliesComponent', () => {
-  let component: WordFamiliesComponent;
-  let fixture: ComponentFixture<WordFamiliesComponent>;
+describe('MultiplicationComponent', () => {
+  let component: MultiplicationComponent;
+  let fixture: ComponentFixture<MultiplicationComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WordFamiliesComponent]
+      imports: [MultiplicationComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(WordFamiliesComponent);
+    fixture = TestBed.createComponent(MultiplicationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

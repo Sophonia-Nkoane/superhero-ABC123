@@ -39,7 +39,7 @@
                 <input #userInput type="text" maxlength="1"
                   [style.border]="userInputs.get(word) === missingLettersMap.get(word)?.letters ? '1px solid green' : '1px solid #ccc'"
                   [attr.data-word]="word"
-                  style="padding: 5px; width: 30px;"
+                  style="padding: 5px; width: 40px; height: 50px; text-align: center;"
                   (input)="checkAnswer($event, word)" />
               </ng-container>
             </ng-container>

@@ -1,0 +1,74 @@
+.test-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.number-inputs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.number-inputs input {
+  margin: 5px;
+  padding: 10px;
+  font-size: 18px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.number-inputs button {
+  margin: 5px;
+  padding: 10px 15px;
+  font-size: 18px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.number-inputs button:hover {
+  background-color: #0056b3;
+}
+
+.result-display {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.blocks {
+  display: flex;
+  align-items: center;
+}
+
+.block {
+  margin: 0 5px;
+  padding: 10px;
+  font-size: 24px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+  background-color: #fff;
+  width: 40px;
+  height: 50px;
+}
+
+.operator {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+}
+
+.number-input {
+  width: 40px;
+  height: 50px;
+  text-align: center;
+}

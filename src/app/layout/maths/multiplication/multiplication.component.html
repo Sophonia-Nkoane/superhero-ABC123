@@ -1,0 +1,21 @@
+<div class="section">
+  <h2>Multiplication</h2>
+  <div class="number-inputs">
+    <input type="number" [(ngModel)]="num1" placeholder="Number 1">
+    <input type="number" [(ngModel)]="num2" placeholder="Number 2">
+  </div>
+  <button class="btn btn-outline-success" type="button" (click)="multiply()">x</button>
+  <div class="result-display">
+    <div class="blocks" *ngFor="let block of getBlocks(num1); let i = index">
+      <div class="block" [style.width]="getBlockWidth(i)"></div>
+    </div>
+    <span class="symbol">x</span>
+    <div class="blocks" *ngFor="let block of getBlocks(num2); let i = index">
+      <div class="block" [style.width]="getBlockWidth(i)"></div>
+    </div>
+    <span class="equals">=</span>
+    <div class="blocks" *ngFor="let block of getBlocks(result); let i = index">
+      <div class="block" [style.width]="getBlockWidth(i)"></div>
+    </div>
+  </div>
+</div>

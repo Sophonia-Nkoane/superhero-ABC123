@@ -1,0 +1,52 @@
+<div class="addition-container">
+  <h2>Addition Practice</h2>
+
+  <div class="problem" *ngIf="currentProblem">
+    <input #inputBlock type="text" [disabled]="missingPosition !== 'num1'"
+           [value]="missingPosition === 'num1' ? '' : currentProblem.num1"
+           (input)="onInputChange($event, 'num1')"
+           class="number-input" [attr.maxlength]="level === 3 || level === 6 ? 3 : 2" id="num1" *ngIf="level <= 3 || level >= 4">
+    +
+    <input #inputBlock type="text" [disabled]="missingPosition !== 'num2'"
+           [value]="missingPosition === 'num2' ? '' : currentProblem.num2"
+           (input)="onInputChange($event, 'num2')"
+           class="number-input" [attr.maxlength]="level === 3 || level === 6 ? 3 : 2" id="num2" *ngIf="level <= 3 || level >= 4">
+    <span *ngIf="level >= 4">+</span>
+    <input #inputBlock type="text" [disabled]="missingPosition !== 'num3'"
+           [value]="missingPosition === 'num3' ? '' : currentProblem.num3"
+           (input)="onInputChange($event, 'num3')"
+           class="number-input" [attr.maxlength]="level === 3 || level === 6 ? 3 : 2" id="num3" *ngIf="level >= 4">
+    <span *ngIf="level >= 4">+</span>
+    <input #inputBlock type="text" [disabled]="missingPosition !== 'num4'"
+           [value]="missingPosition === 'num4' ? '' : currentProblem.num4"
+           (input)="onInputChange($event, 'num4')"
+           class="number-input" [attr.maxlength]="level === 3 || level === 6 ? 3 : 2" id="num4" *ngIf="level >= 4">
+    <span *ngIf="level >= 4">+</span>
+    <input #inputBlock type="text" [disabled]="missingPosition !== 'num5'"
+           [value]="missingPosition === 'num5' ? '' : currentProblem.num5"
+           (input)="onInputChange($event, 'num5')"
+           class="number-input" [attr.maxlength]="level === 3 || level === 6 ? 3 : 2" id="num5" *ngIf="level >= 4">
+    =
+    <input #inputBlock type="text" [disabled]="missingPosition !== 'sum'"
+           [value]="missingPosition === 'sum' ? '' : currentProblem.sum"
+           (input)="onInputChange($event, 'sum')"
+           class="number-input" [attr.maxlength]="level === 3 || level === 6 ? 3 : 2" id="sum">
+  </div>
+
+  <div class="controls">
+    <button (click)="checkAnswer()">Check Answer</button>
+    <button (click)="readProblem()">Read Problem</button>
+    <button (click)="toggleVoice()">{{ voiceEnabled ? 'Disable' : 'Enable' }} Voice</button>
+  </div>
+
+  <div class="level-selector">
+    <button (click)="setLevel(1)">Level 1 (0-10)</button>
+    <button (click)="setLevel(2)">Level 2 (0-10, Mixed)</button>
+    <button (click)="setLevel(3)">Level 3 (0-100, Mixed)</button>
+    <button (click)="setLevel(4)">Level 4 (0-10, 5 numbers)</button>
+    <button (click)="setLevel(5)">Level 5 (0-10, Mixed, 5 numbers)</button>
+    <button (click)="setLevel(6)">Level 6 (0-100, Mixed, 5 numbers)</button>
+  </div>
+
+  <p>Attempts: {{ attemptCount }}</p>
+</div>

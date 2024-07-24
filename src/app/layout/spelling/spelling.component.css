@@ -16,7 +16,8 @@
 .word-container input {
   margin: 5px;
   padding: 10px;
-  font-size: 18px;
+  font-size: 24px;
+  font-weight: bold; /* Added font weight for bold text */
   border: 1px solid #ccc; /* Added border for better input field visibility */
   border-radius: 4px; /* Added rounded corners */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added subtle shadow for depth */
@@ -49,7 +50,8 @@
 .word-blocks span {
   padding: 5px;
   margin-right: 5px;
-  width: 30px;
+  width: 40px;
+  height: 50px;
   text-align: center;
   font-size: 24px; /* Increased font size for better visibility */
   border: 1px solid #ccc; /* Added border for better block visibility */

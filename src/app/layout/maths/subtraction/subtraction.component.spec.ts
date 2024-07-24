@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { learningComponent } from './learning.component';
+import { SubtractionComponent } from './subtraction.component';
 
-describe('LearningComponent', () => {
-  let component: learningComponent;
-  let fixture: ComponentFixture<learningComponent>;
+describe('SubtractionComponent', () => {
+  let component: SubtractionComponent;
+  let fixture: ComponentFixture<SubtractionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [learningComponent]
+      imports: [SubtractionComponent]
     })
     .compileComponents();
-
-    fixture = TestBed.createComponent(learningComponent);
+    
+    fixture = TestBed.createComponent(SubtractionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
