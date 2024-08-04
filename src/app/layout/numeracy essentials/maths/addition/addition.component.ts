@@ -26,6 +26,7 @@ export class AdditionComponent implements OnInit, OnDestroy {
   voiceEnabled: boolean = true;
   errorMessage: string = '';
   private unsubscribe$ = new Subject<void>();
+  isReading: boolean = false; // New property to track if a problem is being read
 
   @ViewChildren('inputBlock') inputBlocks: QueryList<ElementRef<HTMLInputElement>> | null = null;
 
@@ -41,7 +42,7 @@ export class AdditionComponent implements OnInit, OnDestroy {
   }
 
   generateProblems() {
-    this.problems = [];
+    const newProblems: Problem[] = [];
     try {
       for (let i = 0; i < 10; i++) {
         let numbers: number[];
@@ -62,9 +63,13 @@ export class AdditionComponent implements OnInit, OnDestroy {
         }
 
         const sum = numbers.reduce((acc, curr) => acc + curr, 0);
-        this.problems.push({ numbers, sum, missingIndex });
+        newProblems.push({ numbers, sum, missingIndex });
       }
+      this.problems = newProblems;
       console.log('Generated problems:', this.problems);
+
+      // Auto-read the first problem
+      setTimeout(() => this.readProblem(0), 500);
     } catch (error) {
       this.handleError('Error generating problems', error);
     }
@@ -133,7 +138,6 @@ export class AdditionComponent implements OnInit, OnDestroy {
     if (userAnswer === correctAnswer) {
       this.errorMessage = ''; // Clear error message on correct answer
       inputBlock.style.backgroundColor = 'green';
-      this.playResultAudio();
 
       // Move to the next problem after a short delay
       setTimeout(() => {
@@ -143,28 +147,34 @@ export class AdditionComponent implements OnInit, OnDestroy {
           const nextInput = document.getElementById(nextInputId) as HTMLInputElement;
           if (nextInput) {
             nextInput.focus();
+            this.readProblem(problemIndex + 1); // Read the next problem
           }
         }
       }, 1000); // Adjust delay as needed
     } else {
       this.errorMessage = 'Incorrect. Try again!';
       inputBlock.style.backgroundColor = 'red';
+      this.readProblem(problemIndex); // Re-read the current problem
     }
   }
 
-  playResultAudio() {
+  async readProblem(problemIndex: number) {
     if (!this.voiceEnabled) return;
 
+    this.isReading = true; // Set the reading flag to true
     try {
-      const problemsText = this.problems.map(problem => this.formatProblemForSpeech(problem)).join('. ');
+      const problem = this.problems[problemIndex];
+      const problemText = this.formatProblemForSpeech(problem);
       const selectedVoice = this.voiceService.getSelectedVoice(this.language);
       if (selectedVoice) {
-        this.voiceService.playWords([problemsText], this.language);
+        await this.voiceService.playWords([problemText], this.language);
       } else {
         throw new Error('No voice selected or available.');
       }
     } catch (error) {
       this.handleError('Error playing audio', error);
+    } finally {
+      this.isReading = false; // Reset the reading flag once done
     }
   }
 
@@ -197,17 +207,28 @@ export class AdditionComponent implements OnInit, OnDestroy {
     }
   }
 
-  readProblem() {
-    this.playResultAudio();
-  }
-
   toggleVoice() {
     this.voiceEnabled = !this.voiceEnabled;
   }
 
   setLevel(level: number) {
-    this.level = level;
-    this.generateProblems();
+    if (this.level !== level && !this.isReading) { // Disable level change if a problem is being read
+      this.level = level;
+      this.clearInputsAndStyles();
+      setTimeout(() => {
+        this.generateProblems();
+      }, 2000); // Short delay before generating new problems
+    }
+  }
+
+  private clearInputsAndStyles() {
+    this.userInputs = {};
+    this.problems = []; // Clear existing problems immediately
+    const inputFields = document.querySelectorAll('input[type="text"]') as NodeListOf<HTMLInputElement>;
+    inputFields.forEach(input => {
+      input.style.backgroundColor = '';
+      input.value = '';
+    });
   }
 
   private handleError(message: string, error?: any) {

@@ -39,19 +39,21 @@ export class AlphabetComponent implements OnInit {
     const language: 'English' = 'English';
 
     if (this.mode === 'all') {
+      // Update visual immediately
+      this.updateVisualForAll(letter);
+
       // Play alphabet sound
       this.playAlphabetSound(letter, language);
 
-      // Wait for 1 second before playing phonetic sound
+      // Play phonetic sound after a delay
       setTimeout(() => {
         this.playPhoneticSound(letter, language);
 
-        // Wait for 1 second before playing object sound
+        // Play object sound after another delay
         setTimeout(() => {
           const object = this.objects.find(obj => obj.letter === letter);
           if (object) {
             this.voiceService.playText(object.object, language);
-            this.searchLetter = `${letter.toUpperCase()} ${letter.toLowerCase()} - ${object.object} ${object.icon}`;
           }
         }, 1000);
       }, 1000);
@@ -78,6 +80,15 @@ export class AlphabetComponent implements OnInit {
     this.selectedLetter = letter;
     if (this.mode !== 'objects' && this.mode !== 'all') {
       this.updateSearchLetter(letter);
+    }
+  }
+
+  updateVisualForAll(letter: string): void {
+    const object = this.objects.find(obj => obj.letter === letter);
+    if (object) {
+      this.searchLetter = `${letter.toUpperCase()} ${letter.toLowerCase()} - ${object.object} ${object.icon}`;
+    } else {
+      this.searchLetter = `${letter.toUpperCase()} ${letter.toLowerCase()}`;
     }
   }
 

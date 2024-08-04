@@ -11,13 +11,6 @@ export class VoiceService {
   rate: number = 1;
   repeat: boolean = false;
 
-  phonetics: { [key: string]: string } = {
-    A: 'ah', B: 'bah', C: 'kuh', D: 'duh', E: 'eh', F: 'fuh', G: 'gah', H: 'hah',
-    I: 'i', J: 'jar', K: 'kuh', L: 'la', M: 'm', N: 'nuh', O: 'oh', P: 'puh',
-    Q: 'qua', R: 'rah', S: '/s/', T: 'tuh', U: 'uh', V: 'vuh', W: 'wuh', X: 'ks',
-    Y: 'yah', Z: 'zah'
-  };
-
   constructor() {
     if ('speechSynthesis' in window) {
       this.populateVoices();
@@ -110,10 +103,6 @@ export class VoiceService {
 
   getVoiceByName(name: string, langPrefix: string): SpeechSynthesisVoice | null {
     return this.voices.find(voice => voice.name === name && voice.lang.startsWith(langPrefix)) || null;
-  }
-
-  getPhonetic(letter: string): string {
-    return this.phonetics[letter.toUpperCase()] || letter;
   }
 
   setRate(rate: number) {

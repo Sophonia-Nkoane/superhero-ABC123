@@ -1,21 +1,64 @@
-<div class="section">
-  <h2>Subtraction</h2>
-  <div class="number-inputs">
-    <input type="number" [(ngModel)]="num1" placeholder="Number 1">
-    <input type="number" [(ngModel)]="num2" placeholder="Number 2">
+<div class="test-container">
+
+  <div>
+    <button (click)="toggleVoice()">{{ voiceEnabled ? 'Disable' : 'Enable' }} Voice</button>
+    <button *ngFor="let l of [1, 2, 3, 4, 5]" (click)="setLevel(l)">Level {{l}}</button>
   </div>
-  <button class="btn btn-outline-success" type="button" (click)="subtract()">-</button>
-  <div class="result-display">
-    <div class="blocks" *ngFor="let block of getBlocks(num1); let i = index">
-      <div class="block" [style.width]="getBlockWidth(i)"></div>
-    </div>
-    <span class="symbol">-</span>
-    <div class="blocks" *ngFor="let block of getBlocks(num2); let i = index">
-      <div class="block" [style.width]="getBlockWidth(i)"></div>
-    </div>
-    <span class="equals">=</span>
-    <div class="blocks" *ngFor="let block of getBlocks(result); let i = index">
-      <div class="block" [style.width]="getBlockWidth(i)"></div>
-    </div>
+
+  <div class="problems-container">
+    <ng-container *ngFor="let problem of problems; let i = index">
+      <div class="number-inputs">
+        <ng-container *ngFor="let block of getBlocks(i); let j = index; let last = last">
+          <ng-container *ngIf="!last">
+            <ng-container *ngIf="!isInputBlock(i, j); else inputBlock">
+              <input
+                type="text"
+                [id]="'num' + (j + 1)"
+                [value]="getBlockValue(i, j)"
+                readonly
+                class="block"
+              >
+            </ng-container>
+            <ng-template #inputBlock>
+              <input
+                #inputBlock
+                type="text"
+                [id]="'input_' + i + '_' + block"
+                [(ngModel)]="userInputs[i + '_' + block]"
+                (input)="onInputChange($event, i, block)"
+                class="block number-input"
+              >
+            </ng-template>
+            <div *ngIf="j < problem.numbers.length - 1" class="block operator">-</div>
+          </ng-container>
+          <ng-container *ngIf="last">
+            <div class="block operator">=</div>
+            <ng-container *ngIf="!isInputBlock(i, j); else sumInputBlock">
+              <input
+                type="text"
+                [id]="'sum'"
+                [value]="problem.sum"
+                readonly
+                class="block"
+              >
+            </ng-container>
+            <ng-template #sumInputBlock>
+              <input
+                #inputBlock
+                type="text"
+                [id]="'input_' + i + '_' + block"
+                [(ngModel)]="userInputs[i + '_' + block]"
+                (input)="onInputChange($event, i, block)"
+                class="block number-input"
+              >
+            </ng-template>
+          </ng-container>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
   </div>
 </div>

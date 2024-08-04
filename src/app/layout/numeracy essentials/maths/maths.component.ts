@@ -5,7 +5,7 @@ import { AdditionComponent } from './addition/addition.component';
 import { SubtractionComponent } from './subtraction/subtraction.component';
 import { MultiplicationComponent } from './multiplication/multiplication.component';
 import { DivisionComponent } from './division/division.component';
-import { VoiceService } from '../../services/voice.service';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-maths',
@@ -16,24 +16,13 @@ import { VoiceService } from '../../services/voice.service';
     AdditionComponent,
     SubtractionComponent,
     MultiplicationComponent,
-    DivisionComponent
+    DivisionComponent,
+    RouterLink,
+    RouterOutlet
   ],
   templateUrl: './maths.component.html',
   styleUrls: ['./maths.component.css']
 })
 export class MathsComponent {
-  language: 'English' | 'Afrikaans' | 'Zulu' = 'English';
-  name = 'Maths';
-
-  constructor(private voiceService: VoiceService) {}
-
-  playResultAudio(result: string) {
-    const selectedVoice = this.voiceService.getSelectedVoice(this.language);
-    if (selectedVoice) {
-      this.voiceService.playWords([result], this.language);
-    } else {
-      console.error('No voice selected or available.');
-    }
-  }
 
 }

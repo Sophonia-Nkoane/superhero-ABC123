@@ -30,8 +30,4 @@ export class EnglishVoiceService {
   setRepeat(repeat: boolean) {
     this.voiceService.setRepeat(repeat);
   }
-
-  getPhonetic(letter: string): string {
-    return this.voiceService.getPhonetic(letter);
-  }
 }
