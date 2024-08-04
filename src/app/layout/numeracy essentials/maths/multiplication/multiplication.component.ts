@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChildren, QueryList, ElementRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { VoiceService } from '../../../services/voice.service';
-import { DataService } from '../../../services/data.service';
+import { VoiceService } from '../../../../services/voice.service';
+import { DataService } from '../../../../services/data.service';
 import { Subject } from 'rxjs';
 
 interface Problem {
