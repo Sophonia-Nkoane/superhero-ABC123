@@ -1,9 +1,10 @@
 <div class="test-container">
+  <!-- Display the selected word with dots between each letter -->
   <div class="selected-word">
     <p>{{ selectedWord.split('').join(' . ') }}</p>
   </div>
 
-  <!-- Level Selector -->
+  <!-- Level Selector for switching between different levels of difficulty -->
   <div class="level-selector">
     <label>
       <input type="radio" name="level" value="1" (change)="setLevel(1)" [checked]="level === 1" /> Level 1
@@ -16,7 +17,7 @@
     </label>
   </div>
 
-  <!-- Phonetics Toggle -->
+  <!-- Toggle to enable or disable phonetic mode -->
   <div class="phonetics-toggle">
     <label>
       <input type="checkbox" [checked]="usePhonetics" (change)="togglePhonetics()">
@@ -24,17 +25,22 @@
     </label>
   </div>
 
-  <!-- Spelling Section -->
+  <!-- Section for spelling practice -->
   <div class="section">
     <h3>Spelling</h3>
     <div class="word-container">
+      <!-- Use async pipe to handle the observable section1Array$ -->
       <ng-container *ngIf="section1Array$ | async as section1Array">
-        <div *ngFor="let word of section1Array">
+        <!-- Iterate over each word in section1Array -->
+        <div *ngFor="let word of section1Array" class="word-blocks-container">
           <div class="word-blocks">
+            <!-- Generate word blocks for each letter, leaving blanks for missing letters -->
             <ng-container *ngFor="let block of getWordBlocks(word); let i = index">
+              <!-- Display each letter if it's not missing -->
               <ng-container *ngIf="block !== ''">
                 <span>{{ block }}</span>
               </ng-container>
+              <!-- Display an input field for each missing letter -->
               <ng-container *ngIf="block === ''">
                 <input #userInput type="text" maxlength="1"
                   [style.border]="userInputs.get(word) === missingLettersMap.get(word)?.letters ? '1px solid green' : '1px solid #ccc'"
@@ -44,8 +50,11 @@
               </ng-container>
             </ng-container>
           </div>
+          <!-- Button to play the audio for the word -->
           <button (click)="playWordAudio(word)">Play</button>
+          <!-- Display hint button if user has made 5 or more attempts -->
           <button *ngIf="attemptCount >= 5" (click)="hint(word)">Hint</button>
+          <!-- Display "Correct!" message if all letters for the word are entered correctly -->
           <div *ngIf="userInputs.get(word) === missingLettersMap.get(word)?.letters">
             <p>Correct!</p>
           </div>

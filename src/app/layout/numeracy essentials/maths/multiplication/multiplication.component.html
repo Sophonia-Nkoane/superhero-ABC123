@@ -1,23 +1,20 @@
 <div class="test-container">
-
   <div>
     <button (click)="toggleVoice()">{{ voiceEnabled ? 'Disable' : 'Enable' }} Voice</button>
-    <button *ngFor="let l of [1, 2, 3, 4, 5]" (click)="setLevel(l)">Level {{l}}</button>
+    <button *ngFor="let l of [1, 2, 3, 4, 5]" (click)="setLevel(l)">Level {{ l }}</button>
   </div>
-
+  <div *ngIf="level === 1">
+    <button *ngFor="let subLevel of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]" (click)="setSubLevel(subLevel)">
+      {{ subLevel }}
+    </button>
+  </div>
   <div class="problems-container">
     <ng-container *ngFor="let problem of problems; let i = index">
       <div class="number-inputs">
         <ng-container *ngFor="let block of getBlocks(i); let j = index; let last = last">
           <ng-container *ngIf="!last">
             <ng-container *ngIf="!isInputBlock(i, j); else inputBlock">
-              <input
-                type="text"
-                [id]="'num' + (j + 1)"
-                [value]="getBlockValue(i, j)"
-                readonly
-                class="block"
-              >
+              <input type="text" [id]="'num' + (j + 1)" [value]="getBlockValue(i, j)" readonly class="block">
             </ng-container>
             <ng-template #inputBlock>
               <input
@@ -34,13 +31,7 @@
           <ng-container *ngIf="last">
             <div class="block operator">=</div>
             <ng-container *ngIf="!isInputBlock(i, j); else productInputBlock">
-              <input
-                type="text"
-                [id]="'product'"
-                [value]="problem.product"
-                readonly
-                class="block"
-              >
+              <input type="text" [id]="'product'" [value]="problem.product" readonly class="block">
             </ng-container>
             <ng-template #productInputBlock>
               <input
@@ -57,7 +48,6 @@
       </div>
     </ng-container>
   </div>
-
   <div *ngIf="errorMessage" class="error-message">
     {{ errorMessage }}
   </div>

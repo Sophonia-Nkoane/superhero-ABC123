@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VoiceService } from '../../../services/voice.service';
-import { DataService, Object as DataObject  } from '../../../services/data.service';
+import { DataService, Object as DataObject } from '../../../services/data.service';
 
 @Component({
   selector: 'app-alphabet',
@@ -12,15 +12,24 @@ import { DataService, Object as DataObject  } from '../../../services/data.servi
   styleUrls: ['./alphabet.component.css']
 })
 export class AlphabetComponent implements OnInit {
+  // The complete alphabet
   alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  // The letter being searched for
   searchLetter = '';
+  // The currently selected letter
   selectedLetter = '';
+  // Filtered list of letters
   filteredAlphabet: string[] = [];
+  // The mode of the component, default is 'all'
   mode = 'all';
+  // Icon for the search letter
   searchLetterIcon = '';
+  // Whether the component is in reading mode
   isReading = false;
+  // Whether auto-read is enabled
   isAutoRead = false;
 
+  // List of data objects
   objects: DataObject[] = [];
 
   constructor(
@@ -29,12 +38,15 @@ export class AlphabetComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Initialize filteredAlphabet with the full alphabet
     this.filteredAlphabet = this.alphabet.split('');
+    // Subscribe to get objects from data service
     this.dataService.getObjects().subscribe(objects => {
       this.objects = objects;
     });
   }
 
+  // Play phonetic speech for the given letter
   playPhoneticSpeech(letter: string): void {
     const language: 'English' = 'English';
 
@@ -58,6 +70,7 @@ export class AlphabetComponent implements OnInit {
         }, 1000);
       }, 1000);
     } else {
+      // Play sounds based on the current mode
       if (this.mode === 'alphabet' || this.mode === 'all') {
         this.playAlphabetSound(letter, language);
       }
@@ -68,6 +81,7 @@ export class AlphabetComponent implements OnInit {
         const object = this.objects.find(obj => obj.letter === letter);
         if (object) {
           this.voiceService.playText(object.object, language);
+          // Update search letter based on the mode
           if (this.mode === 'all') {
             this.searchLetter = `${letter.toUpperCase()} ${letter.toLowerCase()} - ${object.object} ${object.icon}`;
           } else {
@@ -77,12 +91,14 @@ export class AlphabetComponent implements OnInit {
       }
     }
 
+    // Update the selected letter and search letter
     this.selectedLetter = letter;
     if (this.mode !== 'objects' && this.mode !== 'all') {
       this.updateSearchLetter(letter);
     }
   }
 
+  // Update the visual display for all modes
   updateVisualForAll(letter: string): void {
     const object = this.objects.find(obj => obj.letter === letter);
     if (object) {
@@ -92,22 +108,26 @@ export class AlphabetComponent implements OnInit {
     }
   }
 
+  // Play the alphabet sound for the given letter
   playAlphabetSound(letter: string, language: 'English'): void {
     this.voiceService.playText(letter, language);
   }
 
+  // Play the phonetic sound for the given letter
   playPhoneticSound(letter: string, language: 'English'): void {
     const audioPath = `assets/phonics/upperCase/${letter}.mp3`;
     const audio = new Audio(audioPath);
     audio.play();
   }
 
+  // Update the search letter display
   updateSearchLetter(letter: string): void {
     if (this.mode !== 'objects' && this.mode !== 'all') {
       this.searchLetter = `${letter.toUpperCase()} ${letter.toLowerCase()}`;
     }
   }
 
+  // Handle key press events
   @HostListener('document:keypress', ['$event'])
   handleKeyPress(event: KeyboardEvent): void {
     const letter = event.key.toUpperCase();
@@ -121,27 +141,32 @@ export class AlphabetComponent implements OnInit {
     }
   }
 
+  // Filter the alphabet based on the search letter
   filterAlphabet(): void {
     this.filteredAlphabet = this.alphabet.split('').filter(letter =>
       letter.includes(this.searchLetter.toUpperCase())
     );
   }
 
+  // Get the object associated with the given letter
   getObject(letter: string): string {
     const object = this.objects.find(obj => obj.letter === letter);
     return object ? object.object : '';
   }
 
+  // Get the icon associated with the given letter
   getObjectIcon(letter: string): string {
     const object = this.objects.find(obj => obj.letter === letter);
     return object ? object.icon : '';
   }
 
+  // Toggle the mode of the component
   toggleMode(mode: string): void {
     this.mode = mode;
     this.searchLetter = '';
   }
 
+  // Toggle auto-read functionality
   toggleAutoRead(): void {
     this.isAutoRead = !this.isAutoRead;
     if (this.isAutoRead) {
@@ -151,11 +176,13 @@ export class AlphabetComponent implements OnInit {
     }
   }
 
+  // Read all letters based on the current mode
   readAll(): void {
     this.isReading = true;
     let index = 0;
     let intervalTime: number;
 
+    // Set interval time based on the mode
     switch (this.mode) {
       case 'alphabet':
         intervalTime = 2200;
@@ -179,8 +206,8 @@ export class AlphabetComponent implements OnInit {
     }, intervalTime);
   }
 
+  // Stop the reading process
   stopReading(): void {
     this.isReading = false;
-    console.log('Stopped reading.');
   }
 }

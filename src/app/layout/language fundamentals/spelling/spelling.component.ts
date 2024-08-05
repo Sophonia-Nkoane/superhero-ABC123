@@ -6,35 +6,51 @@ import { DataService } from '../../../services/data.service';
 import { Observable } from 'rxjs';
 import { DataManagerComponent } from '../../../data-manager/data-manager.component';
 
+// Define the SpellingComponent with metadata
 @Component({
   selector: 'app-spelling',
   standalone: true,
-  imports: [CommonModule, FormsModule,DataManagerComponent],
+  imports: [CommonModule, FormsModule, DataManagerComponent],
   templateUrl: './spelling.component.html',
   styleUrls: ['./spelling.component.css']
 })
 export class SpellingComponent implements OnInit {
+  // Array of words used for spelling practice
   words: string[] = [];
+  // The current search word
   searchWord = '';
+  // The currently selected word
   selectedWord = '';
+  // Filtered list of words
   filteredWords: string[] = [];
+  // Count of attempts made by the user
   attemptCount: number = 0;
+  // Current level of the spelling practice
   level: number = 1;
+  // Map to store missing letters and their indexes for each word
   missingLettersMap: Map<string, { letters: string[], indexes: number[] }> = new Map();
+  // Map to store user inputs for each word
   userInputs: Map<string, Set<string>> = new Map();
+  // Index of the expected letter to be input by the user
   expectedLetterIndex: number = 0;
+  // Map to store the current input index for each word
   currentInputIndex: Map<string, number> = new Map();
 
+  // Observable for section1 array from the data service
   section1Array$: Observable<string[]>;
 
+  // Flag to toggle phonetic mode
   usePhonetics: boolean = false;
 
+  // Query list of input elements for user inputs
   @ViewChildren('userInput') inputElements: QueryList<ElementRef<HTMLInputElement>> | null = null;
 
+  // Constructor to inject required services
   constructor(private voiceService: VoiceService, private dataService: DataService) {
     this.section1Array$ = this.dataService.getSection1Array();
   }
 
+  // OnInit lifecycle hook to initialize data
   ngOnInit() {
     this.dataService.getWords().subscribe(wordsObj => {
       this.words = wordsObj['words'];
@@ -45,6 +61,8 @@ export class SpellingComponent implements OnInit {
       words.forEach(word => this.currentInputIndex.set(word, 0));
     });
   }
+
+  // Play audio for the given word
   playWordAudio(word: string): void {
     // Play full word normally
     this.voiceService.playText(word, 'English');
@@ -62,6 +80,7 @@ export class SpellingComponent implements OnInit {
     }, 1000 + word.length * 150); // Adjust timing based on word length
   }
 
+  // Play letters phonetically with a delay
   private playLettersPhonetically(letters: string[], index: number): void {
     if (index >= letters.length) {
       // All letters have been played, play the full word again
@@ -82,6 +101,7 @@ export class SpellingComponent implements OnInit {
     }, 1000); // 1 second pause between letters
   }
 
+  // Play letters normally with a delay
   private playLettersNormally(word: string): void {
     const letters = word.split('');
     for (let i = 0; i < letters.length; i++) {
@@ -96,6 +116,7 @@ export class SpellingComponent implements OnInit {
     }, letters.length * 1000 + 1000); // Wait for all letters to be spoken, then add 1 more second
   }
 
+  // Play the phonetic sound for a given letter
   private playPhoneticSound(letter: string): void {
     const audioPath = `assets/phonics/lowerCase/${letter}.mp3`;
     const audio = new Audio(audioPath);
@@ -104,10 +125,12 @@ export class SpellingComponent implements OnInit {
     });
   }
 
+  // Toggle the use of phonetics
   togglePhonetics(): void {
     this.usePhonetics = !this.usePhonetics;
   }
 
+  // Provide a hint for the given word
   hint(word: string): void {
     const missingLetterData = this.missingLettersMap.get(word);
     if (missingLetterData) {
@@ -122,6 +145,7 @@ export class SpellingComponent implements OnInit {
     }
   }
 
+  // Check the user's answer for the given word
   checkAnswer(event: Event, word: string): void {
     event.preventDefault();
 
@@ -162,6 +186,7 @@ export class SpellingComponent implements OnInit {
     }
   }
 
+  // Check if all letters for the word are entered correctly
   allLettersEntered(word: string): boolean {
     const missingLetterData = this.missingLettersMap.get(word);
     if (missingLetterData) {
@@ -172,6 +197,7 @@ export class SpellingComponent implements OnInit {
     return false;
   }
 
+  // Focus the next input element
   focusNextInput(currentInput: HTMLInputElement): void {
     if (this.inputElements) {
       const inputArray = this.inputElements.toArray();
@@ -188,6 +214,7 @@ export class SpellingComponent implements OnInit {
     }
   }
 
+  // Get the word blocks with missing letters based on the level
   getWordBlocks(word: string): string[] {
     const letters = word.split('');
     if (!this.missingLettersMap.has(word)) {
@@ -208,6 +235,7 @@ export class SpellingComponent implements OnInit {
     return letters;
   }
 
+  // Set the missing letters for the word based on the level
   setMissingLetterForWord(word: string, letters: string[]): void {
     if (this.level === 1) {
       const missingIndex = Math.floor(Math.random() * letters.length);
@@ -231,6 +259,7 @@ export class SpellingComponent implements OnInit {
     }
   }
 
+  // Get two random indexes for level 2
   getTwoRandomIndexes(length: number): number[] {
     const index1 = Math.floor(Math.random() * length);
     let index2 = Math.floor(Math.random() * length);
@@ -240,6 +269,7 @@ export class SpellingComponent implements OnInit {
     return [index1, index2];
   }
 
+  // Set the new level and reset the component state
   setLevel(newLevel: number): void {
     this.level = newLevel;
     this.expectedLetterIndex = 0;
@@ -264,4 +294,3 @@ export class SpellingComponent implements OnInit {
     });
   }
 }
-

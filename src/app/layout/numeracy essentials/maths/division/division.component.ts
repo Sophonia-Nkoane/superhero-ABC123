@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChildren, QueryList, ElementRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
 import { VoiceService } from '../../../../services/voice.service';
 import { DataService } from '../../../../services/data.service';
+import { Subject } from 'rxjs';
 
 interface Problem {
   dividend: number;
   divisor: number;
   quotient: number;
-  missingValue: 'dividend' | 'divisor' | 'quotient';
+  missingIndex: number; // 0 for dividend, 1 for divisor, 2 for quotient
 }
 
 @Component({
@@ -23,11 +23,12 @@ export class DivisionComponent implements OnInit, OnDestroy {
   problems: Problem[] = [];
   userInputs: { [key: string]: string } = {};
   level: number = 1;
+  subLevel: number = 0;
   language: 'English' | 'Afrikaans' | 'Zulu' = 'English';
   voiceEnabled: boolean = true;
   errorMessage: string = '';
   private unsubscribe$ = new Subject<void>();
-  isReading: boolean = false; // New property to track if a problem is being read
+  isReading: boolean = false;
 
   @ViewChildren('inputBlock') inputBlocks: QueryList<ElementRef<HTMLInputElement>> | null = null;
 
@@ -45,27 +46,32 @@ export class DivisionComponent implements OnInit, OnDestroy {
   generateProblems() {
     const newProblems: Problem[] = [];
     try {
-      for (let i = 0; i < 10; i++) {
-        let dividend: number;
-        let divisor: number;
-        let missingValue: 'dividend' | 'divisor' | 'quotient';
+      if (this.level === 1) {
+        for (let i = 1; i <= 12; i++) {
+          const dividend = i;
+          const divisor = 1;
+          const quotient = i;
+          const missingIndex = 2; // Always make the quotient the answer
 
-        if (this.level === 1) {
-          dividend = this.generateRandomNumber(10, 50);
-          divisor = this.generateRandomNumber(1, 10);
-          missingValue = 'dividend'; // Randomly select the missing value
-        } else if (this.level === 2 || this.level === 3) {
-          dividend = this.generateRandomNumber(50, 100);
-          divisor = this.generateRandomNumber(10, 20);
-          missingValue = Math.random() > 0.5 ? 'dividend' : 'divisor'; // Randomly select between dividend and divisor
-        } else { // level 4 and 5
-          dividend = this.generateRandomNumber(100, 200);
-          divisor = this.generateRandomNumber(20, 50);
-          missingValue = Math.random() > 0.5 ? 'quotient' : 'divisor'; // Randomly select between quotient and divisor
+          newProblems.push({ dividend, divisor, quotient, missingIndex });
         }
+      } else {
+        // Generate problems for levels 2 and above (randomized)
+        for (let i = 0; i < 13; i++) {
+          let dividend, divisor, missingIndex;
 
-        const quotient = Math.floor(dividend / divisor);
-        newProblems.push({ dividend, divisor, quotient, missingValue });
+          // Generate random dividend and divisor
+          dividend = this.generateRandomNumber(1, 100);
+          divisor = this.generateRandomNumber(1, 10);
+
+          // Calculate quotient
+          const quotient = Math.floor(dividend / divisor);
+
+          // Randomly select missing index (dividend, divisor, or quotient)
+          missingIndex = Math.floor(Math.random() * 3);
+
+          newProblems.push({ dividend, divisor, quotient, missingIndex });
+        }
       }
       this.problems = newProblems;
       console.log('Generated problems:', this.problems);
@@ -99,11 +105,15 @@ export class DivisionComponent implements OnInit, OnDestroy {
   checkAnswer(problemIndex: number, position: string) {
     const currentProblem = this.problems[problemIndex];
     const userAnswer = parseInt(this.userInputs[problemIndex + '_' + position]);
-    const correctAnswer = position === 'quotient'
-      ? currentProblem.quotient
-      : position === 'dividend'
-      ? currentProblem.dividend
-      : currentProblem.divisor;
+    let correctAnswer;
+
+    if (position === 'dividend') {
+      correctAnswer = currentProblem.dividend;
+    } else if (position === 'divisor') {
+      correctAnswer = currentProblem.divisor;
+    } else {
+      correctAnswer = currentProblem.quotient;
+    }
 
     const inputBlock = document.getElementById(`input_${problemIndex}_${position}`) as HTMLInputElement;
 
@@ -121,7 +131,7 @@ export class DivisionComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         if (problemIndex < this.problems.length - 1) {
           const nextProblem = this.problems[problemIndex + 1];
-          const nextInputId = `input_${problemIndex + 1}_${nextProblem.missingValue}`;
+          const nextInputId = `input_${problemIndex + 1}_${nextProblem.missingIndex === 0 ? 'dividend' : nextProblem.missingIndex === 1 ? 'divisor' : 'quotient'}`;
           const nextInput = document.getElementById(nextInputId) as HTMLInputElement;
           if (nextInput) {
             nextInput.focus();
@@ -130,106 +140,95 @@ export class DivisionComponent implements OnInit, OnDestroy {
         }
       }, 1000); // Adjust delay as needed
     } else {
-      this.errorMessage = 'Incorrect. Try again!';
-      inputBlock.style.backgroundColor = 'red';
-      this.readProblem(problemIndex); // Re-read the current problem
-    }
-  }
-
-  async readProblem(problemIndex: number) {
-    if (!this.voiceEnabled) return;
-
-    this.isReading = true; // Set the reading flag to true
-    try {
-      const problem = this.problems[problemIndex];
-      const problemText = this.formatProblemForSpeech(problem);
-      const selectedVoice = this.voiceService.getSelectedVoice(this.language);
-      if (selectedVoice) {
-        await this.voiceService.playWords([problemText], this.language);
-      } else {
-        throw new Error('No voice selected or available.');
+        this.errorMessage = 'Incorrect. Try again!';
+        inputBlock.style.backgroundColor = 'red';
+        this.readProblem(problemIndex); // Re-read the current problem
       }
-    } catch (error) {
-      this.handleError('Error playing audio', error);
-    } finally {
-      this.isReading = false; // Reset the reading flag once done
     }
-  }
 
-  private formatProblemForSpeech(problem: Problem): string {
-    const { dividend, divisor, quotient, missingValue } = problem;
-    if (missingValue === 'quotient') {
-      return `${dividend} divided by ${divisor} equals what?`;
-    } else if (missingValue === 'divisor') {
-      return `${dividend} divided by what equals ${quotient}?`;
-    } else {
-      return `What is ${dividend} divided by ${divisor}?`;
+    async readProblem(problemIndex: number) {
+      if (!this.voiceEnabled) return;
+
+      this.isReading = true; // Set the reading flag to true
+      try {
+        const problem = this.problems[problemIndex];
+        const problemText = this.formatProblemForSpeech(problem);
+        const selectedVoice = this.voiceService.getSelectedVoice(this.language);
+        if (selectedVoice) {
+          await this.voiceService.playWords([problemText], this.language);
+        } else {
+          throw new Error('No voice selected or available.');
+        }
+      } catch (error) {
+        this.handleError('Error playing audio', error);
+      } finally {
+        this.isReading = false; // Reset the reading flag once done
+      }
     }
-  }
 
-  numberOnly(event: KeyboardEvent): boolean {
-    const charCode = (event.which) ? event.which : event.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      return false;
+    private formatProblemForSpeech(problem: Problem): string {
+      if (problem.missingIndex === 0) {
+        return `What is ${problem.divisor} times what number equals ${problem.dividend}?`;
+      } else if (problem.missingIndex === 1) {
+        return `What is ${problem.dividend} divided by what number equals ${problem.quotient}?`;
+      } else {
+        return `What is ${problem.dividend} divided by ${problem.divisor}?`;
+      }
     }
-    return true;
-  }
 
-  getMaxLength(problemIndex: number, block: string): number {
-    const currentProblem = this.problems[problemIndex];
-    if (block === 'quotient') {
-      return currentProblem.quotient.toString().length;
-    } else if (block === 'divisor') {
-      return currentProblem.divisor.toString().length;
-    } else {
-      return currentProblem.dividend.toString().length;
+    numberOnly(event: KeyboardEvent): boolean {
+      const charCode = (event.which) ? event.which : event.keyCode;
+      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+      }
+      return true;
     }
-  }
 
-  toggleVoice() {
-    this.voiceEnabled = !this.voiceEnabled;
-  }
+    getMaxLength(problemIndex: number, block: string): number {
+      const currentProblem = this.problems[problemIndex];
+      if (block === 'dividend') {
+        return currentProblem.dividend.toString().length;
+      } else if (block === 'divisor') {
+        return currentProblem.divisor.toString().length;
+      } else {
+        return currentProblem.quotient.toString().length;
+      }
+    }
 
-  setLevel(level: number) {
-    if (this.level !== level && !this.isReading) { // Disable level change if a problem is being read
-      this.level = level;
+    toggleVoice() {
+      this.voiceEnabled = !this.voiceEnabled;
+    }
+
+    setLevel(level: number) {
+      if (this.level !== level && !this.isReading) { // Disable level change if a problem is being read
+        this.level = level;
+        this.clearInputsAndStyles();
+        setTimeout(() => {
+          this.generateProblems();
+        }, 2000); // Short delay before generating new problems
+      }
+    }
+
+    setSubLevel(subLevel: number) {
+      this.subLevel = subLevel;
       this.clearInputsAndStyles();
       setTimeout(() => {
         this.generateProblems();
       }, 2000); // Short delay before generating new problems
     }
-  }
 
-  private clearInputsAndStyles() {
-    this.userInputs = {};
-    this.problems = []; // Clear existing problems immediately
-    const inputFields = document.querySelectorAll('input[type="text"]') as NodeListOf<HTMLInputElement>;
-    inputFields.forEach(input => {
-      input.style.backgroundColor = '';
-      input.value = '';
-    });
-  }
+    private clearInputsAndStyles() {
+      this.userInputs = {};
+      this.problems = []; // Clear existing problems immediately
+      const inputFields = document.querySelectorAll('input[type="text"]') as NodeListOf<HTMLInputElement>;
+      inputFields.forEach(input => {
+        input.style.backgroundColor = '';
+        input.value = '';
+      });
+    }
 
-  private handleError(message: string, error?: any) {
-    console.error(message, error);
-    this.errorMessage = `${message}: ${error?.message || error}`;
+    private handleError(message: string, error?: any) {
+      console.error(message, error);
+      this.errorMessage = `${message}: ${error?.message || error}`;
+    }
   }
-
-  getBlocks(problemIndex: number): string[] {
-    const currentProblem = this.problems[problemIndex];
-    return ['dividend', 'divisor', 'quotient'];
-  }
-
-  isInputBlock(problemIndex: number, blockIndex: string): boolean {
-    return this.problems[problemIndex].missingValue === blockIndex;
-  }
-
-  getBlockValue(problemIndex: number, blockIndex: string): number {
-    const problem = this.problems[problemIndex];
-    return blockIndex === 'quotient'
-      ? problem.quotient
-      : blockIndex === 'divisor'
-      ? problem.divisor
-      : problem.dividend;
-  }
-}

@@ -22,11 +22,12 @@ export class MultiplicationComponent implements OnInit, OnDestroy {
   problems: Problem[] = [];
   userInputs: { [key: string]: string } = {};
   level: number = 1;
+  subLevel: number = 0;
   language: 'English' | 'Afrikaans' | 'Zulu' = 'English';
   voiceEnabled: boolean = true;
   errorMessage: string = '';
   private unsubscribe$ = new Subject<void>();
-  isReading: boolean = false; // New property to track if a problem is being read
+  isReading: boolean = false;
 
   @ViewChildren('inputBlock') inputBlocks: QueryList<ElementRef<HTMLInputElement>> | null = null;
 
@@ -44,21 +45,24 @@ export class MultiplicationComponent implements OnInit, OnDestroy {
   generateProblems() {
     const newProblems: Problem[] = [];
     try {
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 13; i++) {
         let numbers: number[];
         let missingIndex: number;
 
         if (this.level === 1) {
-          numbers = this.generateNumbersForLowerLevels();
+          numbers = this.generateNumbersForSubLevel(this.subLevel, i);
           missingIndex = numbers.length; // product is always missing for level 1
-        } else if (this.level === 2 || this.level === 3) {
-          numbers = this.level === 2 ? this.generateNumbersForLowerLevels() : this.generateNumbersForLevelThree();
+        } else if (this.level === 2) {
+          numbers = this.generateNumbersForLevelTwo();
+          missingIndex = numbers.length; // product is always missing for level 2
+        } else if (this.level === 3) {
+          numbers = this.generateNumbersForLevelThree();
           missingIndex = Math.floor(Math.random() * (numbers.length + 1)); // randomly select missing index, including product
         } else if (this.level === 4) {
-          numbers = this.generateNumbersForHigherLevels();
+          numbers = this.generateNumbersForLevelFour();
           missingIndex = numbers.length; // product is always missing for level 4
         } else { // level 5
-          numbers = this.generateNumbersForHigherLevels();
+          numbers = this.generateNumbersForLevelFive();
           missingIndex = Math.floor(Math.random() * (numbers.length + 1)); // randomly select missing index, including product
         }
 
@@ -75,12 +79,16 @@ export class MultiplicationComponent implements OnInit, OnDestroy {
     }
   }
 
-  private generateNumbersForLowerLevels(): number[] {
+  private generateNumbersForSubLevel(subLevel: number, multiplier: number): number[] {
+    return [subLevel, multiplier];
+  }
+
+  private generateNumbersForLevelTwo(): number[] {
     let num1, num2;
     do {
-      num1 = this.generateRandomNumber(1, 10);
-      num2 = this.generateRandomNumber(1, 10);
-    } while (num1 * num2 > 100);
+      num1 = this.generateRandomNumber(1, 20);
+      num2 = this.generateRandomNumber(1, 20);
+    } while (num1 * num2 > 500);
     return [num1, num2];
   }
 
@@ -89,15 +97,23 @@ export class MultiplicationComponent implements OnInit, OnDestroy {
     do {
       num1 = this.generateRandomNumber(1, 50);
       num2 = this.generateRandomNumber(1, 50);
-    } while (num1 * num2 > 2500);
+    } while (num1 * num2 > 500);
     return [num1, num2];
   }
 
-  private generateNumbersForHigherLevels(): number[] {
+  private generateNumbersForLevelFour(): number[] {
+    let numbers: number[];
+    do {
+      numbers = Array.from({ length: 3 }, () => this.generateRandomNumber(1, 10));
+    } while (numbers.reduce((acc, curr) => acc * curr, 1) > 500);
+    return numbers;
+  }
+
+  private generateNumbersForLevelFive(): number[] {
     let numbers: number[];
     do {
       numbers = Array.from({ length: 3 }, () => this.generateRandomNumber(1, 20));
-    } while (numbers.reduce((acc, curr) => acc * curr, 1) > 10000);
+    } while (numbers.reduce((acc, curr) => acc * curr, 1) > 500);
     return numbers;
   }
 
@@ -219,6 +235,14 @@ export class MultiplicationComponent implements OnInit, OnDestroy {
         this.generateProblems();
       }, 2000); // Short delay before generating new problems
     }
+  }
+
+  setSubLevel(subLevel: number) {
+    this.subLevel = subLevel;
+    this.clearInputsAndStyles();
+    setTimeout(() => {
+      this.generateProblems();
+    }, 2000); // Short delay before generating new problems
   }
 
   private clearInputsAndStyles() {

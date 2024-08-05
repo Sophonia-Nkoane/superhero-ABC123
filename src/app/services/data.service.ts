@@ -90,7 +90,7 @@ export class DataService {
     objects: ["Apples", "Ball", "Book", "Toy", "Game", "Pencil", "Paper", "Crayon", "Paintbrush", "Guitar"]
   };
 
-  private readonly defaultSection1: string[] = ['queen', 'zip','jet', 'must', 'cook', 'log','bag', 'dry', 'wax', 'my', 'yes','hut', 'book', 'are', 'this', 'the'];
+  private readonly defaultSection1: string[] = ['rod', 'vet','jam', 'chin', 'hog', 'bed','legs', 'shut', 'chat', 'ship', 'tap', 'met', 'set', 'win', 'sat', 'lap'];
   private readonly defaultSection2: string[] = ['She is at the zoo.', 'My frog can hop.', 'He is at the dam.','My dog can jump.'];
   private readonly defaultSection3: string[] = ['-og', '-in', '-op', '-at', 'jog', 'win', 'pop', 'mat', 'frog', 'bin', 'mop', 'cat', 'hop', 'fin', 'hop', 'pat'];
 
