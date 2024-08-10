@@ -1,122 +1,286 @@
-/*
-  Global Styles for Sentence Building Component
-*/
-
-/* Host element styling */
 :host {
-  display: contents; /* Allows the component's host to pass its children to its parent */
-  padding: 40px; /* Padding around the content */
-  margin: 0 auto; /* Centering the component horizontally */
-  max-width: 1200px; /* Maximum width of the component */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Box shadow for a subtle depth effect */
+  display: contents;
+  padding: 40px;
+  margin: 0 auto;
+  max-width: 1200px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Styling for the main heading */
 h1 {
-  display: flex; /* Flex container for centering */
-  justify-content: center; /* Center content horizontally */
-  align-items: center; /* Center content vertically */
-  margin-bottom: 20px; /* Bottom margin for spacing */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-/* Container styles */
 .container {
-  width: 100%; /* Full width of its parent */
-  margin: 0 auto; /* Centering the container horizontally */
+  width: 100%;
+  margin: 0 auto;
 }
 
-/* Checkbox Input */
 .input-container {
-  margin-top: 10px; /* Top margin for spacing */
-  display: flex; /* Flex container for alignment */
-  justify-content: center; /* Center content horizontally */
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
 }
 
 input[type="checkbox"] {
-  margin-left: 10px; /* Left margin for spacing */
+  margin-left: 10px;
 }
 
-/* Boxes and Layout */
 .box {
-  display: ruby-text; /* Flex container */
-  justify-content: center; /* Center content horizontally */
-  flex-wrap: wrap; /* Wrap items to new line as needed */
-  margin-bottom: 15px; /* Bottom margin for spacing */
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
 }
 
 .word-category {
-  margin-bottom: 15px; /* Bottom margin for word categories */
+  margin-bottom: 15px;
 }
 
-/* Main Display Text */
 .main-display-text {
-  font-size: 40px; /* Large font size */
-  text-align: center; /* Center text horizontally */
-  margin-bottom: 20px; /* Bottom margin for spacing */
+  font-size: 40px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-/* Feedback Display */
 .selected-word {
-  padding: 2px; /* Padding around selected words */
-  border-radius: 4px; /* Rounded corners */
-  margin-right: 5px; /* Right margin for spacing */
+  padding: 2px;
+  border-radius: 4px;
+  margin-right: 5px;
 }
 
-/* Highlight for the currently spoken word */
 .highlighted-word {
-  background-color: yellow; /* Yellow background for highlighting */
-  border-radius: 4px; /* Rounded corners */
-  transition: background-color 0.3s ease; /* Smooth transition for highlighting */
+  background-color: yellow;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
-/* Correct and Incorrect Word Feedback */
 .correct {
-  background-color: green; /* Green background for correct feedback */
+  background-color: green;
 }
 
 .incorrect {
-  background-color: red; /* Red background for incorrect feedback */
+  background-color: red;
 }
 
-/* Media Queries for responsive design */
+.sentence-container {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f0f4f8;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sentence-title {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.level-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.level-button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  background-color: #ecf0f1;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.level-button.active {
+  background-color: #3498db;
+  color: white;
+}
+
+.sentence-board {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sentence-display {
+  margin-bottom: 20px;
+}
+
+.word-block {
+  display: inline-block;
+  background-color: #e4f3ff;
+  padding: 5px 10px;
+  margin: 2px;
+  border-radius: 4px;
+  font-weight: bold;
+  color: #2980b9;
+}
+
+.user-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #bdc3c7;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.check-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.check-button:hover {
+  background-color: #27ae60;
+}
+
+.feedback {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #e74c3c;
+  color: white;
+}
+
+.feedback.correct {
+  background-color: #2ecc71;
+}
+
+.word-banks {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.word-bank h3 {
+  text-align: center;
+}
+
+.word-bank {
+  flex: 1;
+  margin: 0 5px;
+}
+
+.word-button {
+  display: block;
+  width: 100%;
+  padding: 5px;
+  margin: 5px 0;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.word-button:hover {
+  background-color: #2980b9;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.action-button {
+  flex: 1;
+  margin: 0 5px;
+  padding: 10px;
+  background-color: #95a5a6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.action-button:hover {
+  background-color: #7f8c8d;
+}
+
+.highlighted-word {
+  background-color: #f1c40f;
+  color: #2c3e50;
+}
+
+.word-input {
+  width: 80px;
+  margin: 0 5px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.word-input.correct {
+  background-color: #a8f0c6;
+  border-color: #2ecc71;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.action-button, .check-button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
 @media (max-width: 1200px) {
   .word-button {
-    padding: 6px 12px; /* Adjusted padding and font size */
+    padding: 6px 12px;
     font-size: 12px;
   }
 }
 
 @media (max-width: 1000px) {
   .word-button {
-    padding: 7px 14px; /* Adjusted padding and font size */
+    padding: 7px 14px;
     font-size: 13px;
   }
 }
 
 @media (max-width: 800px) {
   .word-button {
-    padding: 8px 16px; /* Adjusted padding and font size */
+    padding: 8px 16px;
     font-size: 14px;
   }
 }
 
 @media (max-width: 600px) {
   .word-button {
-    padding: 9px 18px; /* Adjusted padding and font size */
+    padding: 9px 18px;
     font-size: 15px;
   }
 }
 
 @media (max-width: 400px) {
   .word-button {
-    padding: 10px 20px; /* Adjusted padding and font size */
+    padding: 10px 20px;
     font-size: 16px;
   }
 }
 
 @media (max-width: 300px) {
   .word-button {
-    padding: 11px 22px; /* Adjusted padding and font size */
+    padding: 11px 22px;
     font-size: 17px;
   }
 }

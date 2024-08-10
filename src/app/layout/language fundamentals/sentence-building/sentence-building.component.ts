@@ -12,16 +12,27 @@ import { DataService, Words } from '../../../services/data.service';
   styleUrls: ['./sentence-building.component.css']
 })
 export class SentenceBuildingComponent implements OnInit {
-  // Initialize words object with empty arrays for subjects, actions, and objects
-  words: Words = { subjects: [], actions: [], objects: [] };
+  level = 1;
+  sentences: string[] = [
+    "We are at the sea.",
+    "They have three hens.",
+    "The thin dog is mad.",
+    "We all like that shop.",
+    "The fat dog is sitting.",
+    "Is this my red gun.",
+    "There ia a big nest.",
+    "They have two legs."
+  ];
+  currentSentence = '';
+  userInput = '';
+  userInputs: string[] = [];
+  feedback = '';
+  sentenceDisplay: string[] = [];
+  missingLetters: string[] = [];
 
-  // Array to hold the words of the current sentence
+  words: Words = { subjects: [], actions: [], objects: [] };
   sentenceWords: string[] = [];
-  // Flag to show or hide hints
-  showHits: boolean = false;
-  // Index of the currently spoken word
   currentWordIndex = -1;
-  // Selected voice for speech synthesis
   selectedVoice: SpeechSynthesisVoice | null = null;
 
   constructor(
@@ -30,37 +41,130 @@ export class SentenceBuildingComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Fetch words data from the data service on initialization
+    this.setNewSentence();
     this.dataService.getWords().subscribe(words => {
       this.words = words;
     });
   }
 
-  // Getter to return the sentence as a single string
-  get sentence(): string {
-    return this.sentenceWords.join(' ');
+  setLevel(newLevel: number) {
+    this.level = newLevel;
+    this.reset();
   }
 
-  // Add a word to the current sentence
+  reset() {
+    this.userInput = '';
+    this.userInputs = [];
+    this.missingLetters = [];
+    this.feedback = '';
+    this.sentenceWords = [];
+    this.currentWordIndex = -1;
+    this.setNewSentence();
+  }
+
+  setNewSentence() {
+    const currentIndex = this.sentences.indexOf(this.currentSentence);
+    const nextIndex = (currentIndex + 1) % this.sentences.length;
+    this.currentSentence = this.sentences[nextIndex];
+    this.updateSentenceDisplay();
+  }
+
+  updateSentenceDisplay() {
+    if (this.level === 1 || this.level === 2) {
+      this.sentenceDisplay = this.currentSentence.split(' ');
+      this.userInputs = new Array(this.sentenceDisplay.length).fill('');
+    } else if (this.level === 4) {
+      this.sentenceDisplay = this.currentSentence.split(' ');
+      this.missingLetters = this.sentenceDisplay.map(word => this.removeRandomLetters(word));
+      this.userInputs = new Array(this.sentenceDisplay.length).fill('');
+    }
+  }
+
+  removeRandomLetters(word: string): string {
+    const letters = word.split('');
+    const missingCount = Math.ceil(letters.length / 3);
+    for (let i = 0; i < missingCount; i++) {
+      const randomIndex = Math.floor(Math.random() * letters.length);
+      letters[randomIndex] = '_';
+    }
+    return letters.join('');
+  }
+
+  checkAnswer() {
+    if (this.level === 1) {
+      if (this.userInput.toLowerCase() === this.currentSentence.toLowerCase()) {
+        this.feedback = 'Correct! Great job!';
+        this.playSentence();
+        setTimeout(() => this.setNewSentence(), 8000); // Set new sentence after... seconds
+      } else {
+        this.feedback = 'Not quite. Try again!';
+      }
+      this.userInput = '';
+    }
+  }
+
+  checkLevel2Answer() {
+    const userSentence = this.userInputs.join(' ').toLowerCase();
+    if (userSentence === this.currentSentence.toLowerCase()) {
+      this.feedback = 'Correct! You\'ve completed the sentence!';
+      this.playSentence();
+      setTimeout(() => this.setNewSentence(), 5000);
+    } else {
+      this.feedback = 'Not quite. Listen again and try to fill in the missing words.';
+    }
+  }
+
+  checkLevel4Answer() {
+    const isCorrect = this.sentenceDisplay.every((word, index) =>
+      word.toLowerCase() === this.userInputs[index].toLowerCase()
+    );
+    if (isCorrect) {
+      this.feedback = 'Correct! You\'ve completed the sentence!';
+      this.playSentence();
+      setTimeout(() => this.setNewSentence(), 5000); // Set new sentence after... seconds
+    } else {
+      this.feedback = 'Not quite. Fill in the missing letters and try again!';
+    }
+  }
+
+  isWordCorrect(index: number): boolean {
+    return this.userInputs[index].toLowerCase() === this.sentenceDisplay[index].toLowerCase();
+  }
+
+  // Level 3 methods
   addWordToSentence(word: string): void {
     this.sentenceWords.push(word);
   }
 
-  // Clear all words from the current sentence
   clearSentence(): void {
     this.sentenceWords = [];
   }
 
-  // Remove the last word from the current sentence
   undo(): void {
     if (this.sentenceWords.length > 0) {
       this.sentenceWords.pop();
     }
   }
 
-  // Play the current sentence using the selected voice and settings
   playSentence(): void {
-    const words = this.sentenceWords;
+    let words: string[];
+    switch (this.level) {
+      case 1:
+        words = this.sentenceDisplay;
+        break;
+      case 2:
+        words = this.sentenceDisplay;
+        break;
+      case 3:
+        words = this.sentenceWords;
+        break;
+      case 4:
+        words = this.sentenceDisplay;
+        break;
+      default:
+        words = [];
+    }
+
     let index = 0;
     const voiceRate = this.voiceService.getRate();
     const repeat = this.voiceService.getRepeat();
@@ -86,7 +190,6 @@ export class SentenceBuildingComponent implements OnInit {
     }, intervalTime * (repeat ? 2 : 1));
   }
 
-  // Use speech synthesis to read a word
   readWord(word: string, rate: number, repeat: boolean): void {
     const utterance = new SpeechSynthesisUtterance(word);
     utterance.rate = rate;
@@ -96,12 +199,17 @@ export class SentenceBuildingComponent implements OnInit {
     window.speechSynthesis.speak(utterance);
   }
 
-  // Set the selected voice for speech synthesis
-  setSelectedVoice(voice: SpeechSynthesisVoice | null): void {
-    this.selectedVoice = voice;
+  checkLevel3Sentence(): void {
+    const orderCheck = this.checkSentenceOrder();
+    if (orderCheck.index !== -1) {
+      this.feedback = `Incorrect word order. Check the ${orderCheck.type} in your sentence.`;
+    } else if (this.checkUserSentence(this.sentenceWords.join(' '))) {
+      this.feedback = 'Correct! You\'ve built a valid sentence!';
+    } else {
+      this.feedback = 'Not quite. Try a different combination of words.';
+    }
   }
 
-  // Check the order of words in the sentence
   checkSentenceOrder(): { index: number, type: string } {
     const order = ['subjects', 'actions', 'objects'];
     for (let i = 0; i < this.sentenceWords.length; i++) {
@@ -114,7 +222,6 @@ export class SentenceBuildingComponent implements OnInit {
     return { index: -1, type: '' };
   }
 
-  // Generate all possible sentences from the given words
   generateAllSentences(): string[] {
     const sentences: string[] = [];
     const { subjects, actions, objects } = this.words;
@@ -130,27 +237,11 @@ export class SentenceBuildingComponent implements OnInit {
     return sentences;
   }
 
-  // Check if the user's sentence is one of the possible correct sentences
   checkUserSentence(sentence: string): boolean {
     const possibleSentences = this.generateAllSentences();
     return possibleSentences.includes(sentence);
   }
 
-  // Check if a word is incorrect at a given index based on expected part of speech
-  checkIncorrectWord(word: string, index: number): boolean {
-    const expectedPartOfSpeech = ['subject', 'action', 'object'][index];
-    return this.getWordPartOfSpeech(word) !== expectedPartOfSpeech;
-  }
-
-  // Get the part of speech (subject, action, object) for a given word
-  getWordPartOfSpeech(word: string): string {
-    if (this.words.subjects.includes(word)) return 'subject';
-    if (this.words.actions.includes(word)) return 'action';
-    if (this.words.objects.includes(word)) return 'object';
-    return 'unknown';
-  }
-
-  // Get the style for a word based on its index (used for highlighting)
   getWordStyle(index: number): any {
     return {
       'highlighted-word': index === this.currentWordIndex
