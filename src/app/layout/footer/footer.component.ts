@@ -1,5 +1,4 @@
 import { Component, HostListener, OnInit, inject } from '@angular/core';
-import { Platform } from '@angular/cdk/platform';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -10,13 +9,11 @@ import { CommonModule } from '@angular/common';
   styleUrl: './footer.component.css'
 })
 export class FooterComponent implements OnInit {
-  private platform = inject(Platform);
-
   deferredPrompt: any;
   showInstallBtn = false;
 
   ngOnInit() {
-    if (this.platform.ANDROID || this.platform.IOS) {
+    if (this.isMobile()) {
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         this.deferredPrompt = e;
@@ -41,6 +38,22 @@ export class FooterComponent implements OnInit {
         console.log('User dismissed the install prompt');
       }
       this.deferredPrompt = null;
+    });
+  }
+
+  private isMobile(): boolean {
+    const toMatch = [
+      /Android/i,
+      /webOS/i,
+      /iPhone/i,
+      /iPad/i,
+      /iPod/i,
+      /BlackBerry/i,
+      /Windows Phone/i
+    ];
+
+    return toMatch.some((toMatchItem) => {
+      return navigator.userAgent.match(toMatchItem);
     });
   }
 }
