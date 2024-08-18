@@ -22,15 +22,13 @@ export class LearningComponent implements OnInit {
   // Arrays for sections
   section1Array$: Observable<string[]>;
   section2Array$: Observable<string[]>;
-  section3Array$: Observable<string[]>;
 
   // Table for section 3
   section3Table: string[][] = [];
 
   constructor(private voiceService: VoiceService, private dataService: DataService) {
     this.section1Array$ = this.dataService.getSection1Array();
-    this.section2Array$ = this.dataService.getSection2Array();
-    this.section3Array$ = this.dataService.getSection3Array();
+    this.section2Array$ = this.dataService.getsection2Array();
   }
 
   ngOnInit() {
@@ -82,7 +80,7 @@ export class LearningComponent implements OnInit {
   }
 
   populateSection3Table(): void {
-    this.section3Array$.subscribe(section3Array => {
+    this.section2Array$.subscribe(section2Array => {
       const rows = 4;
       const columns = 4;
       let index = 0;
@@ -90,8 +88,8 @@ export class LearningComponent implements OnInit {
       for (let i = 0; i < rows; i++) {
         const row: string[] = [];
         for (let j = 0; j < columns; j++) {
-          if (index < section3Array.length) {
-            row.push(section3Array[index]);
+          if (index < section2Array.length) {
+            row.push(section2Array[index]);
             index++;
           } else {
             row.push('');

@@ -204,30 +204,6 @@
     </div>
   </div>
 
-  <!-- Section 2 -->
-  <div class="mb-4">
-    <h3>Section 2</h3>
-    <form (ngSubmit)="addSection2Sentence(newSection2Sentence)" #addSection2Form="ngForm" class="mb-2">
-      <div class="form-group">
-        <label for="newSection2Sentence">New Sentence:</label>
-        <input type="text" id="newSection2Sentence" name="newSection2Sentence" class="form-control" [(ngModel)]="newSection2Sentence" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Add Sentence</button>
-    </form>
-    <ul>
-      <li *ngFor="let sentence of section2Array$ | async">
-        {{ sentence }}
-        <button class="btn btn-sm btn-outline-primary" (click)="editSection2Sentence = sentence">Edit</button>
-        <button class="btn btn-sm btn-outline-danger" (click)="deleteSection2Sentence(sentence)">Delete</button>
-      </li>
-    </ul>
-    <div *ngIf="editSection2Sentence" class="mt-2">
-      <input type="text" [(ngModel)]="editSection2SentenceNew" class="form-control d-inline-block w-auto mr-2">
-      <button class="btn btn-sm btn-primary" (click)="updateSection2Sentence(editSection2Sentence, editSection2SentenceNew); editSection2Sentence = null">Update</button>
-      <button class="btn btn-sm btn-secondary" (click)="editSection2Sentence = null">Cancel</button>
-    </div>
-  </div>
-
   <!-- Section 3 -->
   <div class="mb-4">
     <h3>Section 3</h3>
@@ -239,7 +215,7 @@
       <button type="submit" class="btn btn-primary">Add Word</button>
     </form>
     <ul>
-      <li *ngFor="let word of section3Array$ | async">
+      <li *ngFor="let word of section2Array$ | async">
         {{ word }}
         <button class="btn btn-sm btn-outline-primary" (click)="editSection3Word = word">Edit</button>
         <button class="btn btn-sm btn-outline-danger" (click)="deleteSection3Word(word)">Delete</button>

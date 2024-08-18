@@ -18,8 +18,7 @@ export class DataManagerComponent implements OnInit {
   alphabet: string[] = this.dataService.getAlphabet();
   vowels: string[] = this.dataService.getVowels();
   section1Array$: Observable<string[]> = this.dataService.getSection1Array();
-  section2Array$: Observable<string[]> = this.dataService.getSection2Array();
-  section3Array$: Observable<string[]> = this.dataService.getSection3Array();
+  section2Array$: Observable<string[]> = this.dataService.getsection2Array();
 
   newWordFamily: Partial<WordFamily> = {};
   editWordFamily: WordFamily | null = null;
@@ -114,25 +113,6 @@ export class DataManagerComponent implements OnInit {
 
   deleteSection1Word(word: string) {
     this.dataService.deleteSection1Word(word);
-  }
-
-  addSection2Sentence(sentence: string) {
-    if (sentence.trim()) {
-      this.dataService.addSection2Sentence(sentence.trim());
-      this.newSection2Sentence = '';
-    }
-  }
-
-  updateSection2Sentence(oldSentence: string, newSentence: string) {
-    if (newSentence.trim() && oldSentence !== newSentence.trim()) {
-      this.dataService.updateSection2Sentence(oldSentence, newSentence.trim());
-      this.editSection2Sentence = null;
-      this.editSection2SentenceNew = '';
-    }
-  }
-
-  deleteSection2Sentence(sentence: string) {
-    this.dataService.deleteSection2Sentence(sentence);
   }
 
   addSection3Word(word: string) {

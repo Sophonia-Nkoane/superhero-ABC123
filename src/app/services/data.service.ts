@@ -38,7 +38,7 @@ export class DataService {
   private readonly alphabet: string[] = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'r', 's', 't', 'v', 'w'];
   private readonly vowels: string[] = ['a', 'e', 'i', 'o', 'u'];
   private section1Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
-  private section3Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  private section2Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
   private readonly defaultSentences: string[] = [
     "He said this frog is green.",
@@ -109,7 +109,7 @@ export class DataService {
     this.objects.next(this.getFromLocalStorage('objects', this.defaultObjects));
     this.words.next(this.getFromLocalStorage('words', this.defaultWords));
     this.section1Array.next(this.getFromLocalStorage('section1', this.defaultSection1));
-    this.section3Array.next(this.getFromLocalStorage('section3', this.defaultSection3));
+    this.section2Array.next(this.getFromLocalStorage('section3', this.defaultSection3));
     this.sentences.next(this.getFromLocalStorage('sentences', this.defaultSentences));
   }
 
@@ -127,7 +127,7 @@ export class DataService {
     this.objects.next(this.defaultObjects);
     this.words.next(this.defaultWords);
     this.section1Array.next(this.defaultSection1);
-    this.section3Array.next(this.defaultSection3);
+    this.section2Array.next(this.defaultSection3);
     this.sentences.next(this.defaultSentences);
 
     this.saveToLocalStorage('sentences', this.defaultSentences);
@@ -261,31 +261,31 @@ export class DataService {
     this.saveToLocalStorage('section1', updatedWords);
   }
 
-  // Section 3 CRUD operations
-  getSection3Array(): Observable<string[]> {
-    return this.section3Array.asObservable();
+  // Section 2 CRUD operations
+  getsection2Array(): Observable<string[]> {
+    return this.section2Array.asObservable();
   }
 
   addSection3Word(word: string): void {
-    const currentWords = this.section3Array.value;
+    const currentWords = this.section2Array.value;
     if (!currentWords.includes(word)) {
       const updatedWords = [...currentWords, word];
-      this.section3Array.next(updatedWords);
+      this.section2Array.next(updatedWords);
       this.saveToLocalStorage('section3', updatedWords);
     }
   }
 
   updateSection3Word(oldWord: string, newWord: string): void {
-    const currentWords = this.section3Array.value;
+    const currentWords = this.section2Array.value;
     const updatedWords = currentWords.map(w => w === oldWord ? newWord : w);
-    this.section3Array.next(updatedWords);
+    this.section2Array.next(updatedWords);
     this.saveToLocalStorage('section3', updatedWords);
   }
 
   deleteSection3Word(word: string): void {
-    const currentWords = this.section3Array.value;
+    const currentWords = this.section2Array.value;
     const updatedWords = currentWords.filter(w => w !== word);
-    this.section3Array.next(updatedWords);
+    this.section2Array.next(updatedWords);
     this.saveToLocalStorage('section3', updatedWords);
   }
 
