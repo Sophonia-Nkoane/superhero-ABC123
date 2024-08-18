@@ -1,9 +1,14 @@
+:host {
+  display: block;
+  padding: 1rem;
+}
+
 .section {
-  margin: 20px;
+  margin: 1.25rem 0;
 }
 
 .number-inputs {
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
 }
 
 .result-display {
@@ -13,22 +18,32 @@
 
 .blocks {
   display: flex;
-  margin: 0 5px;
+  gap: 0.5rem;
 }
 
 .block {
-  width: 30px;
-  height: 30px;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 5px;
+  width: 2rem;
+  height: 2rem;
+  background-color: var(--block-bg, #f0f0f0);
+  border: 1px solid var(--block-border, #ccc);
+  display: grid;
+  place-items: center;
 }
 
 .symbol, .equals {
-  margin: 0 10px;
-  font-size: 24px;
+  margin: 0 0.75rem;
+  font-size: 1.5rem;
   font-weight: bold;
+}
+
+@media (prefers-color-scheme: dark) {
+  :host {
+    background-color: #333;
+    color: #fff;
+  }
+
+  .block {
+    --block-bg: #555;
+    --block-border: #777;
+  }
 }

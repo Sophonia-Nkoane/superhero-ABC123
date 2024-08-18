@@ -20,6 +20,7 @@ interface Problem {
   styleUrls: ['../maths.component.css']
 })
 export class DivisionComponent implements OnInit, OnDestroy {
+  
   problems: Problem[] = [];
   userInputs: { [key: string]: string } = {};
   level: number = 1;
@@ -168,7 +169,7 @@ export class DivisionComponent implements OnInit, OnDestroy {
 
     private formatProblemForSpeech(problem: Problem): string {
       if (problem.missingIndex === 0) {
-        return `What is ${problem.divisor} times what number equals ${problem.dividend}?`;
+        return `What is ${problem.divisor} divided by what number equals ${problem.dividend}?`;
       } else if (problem.missingIndex === 1) {
         return `What is ${problem.dividend} divided by what number equals ${problem.quotient}?`;
       } else {

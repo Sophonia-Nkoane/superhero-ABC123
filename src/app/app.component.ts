@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { NavBarComponent } from './layout/nav-bar/nav-bar.component';
 import { NetworkStatusService } from './services/network-status.service';
 import { Subscription } from 'rxjs';
-import { FooterComponent } from "./layout/footer/footer.component";
+import { FooterComponent } from './layout/footer/footer.component';
 
 @Component({
   selector: 'app-root',

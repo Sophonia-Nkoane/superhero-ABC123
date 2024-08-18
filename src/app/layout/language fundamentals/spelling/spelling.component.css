@@ -1,51 +1,48 @@
 .test-container {
+  font-family: Arial, sans-serif;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f0f4f8;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.level-selector, .phonetics-toggle {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px; /* Added padding for spacing around the container */
-  background-color: #f9f9f9; /* Added a light background color */
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.level-button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  background-color: #8b919459;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.level-button.active {
+  background-color: #3498db;
+  color: white;
 }
 
 .word-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-  margin-bottom: 20px; /* Added margin for spacing below the container */
-  flex-wrap: wrap;
-}
-
-.word-container input {
-  margin: 5px;
-  padding: 10px;
-  font-size: 24px;
-  font-weight: bold; /* Added font weight for bold text */
-  border: 1px solid #ccc; /* Added border for better input field visibility */
-  border-radius: 4px; /* Added rounded corners */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added subtle shadow for depth */
-  text-transform: lowercase; /* Ensure input text is in lowercase */
-}
-
-.word-container button {
-  margin: 5px;
-  padding: 10px 15px; /* Added extra padding on the sides */
-  font-size: 18px;
-  border: none; /* Removed border for a cleaner look */
-  border-radius: 4px; /* Added rounded corners */
-  background-color: #007bff; /* Added a background color */
-  color: #fff; /* Text color for contrast */
-  cursor: pointer; /* Added pointer cursor for better UX */
-  transition: background-color 0.3s ease; /* Added transition effect for hover */
-  text-transform: lowercase; /* Ensure button text is in lowercase */
-}
-
-.word-container button:hover {
-  background-color: #0056b3; /* Darker color on hover */
+  display: ruby-text;
+  margin-left: 20px;
+  margin-bottom: 20px;
 }
 
 .word-blocks-container {
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
+  flex-direction: row;
   align-items: center;
   margin: 10px;
 }
@@ -53,31 +50,76 @@
 .word-blocks {
   display: flex;
   align-items: center;
-  margin-top: 10px; /* Added margin for spacing above the blocks */
 }
 
-.word-blocks span {
-  padding: 5px;
-  margin-right: 5px;
+.word-blocks span, .word-blocks input {
   width: 40px;
   height: 50px;
+  margin: 0 5px;
+  padding: 5px;
+  font-size: 24px;
   text-align: center;
-  font-size: 24px; /* Increased font size for better visibility */
-  border: 1px solid #ccc; /* Added border for better block visibility */
-  border-radius: 4px; /* Added rounded corners */
-  background-color: #fff; /* Added background color */
-  text-transform: lowercase; /* Ensure block text is in lowercase */
+  border: 1px solid #bdc3c7;
+  border-radius: 4px;
+  background-color: #fff;
+  text-transform: lowercase;
 }
 
-.section {
-  margin-top: 20px;
-  width: 100%; /* Ensure the section spans the full width */
-  max-width: 600px; /* Limit maximum width for readability */
+.word-blocks input {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.word-blocks input[style*="border: 1px solid green"] {
+  background-color: #a8f0c6;
+  border-color: #2ecc71;
+}
+
+button {
+  margin: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #3498db;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #2980b9;
 }
 
 .selected-word {
-  margin-top: 20px;
-  font-size: 24px; /* Increased font size for better visibility */
-  font-weight: bold; /* Added font weight for emphasis */
-  text-transform: lowercase; /* Ensure text is in lowercase */
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  text-transform: lowercase;
+}
+
+.section {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+p {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+  .word-blocks span, .word-blocks input {
+    width: 30px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
 }

@@ -26,6 +26,7 @@ export interface Words {
   providedIn: 'root'
 })
 export class DataService {
+  private sentences: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   private wordFamilies: BehaviorSubject<WordFamily[]> = new BehaviorSubject<WordFamily[]>([]);
   private objects: BehaviorSubject<Object[]> = new BehaviorSubject<Object[]>([]);
   private words: BehaviorSubject<Words> = new BehaviorSubject<Words>({
@@ -37,8 +38,14 @@ export class DataService {
   private readonly alphabet: string[] = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'r', 's', 't', 'v', 'w'];
   private readonly vowels: string[] = ['a', 'e', 'i', 'o', 'u'];
   private section1Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
-  private section2Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   private section3Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+
+  private readonly defaultSentences: string[] = [
+    "He said this frog is green.",
+    "She is a girl.",
+    "He is at the shop.",
+    "She said this dog is big."
+  ];
 
   private readonly defaultWordFamilies: WordFamily[] = [
     { id: 1, group: 'Vowels', prefix: 'at', words: ['cat', 'hat', 'mat', 'rat', 'sat', 'flat', 'chat', 'spat'] },
@@ -90,8 +97,7 @@ export class DataService {
     objects: ["Apples", "Ball", "Book", "Toy", "Game", "Pencil", "Paper", "Crayon", "Paintbrush", "Guitar"]
   };
 
-  private readonly defaultSection1: string[] = ['rod', 'vet','jam', 'chin', 'hog', 'bed','legs', 'shut', 'chat', 'ship', 'tap', 'met', 'set', 'win', 'sat', 'lap'];
-  private readonly defaultSection2: string[] = ['She is at the zoo.', 'My frog can hop.', 'He is at the dam.','My dog can jump.'];
+  private readonly defaultSection1: string[] = ['win', 'drum','mugs', 'yes', 'sun', 'tax','pram', 'bib', 'chop', 'frog', 'said', 'gran', 'this', 'green'];
   private readonly defaultSection3: string[] = ['-og', '-in', '-op', '-at', 'jog', 'win', 'pop', 'mat', 'frog', 'bin', 'mop', 'cat', 'hop', 'fin', 'hop', 'pat'];
 
   constructor() {
@@ -103,8 +109,8 @@ export class DataService {
     this.objects.next(this.getFromLocalStorage('objects', this.defaultObjects));
     this.words.next(this.getFromLocalStorage('words', this.defaultWords));
     this.section1Array.next(this.getFromLocalStorage('section1', this.defaultSection1));
-    this.section2Array.next(this.getFromLocalStorage('section2', this.defaultSection2));
     this.section3Array.next(this.getFromLocalStorage('section3', this.defaultSection3));
+    this.sentences.next(this.getFromLocalStorage('sentences', this.defaultSentences));
   }
 
   private getFromLocalStorage<T>(key: string, defaultValue: T): T {
@@ -121,15 +127,43 @@ export class DataService {
     this.objects.next(this.defaultObjects);
     this.words.next(this.defaultWords);
     this.section1Array.next(this.defaultSection1);
-    this.section2Array.next(this.defaultSection2);
     this.section3Array.next(this.defaultSection3);
+    this.sentences.next(this.defaultSentences);
 
+    this.saveToLocalStorage('sentences', this.defaultSentences);
     this.saveToLocalStorage('wordFamilies', this.defaultWordFamilies);
     this.saveToLocalStorage('objects', this.defaultObjects);
     this.saveToLocalStorage('words', this.defaultWords);
     this.saveToLocalStorage('section1', this.defaultSection1);
-    this.saveToLocalStorage('section2', this.defaultSection2);
     this.saveToLocalStorage('section3', this.defaultSection3);
+  }
+
+  // Sentences CRUD operations
+  getSentences(): Observable<string[]> {
+    return this.sentences.asObservable();
+  }
+
+  addSentence(sentence: string): void {
+    const currentSentences = this.sentences.value;
+    if (!currentSentences.includes(sentence)) {
+      const updatedSentences = [...currentSentences, sentence];
+      this.sentences.next(updatedSentences);
+      this.saveToLocalStorage('sentences', updatedSentences);
+    }
+  }
+
+  updateSentence(oldSentence: string, newSentence: string): void {
+    const currentSentences = this.sentences.value;
+    const updatedSentences = currentSentences.map(s => s === oldSentence ? newSentence : s);
+    this.sentences.next(updatedSentences);
+    this.saveToLocalStorage('sentences', updatedSentences);
+  }
+
+  deleteSentence(sentence: string): void {
+    const currentSentences = this.sentences.value;
+    const updatedSentences = currentSentences.filter(s => s !== sentence);
+    this.sentences.next(updatedSentences);
+    this.saveToLocalStorage('sentences', updatedSentences);
   }
 
   // Word Families CRUD operations
@@ -225,34 +259,6 @@ export class DataService {
     const updatedWords = currentWords.filter(w => w !== word);
     this.section1Array.next(updatedWords);
     this.saveToLocalStorage('section1', updatedWords);
-  }
-
-  // Section 2 CRUD operations
-  getSection2Array(): Observable<string[]> {
-    return this.section2Array.asObservable();
-  }
-
-  addSection2Sentence(sentence: string): void {
-    const currentSentences = this.section2Array.value;
-    if (!currentSentences.includes(sentence)) {
-      const updatedSentences = [...currentSentences, sentence];
-      this.section2Array.next(updatedSentences);
-      this.saveToLocalStorage('section2', updatedSentences);
-    }
-  }
-
-  updateSection2Sentence(oldSentence: string, newSentence: string): void {
-    const currentSentences = this.section2Array.value;
-    const updatedSentences = currentSentences.map(s => s === oldSentence ? newSentence : s);
-    this.section2Array.next(updatedSentences);
-    this.saveToLocalStorage('section2', updatedSentences);
-  }
-
-  deleteSection2Sentence(sentence: string): void {
-    const currentSentences = this.section2Array.value;
-    const updatedSentences = currentSentences.filter(s => s !== sentence);
-    this.section2Array.next(updatedSentences);
-    this.saveToLocalStorage('section2', updatedSentences);
   }
 
   // Section 3 CRUD operations

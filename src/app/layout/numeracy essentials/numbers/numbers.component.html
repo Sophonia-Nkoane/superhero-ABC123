@@ -2,14 +2,12 @@
   <div class="spacing">
     <h1>Numbers
       <span class="toggle-container">
-        <span class="toggle-number" (click)="toggleIncrement('1')">1</span>
-        <span class="toggle-number" (click)="toggleIncrement('2')">2</span>
-        <span class="toggle-number" (click)="toggleIncrement('5')">5</span>
-        <span class="toggle-number" (click)="toggleIncrement('10')">10</span>
-        <span class="toggle-number" (click)="toggleIncrement('20')">20</span>
+        @for (increment of ['1', '2', '5', '10', '20']; track increment) {
+          <span class="toggle-number" (click)="toggleIncrement(increment)">{{ increment }}</span>
+        }
       </span>
     </h1>
-    <div class="auto-read-toggle" >
+    <div class="auto-read-toggle">
       <button class="btn btn-outline-success" type="button" (click)="toggleAutoRead()">
         {{ isReading ? 'Stop Reading' : 'Auto Read' }}
       </button>
@@ -22,9 +20,10 @@
   </div>
 
   <div class="number-column">
-    <span *ngFor="let number of getNumbers()">
-      <button (click)="playNumberAudio(number);">{{ number }}</button>
-    </span>
+    @for (number of getNumbers(); track number) {
+      <span>
+        <button (click)="playNumberAudio(number);">{{ number }}</button>
+      </span>
+    }
   </div>
-
 </div>
