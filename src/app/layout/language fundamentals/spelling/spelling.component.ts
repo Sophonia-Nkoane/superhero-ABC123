@@ -62,68 +62,75 @@ export class SpellingComponent implements OnInit {
     });
   }
 
-  // Play audio for the given word
-  playWordAudio(word: string): void {
-    // Play full word normally
-    this.voiceService.playText(word, 'English');
+// Play audio for the given word
+async playWordAudio(word: string): Promise<void> {
+  // Play full word normally
+  await this.playText(word);
 
-    // Wait for the full word to finish playing
-    setTimeout(() => {
-      if (this.usePhonetics) {
-        // Play each letter phonetically with spacing
-        const letters = word.split('');
-        this.playLettersPhonetically(letters, 0);
-      } else {
-        // Play each letter normally with spacing
-        this.playLettersNormally(word);
-      }
-    }, 1000 + word.length * 150); // Adjust timing based on word length
-  }
+  // Wait for the full word to finish playing
+  await this.delay(1000);
 
-  // Play letters phonetically with a delay
-  private playLettersPhonetically(letters: string[], index: number): void {
-    if (index >= letters.length) {
-      // All letters have been played, play the full word again
-      setTimeout(() => {
-        this.voiceService.playText(letters.join(''), 'English');
-      }, 1000);
-      return;
-    }
-
-    const letter = letters[index];
-
-    // Play the phonetic sound of the letter
-    this.playPhoneticSound(letter);
-
-    // Wait for the phonetic sound to finish, then move to the next letter
-    setTimeout(() => {
-      this.playLettersPhonetically(letters, index + 1);
-    }, 1000); // 1 second pause between letters
-  }
-
-  // Play letters normally with a delay
-  private playLettersNormally(word: string): void {
+  if (this.usePhonetics) {
+    // Play each letter phonetically with spacing
     const letters = word.split('');
-    for (let i = 0; i < letters.length; i++) {
-      setTimeout(() => {
-        this.voiceService.playText(letters[i], 'English');
-      }, i * 1000); // 1 second between each letter
-    }
-
-    // Play full word again
-    setTimeout(() => {
-      this.voiceService.playText(word, 'English');
-    }, letters.length * 1000 + 1000); // Wait for all letters to be spoken, then add 1 more second
+    await this.playLettersPhonetically(letters);
+  } else {
+    // Play each letter normally with spacing
+    await this.playLettersNormally(word);
   }
 
-  // Play the phonetic sound for a given letter
-  private playPhoneticSound(letter: string): void {
+  // Play full word again
+  await this.delay(1000);
+  await this.playText(word);
+}
+
+// Play letters phonetically with a delay
+private async playLettersPhonetically(letters: string[]): Promise<void> {
+  for (const letter of letters) {
+    await this.playPhoneticSound(letter);
+    await this.delay(1000); // 1 second pause between letters
+  }
+}
+
+// Play letters normally with a delay
+private async playLettersNormally(word: string): Promise<void> {
+  const letters = word.split('');
+  for (const letter of letters) {
+    await this.playText(letter);
+    await this.delay(1000); // 1 second between each letter
+  }
+}
+
+// Play the phonetic sound for a given letter
+private async playPhoneticSound(letter: string): Promise<void> {
+  return new Promise<void>((resolve) => {
     const audioPath = `assets/phonics/lowerCase/${letter}.mp3`;
     const audio = new Audio(audioPath);
+    audio.onended = () => resolve();
+    audio.onerror = () => {
+      console.error(`Error playing audio for letter: ${letter}`);
+      resolve();
+    };
     audio.play().catch((error) => {
       console.error(`Error playing audio: ${error}`);
+      resolve();
     });
-  }
+  });
+}
+
+// Play text using VoiceService
+private async playText(text: string): Promise<void> {
+  return new Promise<void>((resolve) => {
+    this.voiceService.playText(text, 'English');
+    // Assuming playText is synchronous, we'll add a small delay before resolving
+    setTimeout(resolve, 500 + text.length * 100); // Adjust timing based on text length
+  });
+}
+
+// Helper method to create a delay
+private delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
   // Toggle the use of phonetics
   togglePhonetics(): void {

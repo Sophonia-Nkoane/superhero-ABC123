@@ -47,40 +47,35 @@ export class AlphabetComponent implements OnInit {
   }
 
   // Play phonetic speech for the given letter
-  playPhoneticSpeech(letter: string): void {
+  async playPhoneticSpeech(letter: string): Promise<void> {
     const language: 'English' = 'English';
 
     if (this.mode === 'all') {
       // Update visual immediately
       this.updateVisualForAll(letter);
 
-      // Play alphabet sound
-      this.playAlphabetSound(letter, language);
+      // Play sounds sequentially
+      await this.playAlphabetSound(letter, language);
+      await this.delay(1000);
+      await this.playPhoneticSound(letter, language);
+      await this.delay(1000);
 
-      // Play phonetic sound after a delay
-      setTimeout(() => {
-        this.playPhoneticSound(letter, language);
-
-        // Play object sound after another delay
-        setTimeout(() => {
-          const object = this.objects.find(obj => obj.letter === letter);
-          if (object) {
-            this.voiceService.playText(object.object, language);
-          }
-        }, 1000);
-      }, 1000);
+      const object = this.objects.find(obj => obj.letter === letter);
+      if (object) {
+        await this.playObjectSound(object.object, language);
+      }
     } else {
       // Play sounds based on the current mode
       if (this.mode === 'alphabet' || this.mode === 'all') {
-        this.playAlphabetSound(letter, language);
+        await this.playAlphabetSound(letter, language);
       }
       if (this.mode === 'phonics' || this.mode === 'all') {
-        this.playPhoneticSound(letter, language);
+        await this.playPhoneticSound(letter, language);
       }
       if (this.mode === 'objects' || this.mode === 'all') {
         const object = this.objects.find(obj => obj.letter === letter);
         if (object) {
-          this.voiceService.playText(object.object, language);
+          await this.playObjectSound(object.object, language);
           // Update search letter based on the mode
           if (this.mode === 'all') {
             this.searchLetter = `${letter.toUpperCase()} ${letter.toLowerCase()} - ${object.object} ${object.icon}`;
@@ -109,15 +104,38 @@ export class AlphabetComponent implements OnInit {
   }
 
   // Play the alphabet sound for the given letter
-  playAlphabetSound(letter: string, language: 'English'): void {
-    this.voiceService.playText(letter, language);
+  async playAlphabetSound(letter: string, language: 'English'): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.voiceService.playText(letter, language);
+      // Assuming playText is synchronous, we'll add a small delay before resolving
+      setTimeout(resolve, 500);
+    });
   }
 
   // Play the phonetic sound for the given letter
-  playPhoneticSound(letter: string, language: 'English'): void {
-    const audioPath = `assets/phonics/upperCase/${letter}.mp3`;
-    const audio = new Audio(audioPath);
-    audio.play();
+  async playPhoneticSound(letter: string, language: 'English'): Promise<void> {
+    return new Promise<void>((resolve) => {
+      const audioPath = `assets/phonics/upperCase/${letter}.mp3`;
+      const audio = new Audio(audioPath);
+      audio.onended = () => {
+        resolve();
+      };
+      audio.play();
+    });
+  }
+
+  // Play the object sound for the given object
+  async playObjectSound(object: string, language: 'English'): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.voiceService.playText(object, language);
+      // Assuming playText is synchronous, we'll add a small delay before resolving
+      setTimeout(resolve, 1000);
+    });
+  }
+
+  // Helper method to create a delay
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   // Update the search letter display
@@ -177,33 +195,14 @@ export class AlphabetComponent implements OnInit {
   }
 
   // Read all letters based on the current mode
-  readAll(): void {
+  async readAll(): Promise<void> {
     this.isReading = true;
-    let index = 0;
-    let intervalTime: number;
-
-    // Set interval time based on the mode
-    switch (this.mode) {
-      case 'alphabet':
-        intervalTime = 2200;
-        break;
-      case 'phonics':
-        intervalTime = 2200;
-        break;
-      default:
-        intervalTime = 5000;
+    for (const letter of this.filteredAlphabet) {
+      if (!this.isReading) break;
+      await this.playPhoneticSpeech(letter);
+      await this.delay(1000); // Add a delay between letters
     }
-
-    const intervalId = setInterval(() => {
-      if (index < this.filteredAlphabet.length && this.isReading) {
-        const letter = this.filteredAlphabet[index];
-        this.playPhoneticSpeech(letter);
-        index++;
-      } else {
-        clearInterval(intervalId);
-        this.stopReading();
-      }
-    }, intervalTime);
+    this.stopReading();
   }
 
   // Stop the reading process

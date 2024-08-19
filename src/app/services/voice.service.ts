@@ -227,3 +227,7 @@ export class VoiceService {
     this.setStoredVoices();
   }
 }
+function resolve() {
+  throw new Error('Function not implemented.');
+}
+
