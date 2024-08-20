@@ -1,0 +1,41 @@
+<div class="test-container">
+  <div class="selected-letter">
+    <p>{{ selectedLetter }}</p>
+  </div>
+
+  <!-- Section 1 -->
+  <div class="section">
+    <h3>Section 1</h3>
+    <div class="alphabet-container">
+      <ng-container *ngIf="section1Array$ | async as section1Array">
+        <button *ngFor="let word of section1Array" (click)="playSpeechWithPhonetics(word)">
+          {{ word }}
+        </button>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Section 2 -->
+  <div class="section">
+    <h3>Section 2</h3>
+    <div class="alphabet-container">
+      <ng-container *ngIf="section2Array$ | async as section2Array">
+        <button *ngFor="let sentence of section2Array" (click)="playSpeech(sentence)">
+          {{ sentence }}
+        </button>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Section 3 -->
+  <div class="section">
+    <h3>Section 3</h3>
+    <table>
+      <tr *ngFor="let row of section3Table">
+        <td *ngFor="let word of row">
+          <button (click)="playSpeech(word)">{{ word }}</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

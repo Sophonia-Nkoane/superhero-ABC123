@@ -1,0 +1,64 @@
+<div class="test-container">
+  <!-- Display the selected word with dots between each letter -->
+  <div class="selected-word">
+    <p>{{ selectedWord.split('').join(' . ') }}</p>
+  </div>
+
+  <div [class.disabled-container]="isPlaying">
+
+    <!-- Level Selector for switching between different levels of difficulty -->
+    <div class="level-buttons">
+      <button (click)="setLevel(1)" [class.active]="level === 1" class="level-button">Level 1</button>
+      <button (click)="setLevel(2)" [class.active]="level === 2" class="level-button">Level 2</button>
+      <button (click)="setLevel(3)" [class.active]="level === 3" class="level-button">Level 3</button>
+    </div>
+
+    <!-- Toggle to enable or disable phonetic mode -->
+    <div class="phonetics-toggle">
+      <label>
+        <input type="checkbox" [checked]="usePhonetics" (change)="togglePhonetics()">
+        Use Phonetics
+      </label>
+    </div>
+  </div>
+
+  <!-- Section for spelling practice -->
+  <div class="section">
+    <h3>Spelling</h3>
+    <div class="word-container">
+      @if (section1Array$ | async; as section1Array) {
+        @for (word of section1Array; track word) {
+          <div class="word-blocks-container">
+            <div class="word-blocks">
+              @for (block of getWordBlocks(word); track block; let i = $index) {
+                @if (block !== '') {
+                  <span>{{ block }}</span>
+                } @else {
+                  <input
+                    #userInput
+                    type="text"
+                    maxlength="1"
+                    [style.border]="userInputs.get(word) === missingLettersMap.get(word)?.letters ? '1px solid green' : '1px solid #ccc'"
+                    [attr.data-word]="word"
+                    style="padding: 5px; width: 40px; height: 50px; text-align: center;"
+                    (input)="checkAnswer($event, word)"
+                  />
+                }
+              }
+            </div>
+            <!-- Button to play the audio for the word -->
+            <button (click)="playWordAudio(word)">Play</button>
+            <!-- Display hint button if user has made 5 or more attempts -->
+            @if (attemptCount >= 5) {
+              <button (click)="hint(word)">Hint</button>
+            }
+            <!-- Display "Correct!" message if all letters for the word are entered correctly -->
+            @if (userInputs.get(word) === missingLettersMap.get(word)?.letters) {
+              <p>Correct!</p>
+            }
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>

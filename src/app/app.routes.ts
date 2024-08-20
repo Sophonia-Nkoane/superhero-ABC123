@@ -1,17 +1,17 @@
 import { Routes } from '@angular/router';
-import { AlphabetComponent } from './layout/language fundamentals/alphabet/alphabet.component';
-import { SentenceBuildingComponent } from './layout/language fundamentals/sentence-building/sentence-building.component';
-import { NumbersComponent } from './layout/numeracy essentials/numbers/numbers.component';
-import { WelcomeComponent } from './layout/welcome/welcome.component';
-import { SettingsComponent } from './settings/settings.component';
-import { DataManagerComponent } from './data-manager/data-manager.component';
-import { SpellingComponent } from './layout/language fundamentals/spelling/spelling.component';
-import { LearningComponent } from './layout/learning/learning.component';
-import { AdditionComponent } from './layout/numeracy essentials/maths/addition/addition.component';
-import { SubtractionComponent } from './layout/numeracy essentials/maths/subtraction/subtraction.component';
-import { MultiplicationComponent } from './layout/numeracy essentials/maths/multiplication/multiplication.component';
-import { DivisionComponent } from './layout/numeracy essentials/maths/division/division.component';
-import { MathsComponent } from './layout/numeracy essentials/maths/maths.component';
+import { AlphabetComponent } from './component/language fundamentals/alphabet/alphabet.component';
+import { SentenceBuildingComponent } from './component/language fundamentals/sentence-building/sentence-building.component';
+import { NumbersComponent } from './component/numeracy essentials/numbers/numbers.component';
+import { WelcomeComponent } from './component/welcome/welcome.component';
+import { SettingsComponent } from './component/settings/settings.component';
+import { DataManagerComponent } from './component/data-manager/data-manager.component';
+import { SpellingComponent } from './component/language fundamentals/spelling/spelling.component';
+import { LearningComponent } from './component/learning/learning.component';
+import { AdditionComponent } from './component/numeracy essentials/maths/addition/addition.component';
+import { SubtractionComponent } from './component/numeracy essentials/maths/subtraction/subtraction.component';
+import { MultiplicationComponent } from './component/numeracy essentials/maths/multiplication/multiplication.component';
+import { DivisionComponent } from './component/numeracy essentials/maths/division/division.component';
+import { MathsComponent } from './component/numeracy essentials/maths/maths.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/welcome', pathMatch: 'full' }, // Redirect to welcome page if no route matched

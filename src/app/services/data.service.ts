@@ -41,10 +41,10 @@ export class DataService {
   private section2Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
   private readonly defaultSentences: string[] = [
-    "He said this frog is green.",
-    "She is a girl.",
-    "He is at the shop.",
-    "She said this dog is big."
+    "My dad is in the bed.",
+    "I think we must go.",
+    "My friend is sleeping.",
+    "I think we have a dog."
   ];
 
   private readonly defaultWordFamilies: WordFamily[] = [
@@ -97,7 +97,7 @@ export class DataService {
     objects: ["Apples", "Ball", "Book", "Toy", "Game", "Pencil", "Paper", "Crayon", "Paintbrush", "Guitar"]
   };
 
-  private readonly defaultSection1: string[] = ['win', 'drum','mugs', 'yes', 'sun', 'tax','pram', 'bib', 'chop', 'frog', 'said', 'gran', 'this', 'green'];
+  private readonly defaultSection1: string[] = ['red', 'chum','job', 'pigs', 'shy', 'hat','club', 'six', 'flag', 'sleeping', 'friend', 'think', 'must', 'hop', 'chin', 'frog', 'looking'];
   private readonly defaultSection3: string[] = ['-og', '-in', '-op', '-at', 'jog', 'win', 'pop', 'mat', 'frog', 'bin', 'mop', 'cat', 'hop', 'fin', 'hop', 'pat'];
 
   constructor() {

@@ -1,0 +1,66 @@
+<div class="test-container">
+  <div>
+    <button (click)="toggleVoice()">{{ voiceEnabled ? 'Disable' : 'Enable' }} Voice</button>
+    @for (l of [1, 2, 3, 4, 5]; track l) {
+      <button (click)="setLevel(l)">Level {{l}}</button>
+    }
+  </div>
+
+  <div class="problems-container">
+    @for (problem of problems; track problem; let i = $index) {
+      <div class="number-inputs">
+        @for (block of getBlocks(i); track block; let j = $index; let last = $last) {
+          @if (!last) {
+            @if (!isInputBlock(i, j)) {
+              <input
+                type="text"
+                [id]="'num' + (j + 1)"
+                [value]="getBlockValue(i, j)"
+                readonly
+                class="block"
+              >
+            } @else {
+              <input
+                #inputBlock
+                type="text"
+                [id]="'input_' + i + '_' + block"
+                [(ngModel)]="userInputs[i + '_' + block]"
+                (input)="onInputChange($event, i, block)"
+                class="block number-input"
+              >
+            }
+            @if (j < problem.numbers.length - 1) {
+              <div class="block operator">+</div>
+            }
+          } @else {
+            <div class="block operator">=</div>
+            @if (!isInputBlock(i, j)) {
+              <input
+                type="text"
+                [id]="'sum'"
+                [value]="problem.sum"
+                readonly
+                class="block"
+              >
+            } @else {
+              <input
+                #inputBlock
+                type="text"
+                [id]="'input_' + i + '_' + block"
+                [(ngModel)]="userInputs[i + '_' + block]"
+                (input)="onInputChange($event, i, block)"
+                class="block number-input"
+              >
+            }
+          }
+        }
+      </div>
+    }
+  </div>
+
+  @if (errorMessage) {
+    <div class="error-message">
+      {{ errorMessage }}
+    </div>
+  }
+</div>

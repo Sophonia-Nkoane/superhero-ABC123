@@ -1,0 +1,43 @@
+<div class="test-container">
+  <div>
+    <button (click)="toggleVoice()">{{ voiceEnabled ? 'Disable' : 'Enable' }} Voice</button>
+    <button *ngFor="let l of [1, 2, 3, 4, 5]" (click)="setLevel(l)">Level {{ l }}</button>
+  </div>
+  <div *ngIf="level === 1">
+    <button *ngFor="let subLevel of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]" (click)="setSubLevel(subLevel)">
+      {{ subLevel }}
+    </button>
+  </div>
+
+    <div class="problems-container">
+      <ng-container *ngFor="let problem of problems; let i = index">
+        <div class="number-inputs">
+          <ng-container *ngIf="problem.missingIndex === 0">
+            <input type="text" [id]="'input_' + i + '_dividend'" [(ngModel)]="userInputs[i + '_dividend']" (input)="onInputChange($event, i, 'dividend')" class="block number-input">
+            <div class="block operator">÷</div>
+            <input type="text" [value]="problem.divisor" readonly class="block">
+            <div class="block operator">=</div>
+            <input type="text" [value]="problem.quotient" readonly class="block">
+          </ng-container>
+          <ng-container *ngIf="problem.missingIndex === 1">
+            <input type="text" [value]="problem.dividend" readonly class="block">
+            <div class="block operator">÷</div>
+            <input type="text" [id]="'input_' + i + '_divisor'" [(ngModel)]="userInputs[i + '_divisor']" (input)="onInputChange($event, i, 'divisor')" class="block number-input">
+            <div class="block operator">=</div>
+            <input type="text" [value]="problem.quotient" readonly class="block">
+          </ng-container>
+          <ng-container *ngIf="problem.missingIndex === 2">
+            <input type="text" [value]="problem.dividend" readonly class="block">
+            <div class="block operator">÷</div>
+            <input type="text" [value]="problem.divisor" readonly class="block">
+            <div class="block operator">=</div>
+            <input type="text" [id]="'input_' + i + '_quotient'" [(ngModel)]="userInputs[i + '_quotient']" (input)="onInputChange($event, i, 'quotient')" class="block number-input">
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+</div>
