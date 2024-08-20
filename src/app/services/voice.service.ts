@@ -4,9 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class VoiceService {
-  getUtterance(letter: string, language: string) {
-    throw new Error('Method not implemented.');
-  }
   voices: SpeechSynthesisVoice[] = [];
   selectedVoiceEnglish: SpeechSynthesisVoice | null = null;
   selectedVoiceAfrikaans: SpeechSynthesisVoice | null = null;
