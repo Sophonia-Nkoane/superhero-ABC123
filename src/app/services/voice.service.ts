@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class VoiceService {
+export class VoiceService { 
   voices: SpeechSynthesisVoice[] = [];
   selectedVoiceEnglish: SpeechSynthesisVoice | null = null;
   selectedVoiceAfrikaans: SpeechSynthesisVoice | null = null;

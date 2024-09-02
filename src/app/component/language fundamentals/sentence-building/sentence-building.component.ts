@@ -27,8 +27,7 @@ export class SentenceBuildingComponent implements OnInit {
   selectedVoice: SpeechSynthesisVoice | null = null;
   isCheckingDisabled = false; // Property to control check button state
   isPlayingDisabled = false; // property to control play button state
-
-
+  showBackButton = false;
 
   constructor(
     private voiceService: VoiceService,
@@ -100,6 +99,7 @@ export class SentenceBuildingComponent implements OnInit {
         setTimeout(() => {
           this.setNewSentence();
           this.isCheckingDisabled = false; // Re-enable the button
+          this.showBackButton = true; // Show the back button after a correct answer
         }, 8000);
       } else {
         this.feedback = 'Not quite. Try again!';
@@ -107,6 +107,14 @@ export class SentenceBuildingComponent implements OnInit {
       }
       this.userInput = '';
     }
+  }
+
+  goBack() {
+    this.showBackButton = false; // Hide the back button when clicked
+    const currentIndex = this.sentences.indexOf(this.currentSentence);
+    const previousIndex = (currentIndex - 1 + this.sentences.length) % this.sentences.length;
+    this.currentSentence = this.sentences[previousIndex];
+    this.updateSentenceDisplay();
   }
 
   checkLevel2Answer() {

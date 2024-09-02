@@ -6,12 +6,13 @@ import { WelcomeComponent } from './component/welcome/welcome.component';
 import { SettingsComponent } from './component/settings/settings.component';
 import { DataManagerComponent } from './component/data-manager/data-manager.component';
 import { SpellingComponent } from './component/language fundamentals/spelling/spelling.component';
-import { LearningComponent } from './component/learning/learning.component';
+import { LearningComponent } from './component/language fundamentals/learning/learning.component';
 import { AdditionComponent } from './component/numeracy essentials/maths/addition/addition.component';
 import { SubtractionComponent } from './component/numeracy essentials/maths/subtraction/subtraction.component';
 import { MultiplicationComponent } from './component/numeracy essentials/maths/multiplication/multiplication.component';
 import { DivisionComponent } from './component/numeracy essentials/maths/division/division.component';
 import { MathsComponent } from './component/numeracy essentials/maths/maths.component';
+import { ReadingComponent } from './component/language fundamentals/reading/reading.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/welcome', pathMatch: 'full' }, // Redirect to welcome page if no route matched
@@ -23,8 +24,9 @@ export const routes: Routes = [
   { path: 'data-manager', component: DataManagerComponent },
   { path: 'learning', component: LearningComponent },
   { path: 'spelling', component: SpellingComponent },
-  {
-    path: 'maths', component: MathsComponent, children: [
+  { path: 'reading', component: ReadingComponent },
+  { path: 'maths', component: MathsComponent, children:
+    [
       { path: 'addition', component: AdditionComponent },
       { path: 'subtraction', component: SubtractionComponent },
       { path: 'multiplication', component: MultiplicationComponent },

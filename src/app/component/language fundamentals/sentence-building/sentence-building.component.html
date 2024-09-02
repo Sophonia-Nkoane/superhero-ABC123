@@ -5,6 +5,7 @@
     <button (click)="setLevel(2)" [class.active]="level === 2" class="level-button">Level 2</button>
     <button (click)="setLevel(3)" [class.active]="level === 3" class="level-button">Level 3</button>
     <button (click)="setLevel(4)" [class.active]="level === 4" class="level-button">Level 4</button>
+    <button (click)="goBack()" class="back-button" *ngIf="showBackButton">Back</button>
   </div>
   <div class="sentence-board">
     @if (level === 1) {
@@ -22,23 +23,23 @@
         </button>
       </div>
       <input
-        type="text"
-        [(ngModel)]="userInput"
-        placeholder="Type the full sentence"
-        class="user-input"
+      type="text"
+      [(ngModel)]="userInput"
+      placeholder="Type the full sentence"
+      class="user-input"
       >
       <button
       (click)="checkAnswer()"
       class="check-button"
       [disabled]="isCheckingDisabled || isPlayingDisabled">Check
-      </button>
-    }
-    @if (level === 2) {
-      <div class="sentence-display">
-        @for (word of sentenceDisplay; track $index) {
-          <input
-            type="text"
-            [(ngModel)]="userInputs[$index]"
+    </button>
+  }
+  @if (level === 2) {
+    <div class="sentence-display">
+      @for (word of sentenceDisplay; track $index) {
+        <input
+        type="text"
+        [(ngModel)]="userInputs[$index]"
             class="word-input"
             [class.correct]="isWordCorrect($index)"
             [disabled]="isWordCorrect($index)"

@@ -1,8 +1,8 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { VoiceService } from '../../services/voice.service';
-import { DataService } from '../../services/data.service';
+import { VoiceService } from '../../../services/voice.service';
+import { DataService } from '../../../services/data.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -80,23 +80,5 @@ export class LearningComponent implements OnInit {
   }
 
   populateSection3Table(): void {
-    this.section2Array$.subscribe(section2Array => {
-      const rows = 4;
-      const columns = 4;
-      let index = 0;
-      this.section3Table = [];
-      for (let i = 0; i < rows; i++) {
-        const row: string[] = [];
-        for (let j = 0; j < columns; j++) {
-          if (index < section2Array.length) {
-            row.push(section2Array[index]);
-            index++;
-          } else {
-            row.push('');
-          }
-        }
-        this.section3Table.push(row);
-      }
-    });
   }
 }

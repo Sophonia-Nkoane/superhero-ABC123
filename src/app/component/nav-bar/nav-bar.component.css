@@ -34,6 +34,7 @@
 .color-4 { color: #AED581; }
 .color-5 { color: #FFA07A; }
 .color-6 { color: #000000; }
+.color-7 { color: #f10c0c; }
 /* Responsive styles */
 @media (max-width: 990px) {
   .navbar-content {

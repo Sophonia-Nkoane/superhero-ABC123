@@ -1,0 +1,20 @@
+<div class="reading-speed-test">
+  <h2>Reading Speed Test</h2>
+  <p>Read the following passage:</p>
+  <div class="passage">
+    <div class="word-block" *ngFor="let word of words; let i = index">
+      <button
+        class="word-button"
+        [ngClass]="{'highlighted-word': currentWordIndex === i, 'read-word': isWordRead(i)}"
+        (click)="onWordClick(i)"
+      >
+        {{ word }}
+      </button>
+    </div>
+  </div>
+  <p>Word Count: {{ wordCount }}</p>
+  <p>Time: {{ elapsedMinutes }} minutes {{ elapsedSeconds }} seconds</p>
+  <p>Reading Speed: {{ readingSpeed }} words per minute (wpm)</p>
+  <button (click)="startTimer()">Start</button>
+  <button (click)="finishTimer()">Finish</button>
+</div>

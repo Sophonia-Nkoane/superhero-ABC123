@@ -34,11 +34,18 @@ export class DataService {
     actions: [],
     objects: []
   });
+  private passage: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([
+    'here','are','is','cat','went','not','but','just', 'with','for','put','there','at',
+    'go','me','get','his','he','them','into','we','was','and','her','did','will','it',
+    'can','they','of','from','you','be','had','back','mud','i','wet','on','out','big',
+    'do','oh','we','an','in','look','no','when','hat','made','a','eggs','so','dog','see',
+    'time','Dad','eat','like','make','mother','still'  ]);
 
   private readonly alphabet: string[] = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'r', 's', 't', 'v', 'w'];
   private readonly vowels: string[] = ['a', 'e', 'i', 'o', 'u'];
   private section1Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   private section2Array: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+
 
   private readonly defaultSentences: string[] = [
     "My dad is in the bed.",
@@ -99,6 +106,11 @@ export class DataService {
 
   private readonly defaultSection1: string[] = ['red', 'chum','job', 'pigs', 'shy', 'hat','club', 'six', 'flag', 'sleeping', 'friend', 'think', 'must', 'hop', 'chin', 'frog', 'looking'];
   private readonly defaultSection3: string[] = ['-og', '-in', '-op', '-at', 'jog', 'win', 'pop', 'mat', 'frog', 'bin', 'mop', 'cat', 'hop', 'fin', 'hop', 'pat'];
+  private readonly defaultPassage: string[] = [
+    "The quick brown fox jumps over the lazy dog.",
+    "Pack my box with five dozen liquor jugs."
+  ];
+
 
   constructor() {
     this.initializeData();
@@ -165,6 +177,34 @@ export class DataService {
     this.sentences.next(updatedSentences);
     this.saveToLocalStorage('sentences', updatedSentences);
   }
+
+  // CRUD operations for passage
+getPassage(): Observable<string[]> {
+  return this.passage.asObservable();
+}
+
+addPassage(sentence: string): void {
+  const currentPassage = this.passage.value;
+  if (!currentPassage.includes(sentence)) {
+    const updatedPassage = [...currentPassage, sentence];
+    this.passage.next(updatedPassage);
+    this.saveToLocalStorage('passage', updatedPassage);
+  }
+}
+
+updatePassage(oldSentence: string, newSentence: string): void {
+  const currentPassage = this.passage.value;
+  const updatedPassage = currentPassage.map(s => s === oldSentence ? newSentence : s);
+  this.passage.next(updatedPassage);
+  this.saveToLocalStorage('passage', updatedPassage);
+}
+
+deletePassage(sentence: string): void {
+  const currentPassage = this.passage.value;
+  const updatedPassage = currentPassage.filter(s => s !== sentence);
+  this.passage.next(updatedPassage);
+  this.saveToLocalStorage('passage', updatedPassage);
+}
 
   // Word Families CRUD operations
   getWordFamilies(): Observable<WordFamily[]> {
