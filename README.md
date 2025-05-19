@@ -28,4 +28,4 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## For Demo
 
-Go to (https://superhero-abc123.netlify.app/welcome)
+Go to [ABC123](https://superhero-abc123.netlify.app/welcome)
