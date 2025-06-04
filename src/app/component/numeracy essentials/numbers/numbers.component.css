@@ -1,0 +1,134 @@
+/*
+/*Styles for Number Converter Component*/
+
+.main-container {
+  font-family: Arial, sans-serif;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f0f4f8;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.section {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.disabled-container {
+  pointer-events: none; /* Disable all interactions */
+  opacity: 0.5; /* Dim the section to indicate it's disabled */
+}
+
+.spacing {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.toggle-container {
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.toggle-number {
+  font-size: 18px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.toggle-number:hover {
+  text-decoration: underline;
+}
+
+.toggle-number.active {
+  font-weight: bold;
+  color: #333;
+}
+
+.keyboard-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+}
+
+.number-row span {
+  font-size: 46px;
+}
+
+#number-in-words {
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+  font-size: 60px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.number-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.number-in-words,
+.current-number {
+  font-size: 2em;
+  margin-bottom: 10px;
+  transition: all 0.5s ease-in-out;
+}
+
+/* Use global button styles, but adjust size for this component */
+.keyboard-row button {
+  font-size: 36px;
+  padding: 10px 12px;
+}
+
+@keyframes fadeInZoom {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .number-row span {
+    font-size: 30px;
+  }
+  .keyboard-row span {
+    font-size: 24px;
+  }
+  .keyboard-row button {
+    font-size: 24px;
+    padding: 8px 16px;
+  }
+  .search-input[type="text"] {
+    padding: 16px 12px;
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .number-row span {
+    font-size: 30px;
+  }
+  .keyboard-row {
+    font-size: 18px;
+  }
+  .keyboard-row button {
+    font-size: 18px;
+    padding: 6px 12px;
+  }
+  .search-input[type="text"] {
+    padding: 12px 8px;
+    font-size: 18px;
+  }
+}

@@ -1,0 +1,83 @@
+<div class="settings-container">
+  <h2>Voice Settings</h2>
+
+  <div class="voice-settings">
+    <div class="language-selector">
+      <label for="languageSelect">Language:</label> <!-- Added for attribute for accessibility -->
+      <!-- Using (ngModelChange) for consistency, $event will be the new language value -->
+      <select id="languageSelect" [(ngModel)]="selectedLanguage" (ngModelChange)="changeLanguage($event)">
+        <option value="English">English</option>
+        <option value="Afrikaans">Afrikaans</option>
+        <option value="Zulu">Zulu</option>
+      </select>
+      <div class="language-status">Current: {{selectedLanguage}}</div>
+    </div>
+
+    <div class="voice-selector" *ngIf="voicesLoaded">
+      <!-- English Voices -->
+      <div class="voice-group" [class.active]="selectedLanguage === 'English'">
+        <label for="englishVoiceSelect">Select English Voice:</label>
+        <!-- ngModelChange passes the selected voice name (string) directly -->
+        <select id="englishVoiceSelect"
+                [ngModel]="selectedVoiceEnglish?.name"
+                (ngModelChange)="onVoiceChange($event, 'English')"
+                [disabled]="selectedLanguage !== 'English' || englishVoices.length === 0">
+          <option *ngIf="englishVoices.length === 0" [ngValue]="null" disabled>No English voices available</option>
+          <option *ngFor="let voice of englishVoices" [value]="voice.name">{{voice.name}} ({{voice.lang}})</option>
+        </select>
+        <div class="status">{{languageStatus['English']}}</div>
+      </div>
+
+      <!-- Afrikaans Voices -->
+      <div class="voice-group" [class.active]="selectedLanguage === 'Afrikaans'">
+        <label for="afrikaansVoiceSelect">Select Afrikaans Voice:</label>
+        <select id="afrikaansVoiceSelect"
+                [ngModel]="selectedVoiceAfrikaans?.name"
+                (ngModelChange)="onVoiceChange($event, 'Afrikaans')"
+                [disabled]="selectedLanguage !== 'Afrikaans' || afrikaansVoices.length === 0">
+          <option *ngIf="afrikaansVoices.length === 0" [ngValue]="null" disabled>No Afrikaans voices available</option>
+          <option *ngFor="let voice of afrikaansVoices" [value]="voice.name">{{voice.name}} ({{voice.lang}})</option>
+        </select>
+        <div class="status">{{languageStatus['Afrikaans']}}</div>
+      </div>
+
+      <!-- Zulu Voices -->
+      <div class="voice-group" [class.active]="selectedLanguage === 'Zulu'">
+        <label for="zuluVoiceSelect">Select Zulu Voice:</label>
+        <select id="zuluVoiceSelect"
+                [ngModel]="selectedVoiceZulu?.name"
+                (ngModelChange)="onVoiceChange($event, 'Zulu')"
+                [disabled]="selectedLanguage !== 'Zulu' || zuluVoices.length === 0">
+          <option *ngIf="zuluVoices.length === 0" [ngValue]="null" disabled>No Zulu voices available</option>
+          <option *ngFor="let voice of zuluVoices" [value]="voice.name">{{voice.name}} ({{voice.lang}})</option>
+        </select>
+        <div class="status">{{languageStatus['Zulu']}}</div>
+      </div>
+    </div>
+    <div *ngIf="!voicesLoaded" class="loading-indicator">
+        Loading voice settings...
+    </div>
+
+
+    <!-- Rate and Repeat Controls -->
+    <div class="voice-controls" *ngIf="voicesLoaded">
+      <label for="voiceRateRange">Voice Rate: {{mapVoiceRate(voiceRate)}}x (Slider: {{voiceRate}})</label> <!-- Display mapped rate -->
+      <input id="voiceRateRange" type="range" min="-2" max="2" step="0.5"
+             [(ngModel)]="voiceRate" (ngModelChange)="setVoiceRate($event)">
+
+      <div class="repeat-control">
+        <label for="repeatWordsCheckbox">
+          <!-- Using (ngModelChange) for checkbox, $event is boolean -->
+          <input id="repeatWordsCheckbox" type="checkbox"
+                 [(ngModel)]="repeatWords" (ngModelChange)="onRepeatWordsChange($event)">
+          Repeat Words
+        </label>
+      </div>
+    </div>
+
+    <div class="button-group" *ngIf="voicesLoaded">
+      <button (click)="saveSettings()">Save Settings</button>
+      <button (click)="resetSettings()">Reset Settings</button>
+    </div>
+  </div>
+</div>

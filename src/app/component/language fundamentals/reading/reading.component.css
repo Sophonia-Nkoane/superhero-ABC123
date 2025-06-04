@@ -1,0 +1,31 @@
+.word-block {
+  display: inline-block;
+  margin: 5px;
+}
+
+.word-button {
+  padding: 5px;
+  font-size: 24px;
+  border: none;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.highlighted-word {
+  background-color: yellow;
+}
+
+.read-word {
+  color: green;
+}
+
+.highlight {
+  background-color: #a8f0c6;
+  border-color: #2ecc71;
+}
+
+.active {
+  color: #fff;
+  background-color: #2ecc71;
+}

@@ -1,0 +1,153 @@
+.settings {
+  padding: 20px;
+}
+
+.voice-selection {
+  margin-bottom: 20px;
+}
+
+/* Container for the settings */
+.settings-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Header styling */
+.settings-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Label styling */
+.settings-container label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #555;
+}
+
+/* Dropdown styling */
+.settings-container select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+/* Slider styling */
+.settings-container input[type="range"] {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Checkbox styling */
+.settings-container input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+/* Container for buttons */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Button styling */
+.button-container button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-container button:first-child {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.button-container button:last-child {
+  background-color: #f44336;
+  color: #fff;
+}
+
+/* Button hover effects */
+.button-container button:first-child:hover {
+  background-color: #45a049;
+}
+
+.button-container button:last-child:hover {
+  background-color: #e53935;
+}
+
+/* Voice group styling */
+.voice-group {
+  margin: 15px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  opacity: 0.7;
+}
+
+.voice-group.active {
+  opacity: 1;
+  border-color: #4CAF50;
+  background-color: #f9f9f9;
+}
+
+/* Status text styling */
+.status {
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 5px;
+}
+
+.language-status {
+  font-weight: bold;
+  color: #4CAF50;
+  margin: 10px 0;
+}
+
+/* Voice controls margin */
+.voice-controls {
+  margin: 20px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .settings-container {
+    padding: 15px;
+  }
+
+  .settings-container label {
+    font-size: 14px;
+  }
+
+  .settings-container select,
+  .settings-container input[type="range"],
+  .button-container button {
+    font-size: 14px;
+  }
+
+  .button-container {
+    flex-direction: column;
+  }
+
+  .button-container button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .button-container button:last-child {
+    margin-bottom: 0;
+  }
+}
