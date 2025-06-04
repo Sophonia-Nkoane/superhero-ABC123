@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+<<<<<<< HEAD:src/app/component/numeracy essentials/numbers/numbers.component.ts
 import { VoiceService } from '../../../services/voice.service';
+=======
+import { VoiceService } from '../Utilities/voice.service';
+>>>>>>> d1bf3511a1fe2066d8beb8d43dfcf952e4f965f3:src/app/numbers/numbers.component.ts
 
 @Component({
   selector: 'app-numbers',
@@ -125,6 +129,7 @@ export class NumbersComponent implements OnInit {
 
     const selectedVoice = this.voiceService.getSelectedVoice(this.language);
     if (selectedVoice) {
+<<<<<<< HEAD:src/app/component/numeracy essentials/numbers/numbers.component.ts
       try {
         await this.voiceService.playWords([this.numberInWords, number], this.language,
           (word) => {
@@ -140,6 +145,14 @@ export class NumbersComponent implements OnInit {
             } else if (word === number) {
               this.currentNumberElement.nativeElement.classList.remove('highlight');
             }
+=======
+      this.voiceService.playWords([this.numberInWords, number], this.language,
+        (word) => {
+          if (word === this.numberInWords) {
+            this.numberInWordsElement.nativeElement.classList.add('highlight');
+          } else if (word === number) {
+            this.currentNumberElement.nativeElement.classList.add('highlight');
+>>>>>>> d1bf3511a1fe2066d8beb8d43dfcf952e4f965f3:src/app/numbers/numbers.component.ts
           }
         );
       } catch (error) {
@@ -149,7 +162,10 @@ export class NumbersComponent implements OnInit {
       }
     } else {
       console.error('No voice selected or available.');
+<<<<<<< HEAD:src/app/component/numeracy essentials/numbers/numbers.component.ts
       this.isPlaying = false;
+=======
+>>>>>>> d1bf3511a1fe2066d8beb8d43dfcf952e4f965f3:src/app/numbers/numbers.component.ts
     }
   }
 
@@ -168,7 +184,11 @@ export class NumbersComponent implements OnInit {
     });
   }
 
+<<<<<<< HEAD:src/app/component/numeracy essentials/numbers/numbers.component.ts
   searchNumbers(query: string) {
+=======
+  async searchNumbers(query: string) {
+>>>>>>> d1bf3511a1fe2066d8beb8d43dfcf952e4f965f3:src/app/numbers/numbers.component.ts
     query = query.toLowerCase();
     this.searchResults = this.numbers.filter(num => num.includes(query));
     this.updateNumberInWordsElement();
@@ -180,6 +200,7 @@ export class NumbersComponent implements OnInit {
   }
 
   async readAllNumbers() {
+<<<<<<< HEAD:src/app/component/numeracy essentials/numbers/numbers.component.ts
     if (this.isPlaying || this.isReading) return; // Prevent starting if already playing or reading
 
     this.isReading = true;
@@ -207,6 +228,11 @@ export class NumbersComponent implements OnInit {
       this.stopReading();
     } else {
       this.readAllNumbers();
+=======
+    for (const number of this.getNumbers()) {
+      await this.playNumberAudio(number);
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Delay between numbers
+>>>>>>> d1bf3511a1fe2066d8beb8d43dfcf952e4f965f3:src/app/numbers/numbers.component.ts
     }
   }
 
