@@ -1,3 +1,4 @@
+/* Container for the settings */
 .settings {
   padding: 20px;
 }
@@ -58,8 +59,6 @@
   color: #666;
 }
 
-
-/* Container for the settings */
 .settings-container {
   max-width: 600px;
   margin: 20px auto;
