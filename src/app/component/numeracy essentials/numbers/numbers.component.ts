@@ -115,36 +115,22 @@ export class NumbersComponent implements OnInit {
   }
 
   async playNumberAudio(number: string) {
-    if (this.isPlaying) return; // Prevent playing if already playing
+    if (this.isPlaying) return;
 
     this.isPlaying = true;
     const num = parseInt(number);
     this.numberInWords = this.num2words(num);
     this.currentNumber = number;
-    this.updateNumberInWordsElement();
 
     const selectedVoice = this.voiceService.getSelectedVoice(this.language);
     if (selectedVoice) {
       try {
-        await this.voiceService.playWords([this.numberInWords, number], this.language,
-          (word) => {
-            if (word === this.numberInWords) {
-              this.numberInWordsElement.nativeElement.classList.add('highlight');
-            } else if (word === number) {
-              this.currentNumberElement.nativeElement.classList.add('highlight');
-            }
-          },
-          (word) => {
-            if (word === this.numberInWords) {
-              this.numberInWordsElement.nativeElement.classList.remove('highlight');
-            } else if (word === number) {
-              this.currentNumberElement.nativeElement.classList.remove('highlight');
-            }
-          }
-        );
+        // Single reading sequence
+        await this.playSequence(this.numberInWords, number);
       } catch (error) {
         console.error('Error playing audio:', error);
       } finally {
+        this.clearHighlights();
         this.isPlaying = false;
       }
     } else {
@@ -153,25 +139,62 @@ export class NumbersComponent implements OnInit {
     }
   }
 
-  updateNumberInWordsElement() {
-    const element = this.numberInWordsElement.nativeElement;
-    element.textContent = this.numberInWords;
+  private async playSequence(wordForm: string, numericForm: string): Promise<void> {
+    if (this.stopRequested) {
+      this.cleanupSequence();
+      return;
+    }
+
+    try {
+      // Highlight and play word form
+      this.setHighlight(true);
+      await this.voiceService.playWords([wordForm], this.language);
+      if (this.stopRequested) {
+        this.cleanupSequence();
+        return;
+      }
+      await this.delay(1000); // Increased delay for better readability
+
+      // Highlight and play numeric form
+      this.setHighlight(false);
+      await this.voiceService.playWords([numericForm], this.language);
+      if (this.stopRequested) {
+        this.cleanupSequence();
+        return;
+      }
+      await this.delay(1500);
+    } catch (error) {
+      console.error('Error in sequence:', error);
+      this.cleanupSequence();
+    }
   }
 
-  animateElement(element: HTMLElement, duration: number) {
-    return new Promise(resolve => {
-      element.classList.add('animate');
-      setTimeout(() => {
-        element.classList.remove('animate');
-        resolve(true);
-      }, duration);
-    });
+  private cleanupSequence() {
+    this.clearHighlights();
+    window.speechSynthesis.cancel();
+    this.isPlaying = false;
+    this.currentNumber = '';
+    this.numberInWords = '';
+  }
+
+  private setHighlight(isWordForm: boolean) {
+    if (isWordForm) {
+      this.numberInWordsElement.nativeElement.classList.add('highlight', 'active');
+      this.currentNumberElement.nativeElement.classList.remove('highlight', 'active');
+    } else {
+      this.currentNumberElement.nativeElement.classList.add('highlight', 'active');
+      this.numberInWordsElement.nativeElement.classList.remove('highlight', 'active');
+    }
+  }
+
+  private clearHighlights() {
+    this.numberInWordsElement.nativeElement.classList.remove('highlight', 'active');
+    this.currentNumberElement.nativeElement.classList.remove('highlight', 'active');
   }
 
   searchNumbers(query: string) {
     query = query.toLowerCase();
     this.searchResults = this.numbers.filter(num => num.includes(query));
-    this.updateNumberInWordsElement();
   }
 
   async onLanguageChange() {
@@ -200,6 +223,7 @@ export class NumbersComponent implements OnInit {
     this.stopRequested = true;
     this.isReading = false;
     this.isPlaying = false;
+    this.cleanupSequence();
   }
 
   toggleAutoRead() {
