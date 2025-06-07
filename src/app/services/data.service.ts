@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { CacheService } from './cache.service';
 
 export interface WordFamily {
   id: number;
@@ -34,12 +35,7 @@ export class DataService {
     actions: [],
     objects: []
   });
-  private passage: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([
-    'here','are','is','cat','went','not','but','just', 'with','for','put','there','at',
-    'go','me','get','his','he','them','into','we','was','and','her','did','will','it',
-    'can','they','of','from','you','be','had','back','mud','i','wet','on','out','big',
-    'do','oh','we','an','in','look','no','when','hat','made','a','eggs','so','dog','see',
-    'time','Dad','eat','like','make','mother','still'  ]);
+  private passage: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]); // Initialize empty, load from cache
 
   private readonly alphabet: string[] = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'r', 's', 't', 'v', 'w'];
   private readonly vowels: string[] = ['a', 'e', 'i', 'o', 'u'];
@@ -112,26 +108,18 @@ export class DataService {
   ];
 
 
-  constructor() {
+  constructor(private cacheService: CacheService) {
     this.initializeData();
   }
 
   private initializeData(): void {
-    this.wordFamilies.next(this.getFromLocalStorage('wordFamilies', this.defaultWordFamilies));
-    this.objects.next(this.getFromLocalStorage('objects', this.defaultObjects));
-    this.words.next(this.getFromLocalStorage('words', this.defaultWords));
-    this.section1Array.next(this.getFromLocalStorage('section1', this.defaultSection1));
-    this.section2Array.next(this.getFromLocalStorage('section3', this.defaultSection3));
-    this.sentences.next(this.getFromLocalStorage('sentences', this.defaultSentences));
-  }
-
-  private getFromLocalStorage<T>(key: string, defaultValue: T): T {
-    const storedValue = localStorage.getItem(key);
-    return storedValue ? JSON.parse(storedValue) : defaultValue;
-  }
-
-  private saveToLocalStorage<T>(key: string, value: T): void {
-    localStorage.setItem(key, JSON.stringify(value));
+    this.wordFamilies.next(this.cacheService.getItem('wordFamilies') || this.defaultWordFamilies);
+    this.objects.next(this.cacheService.getItem('objects') || this.defaultObjects);
+    this.words.next(this.cacheService.getItem('words') || this.defaultWords);
+    this.section1Array.next(this.cacheService.getItem('section1') || this.defaultSection1);
+    this.section2Array.next(this.cacheService.getItem('section2') || this.defaultSection3); // Corrected key to 'section2'
+    this.sentences.next(this.cacheService.getItem('sentences') || this.defaultSentences);
+    this.passage.next(this.cacheService.getItem('passage') || this.defaultPassage); // Load passage from cache
   }
 
   resetToDefaults(): void {
@@ -141,13 +129,15 @@ export class DataService {
     this.section1Array.next(this.defaultSection1);
     this.section2Array.next(this.defaultSection3);
     this.sentences.next(this.defaultSentences);
+    this.passage.next(this.defaultPassage); // Reset passage
 
-    this.saveToLocalStorage('sentences', this.defaultSentences);
-    this.saveToLocalStorage('wordFamilies', this.defaultWordFamilies);
-    this.saveToLocalStorage('objects', this.defaultObjects);
-    this.saveToLocalStorage('words', this.defaultWords);
-    this.saveToLocalStorage('section1', this.defaultSection1);
-    this.saveToLocalStorage('section3', this.defaultSection3);
+    this.cacheService.setItem('sentences', this.defaultSentences);
+    this.cacheService.setItem('wordFamilies', this.defaultWordFamilies);
+    this.cacheService.setItem('objects', this.defaultObjects);
+    this.cacheService.setItem('words', this.defaultWords);
+    this.cacheService.setItem('section1', this.defaultSection1);
+    this.cacheService.setItem('section2', this.defaultSection3); // Corrected key to 'section2'
+    this.cacheService.setItem('passage', this.defaultPassage); // Save default passage
   }
 
   // Sentences CRUD operations
@@ -160,7 +150,7 @@ export class DataService {
     if (!currentSentences.includes(sentence)) {
       const updatedSentences = [...currentSentences, sentence];
       this.sentences.next(updatedSentences);
-      this.saveToLocalStorage('sentences', updatedSentences);
+      this.cacheService.setItem('sentences', updatedSentences);
     }
   }
 
@@ -168,14 +158,14 @@ export class DataService {
     const currentSentences = this.sentences.value;
     const updatedSentences = currentSentences.map(s => s === oldSentence ? newSentence : s);
     this.sentences.next(updatedSentences);
-    this.saveToLocalStorage('sentences', updatedSentences);
+    this.cacheService.setItem('sentences', updatedSentences);
   }
 
   deleteSentence(sentence: string): void {
     const currentSentences = this.sentences.value;
     const updatedSentences = currentSentences.filter(s => s !== sentence);
     this.sentences.next(updatedSentences);
-    this.saveToLocalStorage('sentences', updatedSentences);
+    this.cacheService.setItem('sentences', updatedSentences);
   }
 
   // CRUD operations for passage
@@ -188,7 +178,7 @@ addPassage(sentence: string): void {
   if (!currentPassage.includes(sentence)) {
     const updatedPassage = [...currentPassage, sentence];
     this.passage.next(updatedPassage);
-    this.saveToLocalStorage('passage', updatedPassage);
+    this.cacheService.setItem('passage', updatedPassage);
   }
 }
 
@@ -196,14 +186,14 @@ updatePassage(oldSentence: string, newSentence: string): void {
   const currentPassage = this.passage.value;
   const updatedPassage = currentPassage.map(s => s === oldSentence ? newSentence : s);
   this.passage.next(updatedPassage);
-  this.saveToLocalStorage('passage', updatedPassage);
+  this.cacheService.setItem('passage', updatedPassage);
 }
 
 deletePassage(sentence: string): void {
   const currentPassage = this.passage.value;
   const updatedPassage = currentPassage.filter(s => s !== sentence);
   this.passage.next(updatedPassage);
-  this.saveToLocalStorage('passage', updatedPassage);
+  this.cacheService.setItem('passage', updatedPassage);
 }
 
   // Word Families CRUD operations
@@ -216,7 +206,7 @@ deletePassage(sentence: string): void {
     const newId = currentWordFamilies.length > 0 ? Math.max(...currentWordFamilies.map(wf => wf.id)) + 1 : 1;
     const updatedWordFamilies = [...currentWordFamilies, { ...wordFamily, id: newId }];
     this.wordFamilies.next(updatedWordFamilies);
-    this.saveToLocalStorage('wordFamilies', updatedWordFamilies);
+    this.cacheService.setItem('wordFamilies', updatedWordFamilies);
   }
 
   updateWordFamily(id: number, updatedWordFamily: Partial<WordFamily>): void {
@@ -225,14 +215,14 @@ deletePassage(sentence: string): void {
       wf.id === id ? { ...wf, ...updatedWordFamily } : wf
     );
     this.wordFamilies.next(updatedWordFamilies);
-    this.saveToLocalStorage('wordFamilies', updatedWordFamilies);
+    this.cacheService.setItem('wordFamilies', updatedWordFamilies);
   }
 
   deleteWordFamily(id: number): void {
     const currentWordFamilies = this.wordFamilies.value;
     const updatedWordFamilies = currentWordFamilies.filter(wf => wf.id !== id);
     this.wordFamilies.next(updatedWordFamilies);
-    this.saveToLocalStorage('wordFamilies', updatedWordFamilies);
+    this.cacheService.setItem('wordFamilies', updatedWordFamilies);
   }
 
   // Objects CRUD operations
@@ -245,7 +235,7 @@ deletePassage(sentence: string): void {
     const newId = currentObjects.length > 0 ? Math.max(...currentObjects.map(obj => obj.id)) + 1 : 1;
     const updatedObjects = [...currentObjects, { ...object, id: newId }];
     this.objects.next(updatedObjects);
-    this.saveToLocalStorage('objects', updatedObjects);
+    this.cacheService.setItem('objects', updatedObjects);
   }
 
   updateObject(id: number, updatedObject: Partial<Object>): void {
@@ -254,14 +244,14 @@ deletePassage(sentence: string): void {
       obj.id === id ? { ...obj, ...updatedObject } : obj
     );
     this.objects.next(updatedObjects);
-    this.saveToLocalStorage('objects', updatedObjects);
+    this.cacheService.setItem('objects', updatedObjects);
   }
 
   deleteObject(id: number): void {
     const currentObjects = this.objects.value;
     const updatedObjects = currentObjects.filter(obj => obj.id !== id);
     this.objects.next(updatedObjects);
-    this.saveToLocalStorage('objects', updatedObjects);
+    this.cacheService.setItem('objects', updatedObjects);
   }
 
   // Methods for alphabet and vowels
@@ -283,7 +273,7 @@ deletePassage(sentence: string): void {
     if (!currentWords.includes(word)) {
       const updatedWords = [...currentWords, word];
       this.section1Array.next(updatedWords);
-      this.saveToLocalStorage('section1', updatedWords);
+      this.cacheService.setItem('section1', updatedWords);
     }
   }
 
@@ -291,14 +281,14 @@ deletePassage(sentence: string): void {
     const currentWords = this.section1Array.value;
     const updatedWords = currentWords.map(w => w === oldWord ? newWord : w);
     this.section1Array.next(updatedWords);
-    this.saveToLocalStorage('section1', updatedWords);
+    this.cacheService.setItem('section1', updatedWords);
   }
 
   deleteSection1Word(word: string): void {
     const currentWords = this.section1Array.value;
     const updatedWords = currentWords.filter(w => w !== word);
     this.section1Array.next(updatedWords);
-    this.saveToLocalStorage('section1', updatedWords);
+    this.cacheService.setItem('section1', updatedWords);
   }
 
   // Section 2 CRUD operations
@@ -311,7 +301,7 @@ deletePassage(sentence: string): void {
     if (!currentWords.includes(word)) {
       const updatedWords = [...currentWords, word];
       this.section2Array.next(updatedWords);
-      this.saveToLocalStorage('section3', updatedWords);
+      this.cacheService.setItem('section2', updatedWords); // Corrected key to 'section2'
     }
   }
 
@@ -319,14 +309,14 @@ deletePassage(sentence: string): void {
     const currentWords = this.section2Array.value;
     const updatedWords = currentWords.map(w => w === oldWord ? newWord : w);
     this.section2Array.next(updatedWords);
-    this.saveToLocalStorage('section3', updatedWords);
+    this.cacheService.setItem('section2', updatedWords); // Corrected key to 'section2'
   }
 
   deleteSection3Word(word: string): void {
     const currentWords = this.section2Array.value;
     const updatedWords = currentWords.filter(w => w !== word);
     this.section2Array.next(updatedWords);
-    this.saveToLocalStorage('section3', updatedWords);
+    this.cacheService.setItem('section2', updatedWords); // Corrected key to 'section2'
   }
 
   // Words CRUD operations
@@ -338,7 +328,7 @@ deletePassage(sentence: string): void {
     const currentWords = this.words.value;
     const updatedWords = { ...currentWords, ...newWords } as Words;
     this.words.next(updatedWords);
-    this.saveToLocalStorage('words', updatedWords);
+    this.cacheService.setItem('words', updatedWords);
   }
 
   addWord(category: keyof Words, word: string): void {
@@ -349,7 +339,7 @@ deletePassage(sentence: string): void {
       [category]: [...currentWords[category], word]
     };
     this.words.next(updatedWords);
-    this.saveToLocalStorage('words', updatedWords);
+    this.cacheService.setItem('words', updatedWords);
   }
 
   removeWord(category: keyof Words, word: string): void {
@@ -359,6 +349,6 @@ deletePassage(sentence: string): void {
       [category]: currentWords[category].filter(w => w !== word)
     };
     this.words.next(updatedWords);
-    this.saveToLocalStorage('words', updatedWords);
+    this.cacheService.setItem('words', updatedWords);
   }
 }
