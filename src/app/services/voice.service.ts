@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { CacheService } from './cache.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class VoiceService {
   rate: number = 1;
   repeat: boolean = false;
 
-  constructor() {
+  constructor(private cacheService: CacheService) {
     if ('speechSynthesis' in window) {
       this.populateVoices();
       if (speechSynthesis.onvoiceschanged !== undefined) {
@@ -41,7 +42,12 @@ export class VoiceService {
   }
 
   getStoredVoice(key: string, langPrefix: string): SpeechSynthesisVoice | null {
-    const storedVoiceId = localStorage.getItem(key);
+    const storedVoiceId = this.cacheService.getItem(key);
+    // Check if the retrieved item is a string before using it as a voice ID
+    if (typeof storedVoiceId !== 'string') {
+      console.warn(`Invalid stored voice ID for ${key}:`, storedVoiceId);
+      return this.getDefaultVoice(langPrefix); // Fallback to default if stored data is invalid
+    }
     const voice = this.voices.find(voice => this.getVoiceId(voice) === storedVoiceId && voice.lang.startsWith(langPrefix));
     console.log(`Stored voice for ${key}:`, voice);
     return voice || this.getDefaultVoice(langPrefix);
@@ -56,15 +62,15 @@ export class VoiceService {
       switch (language) {
         case 'English':
           this.selectedVoiceEnglish = voice;
-          localStorage.setItem('selectedVoiceEnglish', this.getVoiceId(voice));
+          this.cacheService.setItem('selectedVoiceEnglish', this.getVoiceId(voice));
           break;
         case 'Afrikaans':
           this.selectedVoiceAfrikaans = voice;
-          localStorage.setItem('selectedVoiceAfrikaans', this.getVoiceId(voice));
+          this.cacheService.setItem('selectedVoiceAfrikaans', this.getVoiceId(voice));
           break;
         case 'Zulu':
           this.selectedVoiceZulu = voice;
-          localStorage.setItem('selectedVoiceZulu', this.getVoiceId(voice));
+          this.cacheService.setItem('selectedVoiceZulu', this.getVoiceId(voice));
           break;
       }
       console.log(`Selected voice for ${language}:`, voice);
@@ -74,11 +80,11 @@ export class VoiceService {
   }
 
   loadSettings() {
-    const savedRate = localStorage.getItem('voiceRate');
+    const savedRate = this.cacheService.getItem('voiceRate');
     if (savedRate !== null) {
       this.rate = parseFloat(savedRate);
     }
-    const savedRepeat = localStorage.getItem('repeatWords');
+    const savedRepeat = this.cacheService.getItem('repeatWords');
     if (savedRepeat !== null) {
       this.repeat = savedRepeat === 'true';
     }
@@ -107,7 +113,7 @@ export class VoiceService {
 
   setRate(rate: number) {
     this.rate = rate;
-    localStorage.setItem('voiceRate', rate.toString());
+    this.cacheService.setItem('voiceRate', rate.toString());
   }
 
   getRate(): number {
@@ -116,7 +122,7 @@ export class VoiceService {
 
   setRepeat(repeat: boolean) {
     this.repeat = repeat;
-    localStorage.setItem('repeatWords', repeat.toString());
+    this.cacheService.setItem('repeatWords', repeat.toString());
   }
 
   getRepeat(): boolean {
@@ -127,15 +133,15 @@ export class VoiceService {
     switch (language) {
       case 'English':
         this.selectedVoiceEnglish = this.getDefaultVoice('en');
-        localStorage.removeItem('selectedVoiceEnglish');
+        this.cacheService.removeItem('selectedVoiceEnglish');
         break;
       case 'Afrikaans':
         this.selectedVoiceAfrikaans = this.getDefaultVoice('af');
-        localStorage.removeItem('selectedVoiceAfrikaans');
+        this.cacheService.removeItem('selectedVoiceAfrikaans');
         break;
       case 'Zulu':
         this.selectedVoiceZulu = this.getDefaultVoice('zu');
-        localStorage.removeItem('selectedVoiceZulu');
+        this.cacheService.removeItem('selectedVoiceZulu');
         break;
     }
   }
@@ -146,7 +152,7 @@ export class VoiceService {
 
   resetRate() {
     this.rate = 1;
-    localStorage.removeItem('voiceRate');
+    this.cacheService.removeItem('voiceRate');
   }
 
   playText(text: string, language: 'English' | 'Afrikaans' | 'Zulu') {
@@ -223,10 +229,7 @@ export class VoiceService {
   }
 
   updateLanguage(language: 'English' | 'Afrikaans' | 'Zulu') {
-    localStorage.setItem('language', language);
+    this.cacheService.setItem('language', language);
     this.setStoredVoices();
   }
-}
-function resolve() {
-  throw new Error('Function not implemented.');
 }
