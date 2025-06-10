@@ -59,59 +59,6 @@
   color: #666;
 }
 
-
-.voice-settings,
-.language-settings {
-  margin-bottom: 20px;
-  padding: 15px;
-  border: 1px solid #eee;
-  border-radius: 6px;
-  background-color: #fff;
-}
-
-.voice-settings h3,
-.language-settings h3 {
-  margin-top: 0;
-  color: #007bff;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
-  margin-bottom: 15px;
-}
-
-.voice-settings div,
-.language-settings div {
-  margin-bottom: 15px;
-}
-
-.voice-settings label,
-.language-settings label {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.voice-settings select,
-.voice-settings input[type="number"],
-.language-settings select {
-  display: block;
-  width: calc(100% - 22px); /* Adjust for padding and border */
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-.voice-settings input[type="checkbox"] {
-  margin-right: 10px;
-  vertical-align: middle;
-}
-
-.voice-settings p,
-.language-settings p {
-  margin-top: 5px;
-  font-size: 14px;
-  color: #666;
-}
-
 .settings-container {
   max-width: 600px;
   margin: 20px auto;

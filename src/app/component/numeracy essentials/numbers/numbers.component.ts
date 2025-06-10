@@ -140,41 +140,15 @@ export class NumbersComponent implements OnInit {
   }
 
   private async playSequence(wordForm: string, numericForm: string): Promise<void> {
-    if (this.stopRequested) {
-      this.cleanupSequence();
-      return;
-    }
+    // Highlight and play word form
+    this.setHighlight(true);
+    await this.voiceService.playWords([wordForm], this.language);
+    await this.delay(300);
 
-    try {
-      // Highlight and play word form
-      this.setHighlight(true);
-      await this.voiceService.playWords([wordForm], this.language);
-      if (this.stopRequested) {
-        this.cleanupSequence();
-        return;
-      }
-      await this.delay(1000); // Increased delay for better readability
-
-      // Highlight and play numeric form
-      this.setHighlight(false);
-      await this.voiceService.playWords([numericForm], this.language);
-      if (this.stopRequested) {
-        this.cleanupSequence();
-        return;
-      }
-      await this.delay(1500);
-    } catch (error) {
-      console.error('Error in sequence:', error);
-      this.cleanupSequence();
-    }
-  }
-
-  private cleanupSequence() {
-    this.clearHighlights();
-    window.speechSynthesis.cancel();
-    this.isPlaying = false;
-    this.currentNumber = '';
-    this.numberInWords = '';
+    // Highlight and play numeric form
+    this.setHighlight(false);
+    await this.voiceService.playWords([numericForm], this.language);
+    await this.delay(300);
   }
 
   private setHighlight(isWordForm: boolean) {
@@ -223,7 +197,6 @@ export class NumbersComponent implements OnInit {
     this.stopRequested = true;
     this.isReading = false;
     this.isPlaying = false;
-    this.cleanupSequence();
   }
 
   toggleAutoRead() {
