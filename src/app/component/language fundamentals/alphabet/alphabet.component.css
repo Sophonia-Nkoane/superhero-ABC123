@@ -215,7 +215,9 @@ h1 {
     align-items: center; justify-content: center; position: relative; overflow: hidden;
 }
 .letter-outline {
+
     font-size: 20rem; font-weight: bold; color: var(--outline-color);
+
     user-select: none; pointer-events: none;
 }
 .tracing-canvas {
@@ -253,11 +255,14 @@ h1 {
     stroke-linejoin: round;
     stroke-dasharray: 4 4; /* Dashed line effect */
     opacity: 1.6;
+
 }
 .stroke-number-bg {
     fill: white;
     stroke: var(--primary-color-dark);
+
     stroke-width: 0.5;
+
 }
 .stroke-number-text {
     fill: var(--primary-color-dark);
