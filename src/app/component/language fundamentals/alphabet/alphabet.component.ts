@@ -19,7 +19,7 @@ interface Stroke {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './alphabet.component.html',
-  styleUrls: ['./alphabet.component.css']
+  styleUrls: ['./alphabet.component.scss']
 })
 export class AlphabetComponent implements OnInit, OnDestroy, AfterViewInit {
   // --- VIEW MANAGEMENT ---
