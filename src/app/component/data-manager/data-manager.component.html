@@ -1,0 +1,259 @@
+<div class="container">
+  <h2>Manage Data</h2>
+  <button (click)="resetData()" class="btn btn-outline-danger">Reset Data</button>
+
+  <section>
+    <h3>Word Families</h3>
+    <!-- Add Word Family Form -->
+    <form (ngSubmit)="addWordFamily()" #newWordFamilyForm="ngForm" class="mb-4">
+      <div class="form-group">
+        <label for="group">Group:</label>
+        <select id="group" name="group" class="form-control" [(ngModel)]="newWordFamily.group" required>
+          <option value="Vowels">Vowels</option>
+          <option value="Consonants">Consonants</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="prefix">Prefix:</label>
+        <input type="text" id="prefix" name="prefix" class="form-control" [(ngModel)]="newWordFamily.prefix" required>
+      </div>
+      <div class="form-group">
+        <label for="words">Words (comma separated):</label>
+        <input type="text" id="words" name="words" class="form-control" [(ngModel)]="newWordFamily.words" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Word Family</button>
+    </form>
+
+    <!-- Display Word Families -->
+    <div *ngIf="wordFamilies$ | async as wordFamilies">
+      <div class="card mb-3" *ngFor="let wordFamily of wordFamilies">
+        <div class="card-body">
+          <h5 class="card-title">{{ wordFamily.prefix }}</h5>
+          <p class="card-text">Group: {{ wordFamily.group }}</p>
+          <p class="card-text">Words: {{ wordFamily.words.join(', ') }}</p>
+          <button class="btn btn-sm btn-outline-primary" (click)="editWordFamily = wordFamily">Edit</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="deleteWordFamily(wordFamily.id)">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Word Family Form -->
+    <div *ngIf="editWordFamily" class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Edit Word Family</h5>
+        <form (ngSubmit)="updateWordFamily(editWordFamily.id, editWordFamily)" #editWordFamilyForm="ngForm">
+          <div class="form-group">
+            <label for="editGroup">Group:</label>
+            <select id="editGroup" name="group" class="form-control" [(ngModel)]="editWordFamily.group" required>
+              <option value="Vowels">Vowels</option>
+              <option value="Consonants">Consonants</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="editPrefix">Prefix:</label>
+            <input type="text" id="editPrefix" name="prefix" class="form-control" [(ngModel)]="editWordFamily.prefix" required>
+          </div>
+          <div class="form-group">
+            <label for="editWords">Words (comma separated):</label>
+            <input type="text" id="editWords" name="words" class="form-control" [(ngModel)]="editWordFamily.words" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Update Word Family</button>
+          <button type="button" class="btn btn-secondary" (click)="editWordFamily = null">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h3>Manage Objects</h3>
+
+    <!-- Add Object Form -->
+    <form (ngSubmit)="addObject()" #newObjectForm="ngForm" class="mb-4">
+      <div class="form-group">
+        <label for="letter">Letter:</label>
+        <input type="text" id="letter" name="letter" class="form-control" [(ngModel)]="newObject.letter" required>
+      </div>
+      <div class="form-group">
+        <label for="object">Object:</label>
+        <input type="text" id="object" name="object" class="form-control" [(ngModel)]="newObject.object" required>
+      </div>
+      <div class="form-group">
+        <label for="icon">Icon:</label>
+        <input type="text" id="icon" name="icon" class="form-control" [(ngModel)]="newObject.icon" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Object</button>
+    </form>
+
+    <!-- Display Objects -->
+    <div *ngIf="objects$ | async as objects">
+      <div class="card mb-3" *ngFor="let object of objects">
+        <div class="card-body">
+          <h5 class="card-title">{{ object.object }}</h5>
+          <p class="card-text">Letter: {{ object.letter }}</p>
+          <p class="card-text">Icon: {{ object.icon }}</p>
+          <button class="btn btn-sm btn-outline-primary" (click)="editObject = object">Edit</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="deleteObject(object.id)">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Object Form -->
+    <div *ngIf="editObject" class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Edit Object</h5>
+        <form (ngSubmit)="updateObject(editObject.id, editObject)" #editObjectForm="ngForm">
+          <div class="form-group">
+            <label for="editLetter">Letter:</label>
+            <input type="text" id="editLetter" name="letter" class="form-control" [(ngModel)]="editObject.letter" required>
+          </div>
+          <div class="form-group">
+            <label for="editObject">Object:</label>
+            <input type="text" id="editObject" name="object" class="form-control" [(ngModel)]="editObject.object" required>
+          </div>
+          <div class="form-group">
+            <label for="editIcon">Icon:</label>
+            <input type="text" id="editIcon" name="icon" class="form-control" [(ngModel)]="editObject.icon" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Update Object</button>
+          <button type="button" class="btn btn-secondary" (click)="editObject = null">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h3>Manage Words</h3>
+
+    <!-- Add Word Form -->
+    <form (ngSubmit)="addWord('subjects')" #addSubjectForm="ngForm" class="mb-4">
+      <div class="form-group">
+        <label for="newSubject">Subject:</label>
+        <input type="text" id="newSubject" name="subject" class="form-control" [(ngModel)]="newWord.subjects" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Subject</button>
+    </form>
+
+    <form (ngSubmit)="addWord('actions')" #addActionForm="ngForm" class="mb-4">
+      <div class="form-group">
+        <label for="newAction">Action:</label>
+        <input type="text" id="newAction" name="action" class="form-control" [(ngModel)]="newWord.actions" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Action</button>
+    </form>
+
+    <form (ngSubmit)="addWord('objects')" #addObjectForm="ngForm" class="mb-4">
+      <div class="form-group">
+        <label for="newObject">Object:</label>
+        <input type="text" id="newObject" name="object" class="form-control" [(ngModel)]="newWord.objects" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Object</button>
+    </form>
+
+    <!-- Display Current Words -->
+    <div *ngIf="words$ | async as words">
+      <div class="mb-3">
+        <h5>Subjects</h5>
+        <ul>
+          <li *ngFor="let subject of words.subjects">
+            {{ subject }}
+            <button class="btn btn-sm btn-outline-danger" (click)="removeWord('subjects', subject)">Remove</button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="mb-3">
+        <h5>Actions</h5>
+        <ul>
+          <li *ngFor="let action of words.actions">
+            {{ action }}
+            <button class="btn btn-sm btn-outline-danger" (click)="removeWord('actions', action)">Remove</button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="mb-3">
+        <h5>Objects</h5>
+        <ul>
+          <li *ngFor="let object of words.objects">
+            {{ object }}
+            <button class="btn btn-sm btn-outline-danger" (click)="removeWord('objects', object)">Remove</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h3>Manage Sections</h3>
+
+    <!-- Section 1 -->
+    <div class="mb-4">
+      <h4>Section 1</h4>
+      <form (ngSubmit)="addSection1Word(newSection1Word)" #addSection1Form="ngForm" class="mb-2">
+        <div class="form-group">
+          <label for="newSection1Word">New Word:</label>
+          <input type="text" id="newSection1Word" name="newSection1Word" class="form-control" [(ngModel)]="newSection1Word" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Word</button>
+      </form>
+      <ul>
+        <li *ngFor="let word of section1Array$ | async">
+          {{ word }}
+          <button class="btn btn-sm btn-outline-primary" (click)="editSection1Word = word">Edit</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="deleteSection1Word(word)">Delete</button>
+        </li>
+      </ul>
+      <div *ngIf="editSection1Word" class="mt-2">
+        <input type="text" [(ngModel)]="editSection1WordNew" class="form-control d-inline-block w-auto mr-2">
+        <button class="btn btn-sm btn-primary" (click)="updateSection1Word(editSection1Word, editSection1WordNew); editSection1Word = null">Update</button>
+        <button class="btn btn-sm btn-secondary" (click)="editSection1Word = null">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="mb-4">
+      <h4>Section 3</h4>
+      <form (ngSubmit)="addSection3Word(newSection3Word)" #addSection3Form="ngForm" class="mb-2">
+        <div class="form-group">
+          <label for="newSection3Word">New Word:</label>
+          <input type="text" id="newSection3Word" name="newSection3Word" class="form-control" [(ngModel)]="newSection3Word" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Word</button>
+      </form>
+      <ul>
+        <li *ngFor="let word of section2Array$ | async">
+          {{ word }}
+          <button class="btn btn-sm btn-outline-primary" (click)="editSection3Word = word">Edit</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="deleteSection3Word(word)">Delete</button>
+        </li>
+      </ul>
+      <div *ngIf="editSection3Word" class="mt-2">
+        <input type="text" [(ngModel)]="editSection3WordNew" class="form-control d-inline-block w-auto mr-2">
+        <button class="btn btn-sm btn-primary" (click)="updateSection3Word(editSection3Word, editSection3WordNew); editSection3Word = null">Update</button>
+        <button class="btn btn-sm btn-secondary" (click)="editSection3Word = null">Cancel</button>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h3>Other Data</h3>
+
+    <div>
+      <h4>Alphabet</h4>
+      <ul>
+        <li *ngFor="let letter of alphabet">{{ letter }}</li>
+      </ul>
+
+      <h4>Vowels</h4>
+      <ul>
+        <li *ngFor="let vowel of vowels">{{ vowel }}</li>
+      </ul>
+    </div>
+  </section>
+</div>
