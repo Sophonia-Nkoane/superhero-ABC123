@@ -9,7 +9,7 @@ import { GlobalSettingsService } from '../../../services/global-settings.service
 import { playAlphabetSound, playPhoneticSound, playObjectSound, delay, getLetterStrokes } from '../../language';
 
 // NEW: Interface for a single stroke guide
-interface Stroke {
+interface LocalStroke {
   path: string;
   number: number;
   numberPos: { x: number, y: number };
@@ -56,7 +56,7 @@ export class AlphabetComponent implements OnInit, OnDestroy, AfterViewInit {
   private uppercaseCtx!: CanvasRenderingContext2D;
   private uppercasePaths: { x: number, y: number }[][] = [];
   private isUppercaseComplete = false;
-  uppercaseStrokes: Stroke[] = []; // NEW: Holds stroke guides for uppercase letter
+  uppercaseStrokes: LocalStroke[] = []; // NEW: Holds stroke guides for uppercase letter
 
   // Lowercase Tracer
   @ViewChild('lowercaseTracingCanvas') lowercaseCanvasRef!: ElementRef<HTMLCanvasElement>;
@@ -67,7 +67,7 @@ export class AlphabetComponent implements OnInit, OnDestroy, AfterViewInit {
   private lowercaseCtx!: CanvasRenderingContext2D;
   private lowercasePaths: { x: number, y: number }[][] = [];
   private isLowercaseComplete = false;
-  lowercaseStrokes: Stroke[] = []; // NEW: Holds stroke guides for lowercase letter
+  lowercaseStrokes: LocalStroke[] = []; // NEW: Holds stroke guides for lowercase letter
 
   constructor(
     private voiceService: VoiceService,
