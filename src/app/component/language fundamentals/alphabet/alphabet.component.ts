@@ -3,19 +3,16 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { VoiceService } from '../../../services/voice.service';
+import { letterStrokes } from '../../../Utilities/letter-stroke.data'; // Import stroke data for letters
 import { DataService, Object as DataObject } from '../../../services/data.service';
 import { GlobalSettingsService } from '../../../services/global-settings.service';
 
-import { playAlphabetSound, playPhoneticSound, playObjectSound, delay, getLetterStrokes } from '../../language';
-
 // NEW: Interface for a single stroke guide
-interface LocalStroke {
+interface Stroke {
   path: string;
   number: number;
-  numberPos: { x: number, y: number };
+  numberPos: { x: number; y: number };
 }
-
-import { StrokeGuideService, Stroke } from '../../../services/stroke-guide.service';
 
 @Component({
   selector: 'app-alphabet',
@@ -54,9 +51,9 @@ export class AlphabetComponent implements OnInit, OnDestroy, AfterViewInit {
   uppercaseFeedbackMessage = '';
   uppercaseFeedbackClass = 'feedback';
   private uppercaseCtx!: CanvasRenderingContext2D;
-  private uppercasePaths: { x: number, y: number }[][] = [];
+  private uppercasePaths: { x: number; y: number }[][] = [];
   private isUppercaseComplete = false;
-  uppercaseStrokes: LocalStroke[] = []; // NEW: Holds stroke guides for uppercase letter
+  uppercaseStrokes: Stroke[] = []; // NEW: Holds stroke guides for uppercase letter
 
   // Lowercase Tracer
   @ViewChild('lowercaseTracingCanvas') lowercaseCanvasRef!: ElementRef<HTMLCanvasElement>;
@@ -65,15 +62,14 @@ export class AlphabetComponent implements OnInit, OnDestroy, AfterViewInit {
   lowercaseFeedbackMessage = '';
   lowercaseFeedbackClass = 'feedback';
   private lowercaseCtx!: CanvasRenderingContext2D;
-  private lowercasePaths: { x: number, y: number }[][] = [];
+  private lowercasePaths: { x: number; y: number }[][] = [];
   private isLowercaseComplete = false;
-  lowercaseStrokes: LocalStroke[] = []; // NEW: Holds stroke guides for lowercase letter
+  lowercaseStrokes: Stroke[] = []; // NEW: Holds stroke guides for lowercase letter
 
   constructor(
     private voiceService: VoiceService,
     private dataService: DataService,
     private globalSettingsService: GlobalSettingsService,
-    private strokeGuideService: StrokeGuideService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -90,7 +86,7 @@ export class AlphabetComponent implements OnInit, OnDestroy, AfterViewInit {
           if (this.currentLanguage === 'Afrikaans' && this.mode === 'phonics') {
             this.mode = 'all';
           }
-          if (this.currentLanguage === 'Afrikaans') {
+           if (this.currentLanguage === 'Afrikaans') {
             this.tracerSoundMode = 'alphabet';
           }
         }
@@ -163,20 +159,20 @@ export class AlphabetComponent implements OnInit, OnDestroy, AfterViewInit {
 
     try {
       if (this.mode === 'all') {
-        await playAlphabetSound(this.voiceService, letter, this.currentLanguage);
-        await delay(500);
+        await this.playAlphabetSound(letter, this.currentLanguage);
+        await this.delay(500);
         if (this.currentLanguage === 'English') {
-          await playPhoneticSound(letter);
-          await delay(500);
+          await this.playPhoneticSound(letter);
+          await this.delay(500);
         }
         const object = this.objects.find(obj => obj.letter === letter);
-        if (object) { await playObjectSound(this.voiceService, object.object, this.currentLanguage); }
+        if (object) await this.playObjectSound(object.object, this.currentLanguage);
       } else {
-        if (this.mode === 'alphabet') await playAlphabetSound(this.voiceService, letter, this.currentLanguage);
-        if (this.mode === 'phonics' && this.currentLanguage === 'English') await playPhoneticSound(letter);
+        if (this.mode === 'alphabet') await this.playAlphabetSound(letter, this.currentLanguage);
+        if (this.mode === 'phonics' && this.currentLanguage === 'English') await this.playPhoneticSound(letter);
         if (this.mode === 'objects') {
           const object = this.objects.find(obj => obj.letter === letter);
-          if (object) { await playObjectSound(this.voiceService, object.object, this.currentLanguage); }
+          if (object) await this.playObjectSound(object.object, this.currentLanguage);
         }
       }
     } finally {
@@ -189,7 +185,7 @@ export class AlphabetComponent implements OnInit, OnDestroy, AfterViewInit {
     for (const letter of this.filteredAlphabet) {
       if (!this.isAutoRead) break;
       await this._playSpeechSequence(letter);
-      await delay(1000);
+      await this.delay(1000);
     }
     if (this.isAutoRead) this.toggleAutoRead();
     this.stopReading();
@@ -218,6 +214,7 @@ export class AlphabetComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getObject = (letter: string): string => this.objects.find(obj => obj.letter === letter)?.object || '';
   getObjectIcon = (letter: string): string => this.objects.find(obj => obj.letter === letter)?.icon || '';
+  private delay = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
 
   getAriaLabel(letter: string): string {
     switch (this.mode) {
@@ -225,6 +222,24 @@ export class AlphabetComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'objects': return `${this.getObject(letter)} for letter ${letter}`;
       default: return `Letter ${letter}`;
     }
+  }
+
+  async playAlphabetSound(letter: string, language: 'English' | 'Afrikaans'): Promise<void> {
+    return this.voiceService.playText(letter, language);
+  }
+
+  async playPhoneticSound(letter: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const audioPath = `assets/phonics/upperCase/${letter}.mp3`;
+      const audio = new Audio(audioPath);
+      audio.onended = () => resolve();
+      audio.onerror = reject;
+      audio.play();
+    });
+  }
+
+  async playObjectSound(object: string, language: 'English' | 'Afrikaans'): Promise<void> {
+    return this.voiceService.playText(object, language);
   }
 
   // ===============================================
@@ -241,9 +256,9 @@ export class AlphabetComponent implements OnInit, OnDestroy, AfterViewInit {
 
   playCurrentTracerSound(): void {
     if (this.tracerSoundMode === 'phonics' && this.currentLanguage === 'English') {
-      playPhoneticSound(this.currentLetter);
+      this.playPhoneticSound(this.currentLetter);
     } else {
-      playAlphabetSound(this.voiceService, this.currentLetter, this.currentLanguage);
+      this.playAlphabetSound(this.currentLetter, this.currentLanguage);
     }
   }
 
@@ -461,14 +476,11 @@ export class AlphabetComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // --- NEW: Stroke Guide Generation ---
   private updateStrokeGuides(): void {
-
     this.uppercaseStrokes = this.getLetterStrokes(this.currentLetter, 'upper');
     this.lowercaseStrokes = this.getLetterStrokes(this.currentLetter, 'lower');
   }
 
   private getLetterStrokes(letter: string, caseType: 'upper' | 'lower'): Stroke[] {
-    // Example implementation: Fetch strokes from the strokeGuideService
-    return this.strokeGuideService.getLetterStrokes(letter, caseType);
-
+    return letterStrokes[`${letter.toUpperCase()}_${caseType}`] || [];
   }
 }
