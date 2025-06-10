@@ -474,7 +474,8 @@ export class AlphabetComponent implements OnInit, OnDestroy, AfterViewInit {
     this.lowercaseStrokes = this.getLetterStrokes(this.currentLetter, 'lower');
   }
 
-  private getLetterStrokes(letter: string, caseType: 'upper' | 'lower'): Stroke[]
+  private getLetterStrokes(letter: string, caseType: 'upper' | 'lower'): Stroke[] {
+    // Example implementation: Fetch strokes from the strokeGuideService
     return this.strokeGuideService.getLetterStrokes(letter, caseType);
   }
 }
