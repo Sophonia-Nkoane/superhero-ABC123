@@ -3,16 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { VoiceService } from '../../../services/voice.service';
-import { letterStrokes } from '../../../Utilities/letter-stroke.data'; // Import stroke data for letters
 import { DataService, Object as DataObject } from '../../../services/data.service';
 import { GlobalSettingsService } from '../../../services/global-settings.service';
-
-// NEW: Interface for a single stroke guide
-interface Stroke {
-  path: string;
-  number: number;
-  numberPos: { x: number; y: number };
-}
+import { StrokeGuideService, Stroke } from '../../../services/stroke-guide.service';
 
 @Component({
   selector: 'app-alphabet',
@@ -70,6 +63,7 @@ export class AlphabetComponent implements OnInit, OnDestroy, AfterViewInit {
     private voiceService: VoiceService,
     private dataService: DataService,
     private globalSettingsService: GlobalSettingsService,
+    private strokeGuideService: StrokeGuideService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -481,6 +475,6 @@ export class AlphabetComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private getLetterStrokes(letter: string, caseType: 'upper' | 'lower'): Stroke[] {
-    return letterStrokes[`${letter.toUpperCase()}_${caseType}`] || [];
+    return this.strokeGuideService.getLetterStrokes(letter, caseType);
   }
 }
