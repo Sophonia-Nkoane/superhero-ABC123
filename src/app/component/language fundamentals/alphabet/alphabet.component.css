@@ -1,21 +1,29 @@
 /* --- ROOT & THEMING (COMBINED) --- */
 :host {
+  /* Primary Colors */
   --primary-color: #4CAF50;
   --primary-color-dark: #388E3C;
+
+  /* Text & Background Colors */
   --text-color: #333;
   --background-color: #ffffff;
   --surface-color: #f7f9fc;
+
+  /* Accent Colors */
   --glow-color: #5eff70;
   --shadow-color: rgba(0, 0, 0, 0.1);
-  /* Tracer specific variables */
+
+  /* Tracer Specific Variables */
   --outline-color: #e8e8e8;
   --trace-color: #FF6B6B;
   --success-color: #4CAF50;
+
   display: block;
   color: var(--text-color);
   background-color: var(--background-color);
 }
 
+/* Dark Mode Theme */
 @media (prefers-color-scheme: dark) {
   :host {
     --text-color: #e0e0e0;
@@ -25,6 +33,7 @@
     --primary-color-dark: #4caf50;
     --glow-color: #69f0ae;
     --shadow-color: rgba(0, 0, 0, 0.4);
+
     /* Tracer specific variables for dark mode */
     --outline-color: #333333;
   }
@@ -66,11 +75,11 @@ h1 {
   background-color: var(--surface-color);
   border-radius: 10px;
   padding: 0.5rem;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* Adjusted shadow */
   margin-bottom: 1rem;
 }
 
-.nav .nav-link {
+.nav-link {
   transition: background-color 0.3s ease, color 0.3s ease;
   border-radius: 8px;
   font-weight: 500;
@@ -81,12 +90,13 @@ h1 {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  padding: 0.5rem 1rem; /* Added padding for better spacing */
 }
 
-.nav .nav-link.active {
+.nav-link.active {
   background-color: var(--primary-color) !important;
   color: white !important;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Adjusted shadow */
 }
 
 /* --- ALPHABET EXPLORER SPECIFIC STYLES --- */
@@ -99,50 +109,74 @@ h1 {
   border-color: var(--primary-color);
   color: var(--primary-color);
 }
-.btn.btn-outline-success:hover {
+
+.btn.btn-outline-success:hover:not(:disabled) {
   background-color: var(--primary-color);
   color: white;
 }
 
 /* Focus Overlay & Card Styles */
 .focus-overlay {
-  position: fixed; inset: 0; z-index: 1000;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
   background-color: rgba(0, 0, 0, 0.7);
-  display: grid; place-items: center;
+  display: grid;
+  place-items: center;
   backdrop-filter: blur(5px);
   animation: fade-in 0.3s ease;
 }
+
 .focus-card {
   position: relative;
-  display: flex; flex-direction: column;
+  display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   gap: 1rem;
-  padding: 3rem 2rem 2rem 2rem;
-  background: var(--surface-color);
+  padding: 3rem 2rem 2rem; /* Consistent padding */
+  background-color: var(--surface-color);
   border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   animation: fade-in-zoom-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   width: clamp(280px, 40vw, 320px);
   min-height: 450px;
 }
+
 .focus-close-btn {
-  position: absolute; top: 15px; right: 20px;
-  font-size: 2.5rem; font-weight: bold; color: #aaa;
-  background: none; border: none; cursor: pointer;
-  line-height: 1; padding: 0; transition: color 0.2s ease;
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #aaa;
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: color 0.2s ease;
 }
-.focus-close-btn:hover { color: var(--text-color); }
+
+.focus-close-btn:hover {
+  color: var(--text-color);
+}
+
 .focus-character {
   font-size: clamp(8rem, 25vw, 12rem);
-  font-weight: bold; color: var(--primary-color); line-height: 1;
+  font-weight: bold;
+  color: var(--primary-color);
+  line-height: 1;
 }
+
 .focus-name {
   font-size: clamp(2rem, 6vw, 2.5rem);
   font-weight: 500;
   color: var(--text-color);
   margin-top: -1rem;
+  text-align: center; /* Center the name */
 }
+
 .focus-icon {
   font-size: clamp(5rem, 15vw, 7rem);
   margin-top: auto;
@@ -151,26 +185,53 @@ h1 {
 .alphabet-row {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 1rem; padding-top: 1rem;
+  gap: 1rem;
+  padding-top: 1rem;
 }
+
 .letter-button {
-  background: var(--background-color); color: var(--text-color);
-  border: 1px solid #ddd; border-radius: 12px;
-  cursor: pointer; padding: 1rem; font-weight: 500;
-  display: flex; align-items: center; justify-content: center;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  cursor: pointer;
+  padding: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 120px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; /* Added border-color transition */
   box-shadow: 0 2px 4px var(--shadow-color);
 }
+
 .letter-button:hover:not(:disabled) {
   transform: translateY(-5px) scale(1.05);
   box-shadow: 0 8px 16px var(--shadow-color);
   border-color: var(--primary-color);
 }
-.letter-button:disabled { opacity: 0.6; cursor: not-allowed; }
-.letter-content { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
-.letter-text { font-size: clamp(1.2rem, 4vw, 1.5rem); font-weight: bold; text-align: center; }
-.letter-icon { font-size: clamp(1.2rem, 3vw, 1.75rem); }
+
+.letter-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.letter-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.letter-text {
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  font-weight: bold;
+  text-align: center;
+}
+
+.letter-icon {
+  font-size: clamp(1.2rem, 3vw, 1.75rem);
+}
 
 /* --- LETTER TRACER SPECIFIC STYLES --- */
 .controls {
@@ -178,26 +239,42 @@ h1 {
     gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;
 }
 .btn {
-    padding: 0.75rem 1.5rem; border: 2px solid var(--primary-color);
-    border-radius: 8px; background: var(--background-color);
-    color: var(--primary-color); cursor: pointer;
-    font-weight: 500; transition: all 0.3s ease; font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    background-color: var(--background-color);
+    color: var(--primary-color);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    display: inline-flex; /* Use flex to align icon and text */
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
+
 .btn:hover:not(:disabled) {
-    background: var(--primary-color); color: white;
+    background-color: var(--primary-color);
+    color: white;
     transform: translateY(-2px);
 }
+
 .btn:disabled {
     border-color: #ccc;
     color: #ccc;
-    background: var(--background-color);
+    background-color: var(--background-color);
     cursor: not-allowed;
 }
+
 .btn.clear {
-    border-color: var(--trace-color); color: var(--trace-color);
+    border-color: var(--trace-color);
+    color: var(--trace-color);
 }
+
 .btn.clear:hover:not(:disabled) {
-    background: var(--trace-color); color: white;
+    background-color: var(--trace-color);
+    color: white;
 }
 .practice-area {
     display: grid; grid-template-columns: 1fr 1fr;
