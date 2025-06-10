@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { VoiceService } from '../../../services/voice.service';
 import { DataService, Object as DataObject } from '../../../services/data.service';
 import { GlobalSettingsService } from '../../../services/global-settings.service';
+
 import { playAlphabetSound, playPhoneticSound, playObjectSound, delay, getLetterStrokes } from '../../language';
 
 // NEW: Interface for a single stroke guide
@@ -13,6 +14,8 @@ interface Stroke {
   number: number;
   numberPos: { x: number, y: number };
 }
+
+import { StrokeGuideService, Stroke } from '../../../services/stroke-guide.service';
 
 @Component({
   selector: 'app-alphabet',
@@ -70,6 +73,7 @@ export class AlphabetComponent implements OnInit, OnDestroy, AfterViewInit {
     private voiceService: VoiceService,
     private dataService: DataService,
     private globalSettingsService: GlobalSettingsService,
+    private strokeGuideService: StrokeGuideService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -457,7 +461,14 @@ export class AlphabetComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // --- NEW: Stroke Guide Generation ---
   private updateStrokeGuides(): void {
-    this.uppercaseStrokes = getLetterStrokes(this.currentLetter, 'upper');
-    this.lowercaseStrokes = getLetterStrokes(this.currentLetter, 'lower');
+
+    this.uppercaseStrokes = this.getLetterStrokes(this.currentLetter, 'upper');
+    this.lowercaseStrokes = this.getLetterStrokes(this.currentLetter, 'lower');
+  }
+
+  private getLetterStrokes(letter: string, caseType: 'upper' | 'lower'): Stroke[] {
+    // Example implementation: Fetch strokes from the strokeGuideService
+    return this.strokeGuideService.getLetterStrokes(letter, caseType);
+
   }
 }

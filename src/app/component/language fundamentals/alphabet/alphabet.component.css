@@ -292,7 +292,9 @@ h1 {
     align-items: center; justify-content: center; position: relative; overflow: hidden;
 }
 .letter-outline {
-    font-size: 12rem; font-weight: bold; color: var(--outline-color);
+
+    font-size: 20rem; font-weight: bold; color: var(--outline-color);
+
     user-select: none; pointer-events: none;
 }
 .tracing-canvas {
@@ -325,16 +327,19 @@ h1 {
 .stroke-line {
     fill: none;
     stroke: var(--primary-color-dark);
-    stroke-width: 6; /* Thicker for visibility */
+    stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
-    stroke-dasharray: 10 8; /* Dashed line effect */
-    opacity: 0.6;
+    stroke-dasharray: 4 4; /* Dashed line effect */
+    opacity: 1.6;
+
 }
 .stroke-number-bg {
     fill: white;
     stroke: var(--primary-color-dark);
-    stroke-width: 1.5;
+
+    stroke-width: 0.5;
+
 }
 .stroke-number-text {
     fill: var(--primary-color-dark);
