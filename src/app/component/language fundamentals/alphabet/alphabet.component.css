@@ -6,7 +6,7 @@
   --background-color: #ffffff;
   --surface-color: #f7f9fc;
   --glow-color: #5eff70;
-  --shadow-color: rgba(0, 0, 1, 0.1);
+  --shadow-color: rgba(0, 0, 0, 0.1);
   /* Tracer specific variables */
   --outline-color: #e8e8e8;
   --trace-color: #FF6B6B;
